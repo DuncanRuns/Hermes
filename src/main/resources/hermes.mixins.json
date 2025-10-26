@@ -1,0 +1,34 @@
+{
+  "required": true,
+  "package": "me.duncanruns.hermes.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "me.duncanruns.hermes.HermesMixinPlugin",
+  "mixins": [
+    "ghost.MinecraftServerMixin",
+    "playlog.MinecraftServerMixin",
+    "playlog.PlayerAdvancementTrackerMixin",
+    "playlog.PlayerManagerMixin",
+    "playlog.ServerPlayNetworkHandlerMixin",
+    "playlog.ServerStatHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "client": [
+    "client.MinecraftClientMixin",
+    "instancestate.client.MinecraftClientMixin",
+    "playlog.client.MinecraftClientMixin",
+    "playlog.client.enteredseed.CreateWorldScreenMixin",
+    "playlog.client.enteredseed.MoreOptionsDialogAccessor",
+    "playlog.client.fastreset.MinecraftServerMixin",
+    "testwarning.DebugHudMixin",
+    "worldlog.client.MinecraftClientMixin"
+  ],
+  "server": [
+    "instancestate.server.MinecraftServerMixin",
+    "server.MinecraftServerMixin"
+  ]
+}
