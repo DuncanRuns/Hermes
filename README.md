@@ -162,6 +162,4 @@ following benefits:
 - Less updating: Whenever a tool wants to do something new and unique, it is less likely that Hermes will need to be
   updated to support it.
 
-The no data interpretation rule is broken in one particular place: Stats that would spam the play log are filtered out,
-These include any stat that updates once per tick (`play_one_minute`, or "time since some action"), and the
-`[movement type]_one_cm` stats.
+TODO: define data interpretation
