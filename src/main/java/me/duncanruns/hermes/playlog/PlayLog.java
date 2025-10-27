@@ -17,6 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.WorldSavePath;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.GeneratorOptions;
 import org.jetbrains.annotations.NotNull;
@@ -72,6 +73,7 @@ public class PlayLog {
 
     private final InventoryTracker inventoryTracker = new InventoryTracker();
     private final DimensionTracker dimensionTracker = new DimensionTracker();
+    private final StructureTracker structureTracker = new StructureTracker();
 
     private boolean isCreated = false;
     private boolean isClosing = false;
@@ -163,6 +165,13 @@ public class PlayLog {
         JsonObject posJson = new JsonObject();
         posJson.addProperty("x", pos.x);
         posJson.addProperty("y", pos.y);
+        posJson.addProperty("z", pos.z);
+        return posJson;
+    }
+
+    public static @NotNull JsonObject toPositionData(ChunkPos pos) {
+        JsonObject posJson = new JsonObject();
+        posJson.addProperty("x", pos.x);
         posJson.addProperty("z", pos.z);
         return posJson;
     }
@@ -266,6 +275,7 @@ public class PlayLog {
         checkGameInfo(minecraftServer);
         inventoryTracker.tick(minecraftServer).forEach(jsonObject -> write("inventory_change", jsonObject));
         dimensionTracker.tick(minecraftServer).forEach(jsonObject -> write("dimension_change", jsonObject));
+        structureTracker.tick(minecraftServer).forEach(jsonObject -> write("entered_structure", jsonObject));
     }
 
     private void checkGameInfo(MinecraftServer minecraftServer) {
