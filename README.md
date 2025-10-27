@@ -59,9 +59,16 @@ play log.
 - `advancement_change` - Every advancement update, the criteria earned, the player it's for, and if it is completed. It
   also contains the "display" data for the advancement (hidden, announce to chat, show toast).
 - `dimension_change` - Every change to a player's dimension including their initial dimension when they join.
-- `respawn` - Every time a player respawns, the player it's for, the position they respawned at, and if they were alive
-  before (e.g. `true` if coming out of the end). The dimension of the respawn can be determined by the
+- `respawn` - Every time a player respawns, the player who respawned, the position they respawned at, and if they were
+  alive before (e.g. `true` if coming out of the end). The dimension of the respawn can be determined by the
   `dimension_change` event (no order guaranteed).
+    - This specific event
+- `entered_structure` - Every time a player enters a structure, the player who entered it, the structure name, and the
+  chunk position they entered it at. Functionality is based off of how advancements track structures, so this is only
+  checked every 20 ticks and at the same time that location based advancements are checked per player. Entering a
+  structure can be defined as the player being in the structure bounding box for the first time since joining the world.
+  This means the same structure may be logged two or more times if the player leaves and rejoins the world.
+    - This event should be particularly useful for versions with no structure related advancements.
 - `game_info` - The "Game Info" whenever a change happens to it. Game Info includes:
     - Changed Game Rules (compares to a default `new GameRules()`)
     - If cheats are allowed
@@ -130,12 +137,14 @@ Hermes can be used on dedicated servers, but there are a few things to note:
 
 ## Developing
 
+This section contains some notes for those looking to contribute to Hermes or use its API. Make sure to also read
+the [ideology](#ideology) section if you want a better understanding of the mod.
+
 ### API
 
 A `me.duncanruns.hermes.api.HermesModAPI` class is provided for modders to use Hermes' features. Its methods have
-javadoc
-comments somewhat explaining their usage. Refer to the documentation of features above to get a better idea of what the
-methods might be used for.
+javadoc comments somewhat explaining their usage. Refer to the documentation of features above to get a better idea of
+what the methods might be used for.
 
 ### Codebase Structure
 
@@ -152,14 +161,26 @@ For working on Hermes, a few notes on how the codebase is structured:
 
 ## Ideology
 
-The most core ideology of Hermes is **no data interpretation**. The data that Hermes outputs should be as close to the
-raw data as possible. There should exist no concept of speedrunning splits such as "blinds" or likewise, but rather such
-a concept should be able to be determined by external tools using the data Hermes provides. This comes with the
-following benefits:
+The most core ideology of Hermes is **no data interpretation**.
+
+Data interpretation can be defined as any sort of processing or logic applied to raw data.
+
+The data that Hermes outputs should be as close to the raw data as possible. There should exist no concept of
+speedrunning splits such as "blinds" or likewise, but rather such a concept should be able to be determined by external
+tools using the data Hermes provides. This comes with the following benefits:
 
 - Easier development: The mod is simpler as it just outputs data. The mixins are simpler, and as a whole the mod is
   easier to port to other versions.
 - Less updating: Whenever a tool wants to do something new and unique, it is less likely that Hermes will need to be
   updated to support it.
 
-TODO: define data interpretation
+An example of data interpretation can be found within Hermes regarding the `stat_change` event. Certain stats are
+excluded from the event because they are updated every tick and are not very useful. This is data interpretation as it
+**conditionally** filters out data. Unfortunately, this is necessary to keep reasonable file sizes.
+
+Prior to Hermes, mods would output very heavily interpreted data. This lead to those mods needing updates, which lead to
+more mod development time, delays merging PRs, delays waiting for mod legalization, and demotivation.
+
+While the goal of Hermes is to cover all external tool use cases at the time of development and in the future, of course
+it is possible that a use case will come up that Hermes does not support. It would probably be ignorant to think that
+all possible use cases are already covered.
