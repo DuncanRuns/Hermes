@@ -46,8 +46,8 @@ play log.
 
 > Data related to player activity in the world will logged in real-time in a ciphered format in a "restricted" folder
 > that most external tools should not be able to access (The cipher isn't very secure, and is only meant to convey
-> intention). Then on server shutdown, an unciphered copy is made. A warning.txt file is also placed in the restricted
-> folder to make it extra obvious.
+> intention). Then on server shutdown (world exit), an unciphered copy is made. A warning.txt file is also placed in the
+> restricted folder to make it extra obvious.
 
 - `initialize` - Runs when the play log is initialized (creating or joining a world), contains generator options,
   entered seed (if creating), the world time (total ticks ran in world, should be 0 for new world), and if atum is
