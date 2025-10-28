@@ -52,23 +52,20 @@ play log.
 - `initialize` - Runs when the play log is initialized (creating or joining a world), contains generator options,
   entered seed (if creating), the world time (total ticks ran in world, should be 0 for new world), and if atum is
   installed, a field noting if atum is running.
-- `stat_change` - Every stat update, the player it's for, the new value, and the difference from the last one. Excludes
+- `stat` - Every stat update, the player it's for, the new value, and the difference from the last one. Excludes
   stats that naturally update every tick or extremely spammy ones (e.g. walking/sprinting/flying)
-- `screen_change` - Every screen change, the class (will look like class_xxxxx bc of intermediary), the title (
+- `screen` - Every screen change, the class (will look like class_xxxxx bc of intermediary), the title (
   untranslated key, or sometimes the text in case of a renamed container), if the screen is supposed to pause the game.
-- `advancement_change` - Every advancement update, the criteria earned, the player it's for, and if it is completed. It
+- `advancement` - Every advancement update, the criteria earned, the player it's for, and if it is completed. It
   also contains the "display" data for the advancement (hidden, announce to chat, show toast).
-- `dimension_change` - Every change to a player's dimension including their initial dimension when they join.
+- `dimension` - Every change to a player's dimension as well as their initial dimension when they join.
 - `respawn` - Every time a player respawns, the player who respawned, the position they respawned at, and if they were
   alive before (e.g. `true` if coming out of the end). The dimension of the respawn can be determined by the
-  `dimension_change` event (no order guaranteed).
+  `dimension` event (no order guaranteed).
     - This specific event
-- `entered_structure` - Every time a player enters a structure, the player who entered it, the structure name, and the
-  chunk position they entered it at. Functionality is based off of how advancements track structures, so this is only
-  checked every 20 ticks and at the same time that location based advancements are checked per player. Entering a
-  structure can be defined as the player being in the structure bounding box for the first time since joining the world.
-  This means the same structure may be logged two or more times if the player leaves and rejoins the world.
-    - This event should be particularly useful for versions with no structure related advancements.
+- `inside_structures` - A list of names of structures that a player is currently inside. Only logs when the list of
+  structures changes to prevent redundant logs, although relogging may result in duplicate logs. The check runs every 20
+  ticks, similar to advancements.
 - `game_info` - The "Game Info" whenever a change happens to it. Game Info includes:
     - Changed Game Rules (compares to a default `new GameRules()`)
     - If cheats are allowed
@@ -80,7 +77,7 @@ play log.
         - Names
         - Uuids
         - Gamemodes
-- `inventory_change` - Every update to a player's inventory (stats aren't accurate enough to determine full item history
+- `inventory_slots` - Every update to a player's inventory (stats aren't accurate enough to determine full item history
   because of taking from chests and such).
 - `command`- Every command ran by a player and who entered it.
 - `fast_reset` - Every time the fast reset's quit functionality runs.
@@ -174,7 +171,7 @@ tools using the data Hermes provides. This comes with the following benefits:
 - Less updating: Whenever a tool wants to do something new and unique, it is less likely that Hermes will need to be
   updated to support it.
 
-An example of data interpretation can be found within Hermes regarding the `stat_change` event. Certain stats are
+An example of data interpretation can be found within Hermes regarding the `stat` event. Certain stats are
 excluded from the event because they are updated every tick and are not very useful. This is data interpretation as it
 **conditionally** filters out data. Unfortunately, this is necessary to keep reasonable file sizes.
 

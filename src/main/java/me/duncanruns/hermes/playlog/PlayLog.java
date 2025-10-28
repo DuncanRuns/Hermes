@@ -151,7 +151,7 @@ public class PlayLog {
         data.addProperty("stat", name);
         data.addProperty("value", value);
         data.addProperty("diff", diff);
-        write("stat_change", data);
+        write("stat", data);
     }
 
     public static @NotNull JsonObject toPlayerData(PlayerEntity player) {
@@ -252,7 +252,7 @@ public class PlayLog {
         JsonObject data = Hermes.screenToJsonObject(currentScreen);
         if (Objects.equals(data, lastScreenData)) return;
         lastScreenData = data;
-        write("screen_change", data);
+        write("screen", data);
     }
 
     public void onAdvancement(Advancement advancement, String criterionName, boolean done, ServerPlayerEntity owner) {
@@ -268,14 +268,14 @@ public class PlayLog {
             if (Hermes.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
             return display;
         }).orElse(null));
-        write("advancement_change", data);
+        write("advancement", data);
     }
 
     public void onTick(MinecraftServer minecraftServer) {
         checkGameInfo(minecraftServer);
-        inventoryTracker.tick(minecraftServer).forEach(jsonObject -> write("inventory_change", jsonObject));
-        dimensionTracker.tick(minecraftServer).forEach(jsonObject -> write("dimension_change", jsonObject));
-        structureTracker.tick(minecraftServer).forEach(jsonObject -> write("entered_structure", jsonObject));
+        inventoryTracker.tick(minecraftServer).forEach(jsonObject -> write("inventory_slots", jsonObject));
+        dimensionTracker.tick(minecraftServer).forEach(jsonObject -> write("dimension", jsonObject));
+        structureTracker.tick(minecraftServer).forEach(jsonObject -> write("inside_structures", jsonObject));
     }
 
     private void checkGameInfo(MinecraftServer minecraftServer) {
