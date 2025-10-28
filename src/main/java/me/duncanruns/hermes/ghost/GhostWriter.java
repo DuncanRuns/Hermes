@@ -37,7 +37,7 @@ public class GhostWriter  {
     public void onTick(long time, ServerPlayerEntity player) {
         if (full) return;
         if (buffer.position() + PACKET_SIZE > buffer.array().length) {
-            Hermes.LOGGER.warn("Position log buffer is full for {}! Won't be able to track more positions until next save.", path);
+            Hermes.LOGGER.warn("Ghost buffer is full for {}! Won't be able to track more positions until next save.", path);
             full = true;
             return;
         }
