@@ -17,11 +17,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class Hermes implements ModInitializer {
@@ -50,7 +49,7 @@ public class Hermes implements ModInitializer {
     }
 
     public static long getProcessId() {
-        String jvmName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+        String jvmName = ManagementFactory.getRuntimeMXBean().getName();
         int atIndex = jvmName.indexOf('@');
         if (atIndex > 0) {
             try {
