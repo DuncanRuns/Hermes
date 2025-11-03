@@ -62,7 +62,6 @@ play log.
 - `respawn` - Every time a player respawns, the player who respawned, the position they respawned at, and if they were
   alive before (e.g. `true` if coming out of the end). The dimension of the respawn can be determined by the
   `dimension` event (no order guaranteed).
-    - This specific event
 - `inside_structures` - A list of names of structures that a player is currently inside. Only logs when the list of
   structures changes to prevent redundant logs, although relogging may result in duplicate logs. The check runs every 20
   ticks, similar to advancements.
