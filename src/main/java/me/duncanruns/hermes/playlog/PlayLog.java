@@ -14,7 +14,6 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.datafixer.NbtOps;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
@@ -22,6 +21,7 @@ import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.LevelProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -118,10 +118,10 @@ public class PlayLog {
     }
 
     private static JsonElement getGeneratorOptions(MinecraftServer server) {
-        // TODO: this is always empty? Even on superflat. Even calling at a random tick it's empty.
-        CompoundTag generatorOptions = server.getWorld(DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
-        JsonElement json = Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, generatorOptions);
-        clearSeed(json);
+        JsonObject json = new JsonObject();
+        LevelProperties levelProperties = server.getWorld(DimensionType.OVERWORLD).getLevelProperties();
+        json.add("options", Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, levelProperties.getGeneratorOptions()));
+        json.addProperty("type", levelProperties.getGeneratorType().getName());
         return json;
     }
 
