@@ -3,7 +3,6 @@ package me.duncanruns.hermes.ghost;
 import me.duncanruns.hermes.Hermes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.Vec3d;
 
 import java.io.RandomAccessFile;
@@ -16,7 +15,7 @@ import java.util.UUID;
  * Format: time, x, y, z, yaw, pitch (40 bytes total: long, 3 doubles, 2 floats)
  * It's possible the format could change, and anything that reads the file should know the version of Hermes that wrote it.
  */
-public class GhostWriter  {
+public class GhostWriter {
     private static final int PACKET_SIZE = 42;
     private final Path path;
     private final Path requiredParent;
@@ -27,7 +26,7 @@ public class GhostWriter  {
     private final ByteBuffer buffer;
 
     public GhostWriter(MinecraftServer server, UUID playerId) {
-        Path worldPath = server.getSavePath(WorldSavePath.ROOT);
+        Path worldPath = Hermes.getSavePath(server).normalize();
         this.path = worldPath.resolve("hermes").resolve("ghosts").resolve(playerId.toString() + ".ghost");
         this.requiredParent = worldPath;
         buffer = ByteBuffer.wrap(new byte[PACKET_SIZE * 20 * 60 * 10]); // 0.48 MB, 10 minutes of data
@@ -53,7 +52,7 @@ public class GhostWriter  {
     }
 
     private static byte getFlags(ServerPlayerEntity player) {
-        byte swinging = (byte) (player.handSwinging ? (0x01) : 0);
+        byte swinging = (byte) (player.isHandSwinging ? (0x01) : 0);
         byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
         byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);
         byte sprinting = (byte) (player.isSprinting() ? (0x08) : 0);

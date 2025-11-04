@@ -6,14 +6,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.util.*;
 
 // *sigh* what a mess
 public class StructureTracker {
-    private final Map<UUID, Set<StructureStart<?>>> structureMap = new HashMap<>();
+    private final Map<UUID, Set<StructureFeature<?>>> structureMap = new HashMap<>();
 
     public Collection<JsonObject> tick(MinecraftServer server) {
         List<JsonObject> out = new ArrayList<>();
@@ -29,18 +28,15 @@ public class StructureTracker {
 
             UUID id = player.getGameProfile().getId();
 
-            Set<StructureStart<?>> structures = new HashSet<>();
-            StructureAccessor structureAccessor = world.getStructureAccessor();
+            Set<StructureFeature<?>> structures = new HashSet<>();
             StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
-                StructureStart<?> structureStart = structureAccessor.method_28388(blockPos, true, feature);
-                if (!structureStart.hasChildren()) return;
-                structures.add(structureStart);
+                if (feature.isInsideStructure(world, blockPos)) structures.add(feature);
             });
 
             if (!Objects.equals(structureMap.computeIfAbsent(id, uuid -> Collections.emptySet()), structures)) {
                 structureMap.put(id, structures);
                 JsonArray structureNames = new JsonArray();
-                structures.forEach(structureStart -> structureNames.add(structureStart.getFeature().getName()));
+                structures.forEach(f -> structureNames.add(f.getName()));
                 JsonObject data = new JsonObject();
                 data.add("player", PlayLog.toPlayerData(player));
                 data.add("structures", structureNames);

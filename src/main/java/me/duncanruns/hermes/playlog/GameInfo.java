@@ -3,12 +3,15 @@ package me.duncanruns.hermes.playlog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.JsonOps;
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 import net.minecraft.datafixer.NbtOps;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.LevelProperties;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +24,7 @@ import java.util.stream.Collectors;
 public class GameInfo {
     private static final GameInfo EMPTY = new GameInfo();
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
-    private static final JsonObject DEFAULT_GAMERULES = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, new GameRules().toNbt()).getAsJsonObject();
+    private static final JsonObject DEFAULT_GAMERULES = Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, new GameRules().toNbt()).getAsJsonObject();
     private Boolean cheatsAllowed;
     private Boolean openToLan;
     private Boolean hardcore;
@@ -71,9 +74,10 @@ public class GameInfo {
         GameInfo gameInfo = new GameInfo();
         gameInfo.cheatsAllowed = server.getPlayerManager().areCheatsAllowed();
         gameInfo.openToLan = server.isRemote();
-        gameInfo.hardcore = server.getSaveProperties().isHardcore();
-        gameInfo.difficultyLocked = server.getSaveProperties().isDifficultyLocked();
-        gameInfo.difficulty = server.getSaveProperties().getDifficulty().getName();
+        LevelProperties levelProperties = server.getWorld(DimensionType.OVERWORLD).getLevelProperties();
+        gameInfo.hardcore = levelProperties.isHardcore();
+        gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
+        gameInfo.difficulty = levelProperties.getDifficulty().getName();
         gameInfo.players = server.getPlayerManager().getPlayerList().stream().map(p -> {
             PlayerInfo pi = new PlayerInfo();
             pi.gamemode = p.interactionManager.getGameMode().getName();
@@ -83,16 +87,16 @@ public class GameInfo {
         }).collect(Collectors.toList());
         gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
         ResourcePackManager<ResourcePackProfile> dataPackManager = server.getDataPackManager();
-        gameInfo.dataPacks = dataPackManager.getNames().stream().sorted().collect(Collectors.toList());
-        gameInfo.enabledDataPacks = dataPackManager.getEnabledNames().stream().sorted().collect(Collectors.toList());
+        gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(ResourcePackProfile::getName).sorted().collect(Collectors.toList());
+        gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(ResourcePackProfile::getName).sorted().collect(Collectors.toList());
         gameInfo.changedGameRules = getChangedGameRules(server);
         return gameInfo;
     }
 
     private static JsonObject getChangedGameRules(MinecraftServer server) {
-        JsonObject gamerules = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, server.getGameRules().toNbt()).getAsJsonObject();
-        gamerules.entrySet().removeIf(e -> DEFAULT_GAMERULES.has(e.getKey()) && DEFAULT_GAMERULES.get(e.getKey()).equals(e.getValue()));
-        return gamerules;
+        JsonObject gameRules = Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, server.getGameRules().toNbt()).getAsJsonObject();
+        gameRules.entrySet().removeIf(e -> DEFAULT_GAMERULES.has(e.getKey()) && DEFAULT_GAMERULES.get(e.getKey()).equals(e.getValue()));
+        return gameRules;
     }
 
 

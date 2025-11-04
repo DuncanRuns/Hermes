@@ -4,24 +4,25 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.JsonOps;
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 import me.duncanruns.hermes.Hermes;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
 import me.duncanruns.hermes.rot.Rotator;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.datafixer.NbtOps;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.GeneratorOptions;
+import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -93,7 +94,7 @@ public class PlayLog {
     );
 
     public PlayLog(MinecraftServer server) {
-        Path worldFolder = server.getSavePath(WorldSavePath.ROOT).normalize();
+        Path worldFolder = Hermes.getSavePath(server).normalize();
         this.savePath = worldFolder.resolve("hermes").resolve("play.log");
         this.rtPath = worldFolder.resolve("hermes").resolve("restricted").resolve("play.log.enc");
         this.requiredParent = worldFolder;
@@ -106,7 +107,7 @@ public class PlayLog {
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(EnteredSeedHolder.enteredSeed.get()).ifPresent(s -> data.addProperty("entered_seed", s));
         EnteredSeedHolder.enteredSeed.remove();
-        data.addProperty("world_time", server.getSaveProperties().getMainWorldProperties().getTimeOfDay());
+        data.addProperty("world_time", server.getWorld(DimensionType.OVERWORLD).getTime());
         if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
         write("initialize", data);
         INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
@@ -116,15 +117,12 @@ public class PlayLog {
         INITIALIZATION_CONSUMERS.add(consumer);
     }
 
-    private static @Nullable JsonObject getGeneratorOptions(MinecraftServer server) {
-        JsonObject jsonObject = GeneratorOptions.CODEC
-                .encode(server.getSaveProperties().getGeneratorOptions(), JsonOps.INSTANCE, new JsonObject())
-                .resultOrPartial(s -> Hermes.LOGGER.warn("Failed to encode generator options: {}", s))
-                .map(JsonElement::getAsJsonObject)
-                .orElse(null);
-        if (jsonObject == null) return null;
-        clearSeed(jsonObject);
-        return jsonObject;
+    private static JsonElement getGeneratorOptions(MinecraftServer server) {
+        // TODO: this is always empty? Even on superflat. Even calling at a random tick it's empty.
+        CompoundTag generatorOptions = server.getWorld(DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
+        JsonElement json = Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, generatorOptions);
+        clearSeed(json);
+        return json;
     }
 
     private static void clearSeed(JsonElement jsonElement) {

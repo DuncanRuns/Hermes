@@ -12,6 +12,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Hermes implements ModInitializer {
@@ -46,6 +49,10 @@ public class Hermes implements ModInitializer {
         data.add("title", screenTitle);
         data.addProperty("is_pause", screenIsPause);
         return data;
+    }
+
+    public static Path getSavePath(MinecraftServer server) {
+        return server.getLevelStorage().getSavesDirectory().resolve(server.getLevelName());
     }
 
     public static long getProcessId() {

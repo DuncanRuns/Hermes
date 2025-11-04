@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import me.duncanruns.hermes.Hermes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.WorldSavePath;
 
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
@@ -98,12 +97,12 @@ public final class InstanceState {
             }
         });
         registerStateUpdater((json, server) ->
-                json.add("world", Optional.ofNullable(server).map(s -> Hermes.pathToJsonObject(server.getSavePath(WorldSavePath.ROOT).normalize().toAbsolutePath())).orElse(null))
+                json.add("world", Optional.ofNullable(server).map(s -> Hermes.pathToJsonObject(Hermes.getSavePath(server).normalize().toAbsolutePath())).orElse(null))
         );
         if (!Hermes.IS_CLIENT) return;
         AtomicReference<Path> lastWorldJoined = new AtomicReference<>(null);
         registerClientStateUpdater((json, client) -> {
-            Optional.ofNullable(client.getServer()).map(s -> s.getSavePath(WorldSavePath.ROOT).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
+            Optional.ofNullable(client.getServer()).map(s -> Hermes.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
             json.add("screen", Hermes.screenToJsonObject(client.currentScreen));
             json.add("last_world_joined", Hermes.pathToJsonObject(lastWorldJoined.get()));
         });

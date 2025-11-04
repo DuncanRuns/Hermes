@@ -18,9 +18,9 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modCompileOnly "com.github.RedLime:SpeedRunIGT:f742cbaf81"
-    modCompileOnly "com.github.contariaa:FastReset:69e849068a" // Nothing actually references a class from this mod btw
-    modCompileOnly "com.github.contariaa:atum:v2.5"
+    modCompileOnly "com.github.RedLime:SpeedRunIGT:b6addc6669"
+    // modCompileOnly "com.github.contariaa:FastReset:fac19e8f66" // Nothing actually references a class from this mod btw
+    modCompileOnly "com.github.contariaa:atum:3a3851852d"
 }
 
 processResources {
