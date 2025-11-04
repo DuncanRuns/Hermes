@@ -1,5 +1,7 @@
 package me.duncanruns.hermes.playlog;
 
-public interface PlayLogOwner {
+public interface PlayLogServer {
     PlayLog hermes$getPlayLog();
+
+    String hermes$takeEnteredSeed();
 }
