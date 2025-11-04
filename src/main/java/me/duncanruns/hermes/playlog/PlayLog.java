@@ -105,7 +105,7 @@ public class PlayLog {
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
         data.add("generator_options", getGeneratorOptions(server));
-        Optional.ofNullable(EnteredSeedHolder.enteredSeed.get()).ifPresent(s -> data.addProperty("entered_seed", s));
+        Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         EnteredSeedHolder.enteredSeed.remove();
         data.addProperty("world_time", server.getWorld(DimensionType.OVERWORLD).getTime());
         if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());

@@ -15,7 +15,7 @@ public final class PlayLogHelper {
     }
 
     public static PlayLog getPlayLog(MinecraftServer server) {
-        return ((PlayLogOwner) server).hermes$getPlayLog();
+        return ((PlayLogServer) server).hermes$getPlayLog();
     }
 
     @Environment(EnvType.CLIENT)
