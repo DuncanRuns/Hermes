@@ -16,7 +16,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.GeneratorOptions;
@@ -93,7 +92,7 @@ public class PlayLog {
     );
 
     public PlayLog(MinecraftServer server) {
-        Path worldFolder = server.getSavePath(WorldSavePath.ROOT).normalize();
+        Path worldFolder = Hermes.getSavePath(server).normalize();
         this.savePath = worldFolder.resolve("hermes").resolve("play.log");
         this.rtPath = worldFolder.resolve("hermes").resolve("restricted").resolve("play.log.enc");
         this.requiredParent = worldFolder;
@@ -116,15 +115,14 @@ public class PlayLog {
         INITIALIZATION_CONSUMERS.add(consumer);
     }
 
-    private static @Nullable JsonObject getGeneratorOptions(MinecraftServer server) {
-        JsonObject jsonObject = GeneratorOptions.CODEC
+    private static @Nullable JsonElement getGeneratorOptions(MinecraftServer server) {
+        JsonElement json = GeneratorOptions.CODEC
                 .encode(server.getSaveProperties().getGeneratorOptions(), JsonOps.INSTANCE, new JsonObject())
                 .resultOrPartial(s -> Hermes.LOGGER.warn("Failed to encode generator options: {}", s))
-                .map(JsonElement::getAsJsonObject)
                 .orElse(null);
-        if (jsonObject == null) return null;
-        clearSeed(jsonObject);
-        return jsonObject;
+        if (json == null) return null;
+        clearSeed(json);
+        return json;
     }
 
     private static void clearSeed(JsonElement jsonElement) {

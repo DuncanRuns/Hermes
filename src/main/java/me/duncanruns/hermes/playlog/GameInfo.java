@@ -90,9 +90,9 @@ public class GameInfo {
     }
 
     private static JsonObject getChangedGameRules(MinecraftServer server) {
-        JsonObject gamerules = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, server.getGameRules().toNbt()).getAsJsonObject();
-        gamerules.entrySet().removeIf(e -> DEFAULT_GAMERULES.has(e.getKey()) && DEFAULT_GAMERULES.get(e.getKey()).equals(e.getValue()));
-        return gamerules;
+        JsonObject gameRules = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, server.getGameRules().toNbt()).getAsJsonObject();
+        gameRules.entrySet().removeIf(e -> DEFAULT_GAMERULES.has(e.getKey()) && DEFAULT_GAMERULES.get(e.getKey()).equals(e.getValue()));
+        return gameRules;
     }
 
 

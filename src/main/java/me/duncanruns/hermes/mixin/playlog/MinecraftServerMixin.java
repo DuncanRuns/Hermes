@@ -15,7 +15,7 @@ public abstract class MinecraftServerMixin implements PlayLogOwner {
     private PlayLog playLog;
 
 
-    @Inject(method = "<init>*", at = @At("TAIL"))
+    @Inject(method = "createWorlds", at = @At("RETURN"))
     private void onInit(CallbackInfo ci) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         this.playLog = new PlayLog(server);

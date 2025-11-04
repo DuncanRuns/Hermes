@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import me.duncanruns.hermes.Hermes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.util.WorldSavePath;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -43,7 +42,7 @@ public final class WorldLog {
 
     public static void update(MinecraftClient client) {
         IntegratedServer server = client.getServer();
-        Path world = Optional.ofNullable(server).map(s -> s.getSavePath(WorldSavePath.ROOT).normalize()).orElse(null);
+        Path world = Optional.ofNullable(server).map(s -> Hermes.getSavePath(server).normalize()).orElse(null);
 
         Path previousWorld = lastWorld;
         if (!Objects.equals(world, lastWorld)) {
