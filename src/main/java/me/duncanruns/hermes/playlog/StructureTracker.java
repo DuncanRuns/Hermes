@@ -4,16 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.util.*;
 
-// *sigh* what a mess
 public class StructureTracker {
-    private final Map<UUID, Set<StructureStart<?>>> structureMap = new HashMap<>();
+    private final Map<UUID, Set<String>> structureMap = new HashMap<>();
 
     public Collection<JsonObject> tick(MinecraftServer server) {
         List<JsonObject> out = new ArrayList<>();
@@ -29,18 +26,23 @@ public class StructureTracker {
 
             UUID id = player.getGameProfile().getId();
 
-            Set<StructureStart<?>> structures = new HashSet<>();
-            StructureAccessor structureAccessor = world.getStructureAccessor();
+            Set<String> structures = new HashSet<>();
+            //? if >=1.16
+             net.minecraft.world.gen.StructureAccessor structureAccessor = world.getStructureAccessor();
             StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
-                StructureStart<?> structureStart = structureAccessor.method_28388(blockPos, true, feature);
+                //? if >=1.16 {
+                net.minecraft.structure.StructureStart<?> structureStart = structureAccessor.method_28388(blockPos, true, feature);
                 if (!structureStart.hasChildren()) return;
-                structures.add(structureStart);
+                //?} else {
+                /*if (!feature.isInsideStructure(world, blockPos)) return;
+                *///?}
+                structures.add(structureName);
             });
 
             if (!Objects.equals(structureMap.computeIfAbsent(id, uuid -> Collections.emptySet()), structures)) {
                 structureMap.put(id, structures);
                 JsonArray structureNames = new JsonArray();
-                structures.forEach(structureStart -> structureNames.add(structureStart.getFeature().getName()));
+                structures.forEach(structureNames::add);
                 JsonObject data = new JsonObject();
                 data.add("player", PlayLog.toPlayerData(player));
                 data.add("structures", structureNames);

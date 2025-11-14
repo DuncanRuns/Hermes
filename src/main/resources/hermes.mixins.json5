@@ -22,6 +22,7 @@
     "instancestate.client.MinecraftClientMixin",
     "playlog.client.MinecraftClientMixin",
     "playlog.client.enteredseed.CreateWorldScreenMixin",
+    //? if >=1.16
     "playlog.client.enteredseed.MoreOptionsDialogAccessor",
     "playlog.client.fastreset.MinecraftServerMixin",
     "testwarning.DebugHudMixin",

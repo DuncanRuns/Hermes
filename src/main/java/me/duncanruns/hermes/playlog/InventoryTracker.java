@@ -38,7 +38,7 @@ public class InventoryTracker {
             data.add("player", PlayLog.toPlayerData(player));
             JsonObject changedSlots = new JsonObject();
             for (int i = 0; i < newItems.size(); i++) {
-                if (!ItemStack.areEqual(oldItems.get(i), newItems.get(i))) {
+                if (!areItemsEqual(oldItems.get(i), newItems.get(i))) {
                     changedSlots.addProperty(String.valueOf(i), stackToString(newItems.get(i)));
                 }
             }
@@ -61,8 +61,17 @@ public class InventoryTracker {
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
         if (a.size() != b.size()) return false;
         for (int i = 0; i < a.size(); i++) {
-            if (!ItemStack.areEqual(a.get(i), b.get(i))) return false;
+            if (!areItemsEqual(a.get(i), b.get(i))) return false;
         }
         return true;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private static boolean areItemsEqual(ItemStack a, ItemStack b) {
+        //? if >=1.16 {
+        return ItemStack.areEqual(a, b);
+        //?} else {
+        /*return ItemStack.areItemsEqual(a, b);
+        *///?}
     }
 }

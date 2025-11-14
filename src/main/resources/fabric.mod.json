@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "hermes",
+  "id": "${id}",
   "version": "${version}",
-  "name": "Hermes",
+  "name": "${name}",
   "description": "Uninterpreted data output for external tools focused on the MCSR speedrunning community.",
   "authors": [
     "DuncanRuns"
@@ -19,6 +19,6 @@
     "hermes.mixins.json"
   ],
   "depends": {
-    "minecraft": "~1.16.1"
+    "minecraft": "${minecraft}"
   }
 }

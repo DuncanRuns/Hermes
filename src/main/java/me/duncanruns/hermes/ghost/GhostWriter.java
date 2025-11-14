@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 /**
- * Format: time, x, y, z, yaw, pitch (40 bytes total: long, 3 doubles, 2 floats)
  * It's possible the format could change, and anything that reads the file should know the version of Hermes that wrote it.
  */
 public class GhostWriter {
@@ -52,7 +51,12 @@ public class GhostWriter {
     }
 
     private static byte getFlags(ServerPlayerEntity player) {
-        byte swinging = (byte) (player.handSwinging ? (0x01) : 0);
+        //? if >=1.16 {
+        boolean isHandSwinging = player.handSwinging;
+        //?} else {
+        /*boolean isHandSwinging = player.isHandSwinging;
+        *///?}
+        byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
         byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
         byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);
         byte sprinting = (byte) (player.isSprinting() ? (0x08) : 0);

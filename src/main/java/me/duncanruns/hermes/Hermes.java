@@ -14,7 +14,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
-import net.minecraft.util.WorldSavePath;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +52,11 @@ public class Hermes implements ModInitializer {
     }
 
     public static Path getSavePath(MinecraftServer server) {
-        return server.getSavePath(WorldSavePath.ROOT);
+        //? if >=1.16 {
+        return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
+        //?} else {
+        /*return server.getLevelStorage().getSavesDirectory().resolve(server.getLevelName());
+        *///?}
     }
 
     public static long getProcessId() {

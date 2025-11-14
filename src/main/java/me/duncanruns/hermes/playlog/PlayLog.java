@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.JsonOps;
 import me.duncanruns.hermes.Hermes;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
@@ -18,9 +17,7 @@ import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.GeneratorOptions;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -105,24 +102,39 @@ public class PlayLog {
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         EnteredSeedHolder.enteredSeed.remove();
-        data.addProperty("world_time", server.getSaveProperties().getMainWorldProperties().getTimeOfDay());
+        data.addProperty("world_time", getTimeOfDay(server));
         if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
         write("initialize", data);
         INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
+    }
+
+    private static long getTimeOfDay(MinecraftServer server) {
+        //? if >=1.16 {
+        return server.getSaveProperties().getMainWorldProperties().getTime();
+         //?} else {
+        /*return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
+        *///?}
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
         INITIALIZATION_CONSUMERS.add(consumer);
     }
 
-    private static @Nullable JsonElement getGeneratorOptions(MinecraftServer server) {
-        JsonElement json = GeneratorOptions.CODEC
-                .encode(server.getSaveProperties().getGeneratorOptions(), JsonOps.INSTANCE, new JsonObject())
+    private static JsonElement getGeneratorOptions(MinecraftServer server) {
+        //? if >=1.16 {
+        JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
+                .encode(server.getSaveProperties().getGeneratorOptions(), com.mojang.serialization.JsonOps.INSTANCE, new JsonObject())
                 .resultOrPartial(s -> Hermes.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
         if (json == null) return null;
         clearSeed(json);
         return json;
+    //?} else {
+        /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
+        JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
+        clearSeed(json);
+        return json;
+        *///?}
     }
 
     private static void clearSeed(JsonElement jsonElement) {

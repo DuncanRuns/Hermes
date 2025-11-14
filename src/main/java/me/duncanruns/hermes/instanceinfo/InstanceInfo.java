@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import me.duncanruns.hermes.Hermes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -28,28 +29,26 @@ public final class InstanceInfo {
 
     private static Path getGlobalHermesPath() {
         String os = System.getProperty("os.name").toLowerCase();
-        String folderName = "HermesMCInstances";
 
         if (os.contains("win")) {
-            // Windows → %LOCALAPPDATA%\Temp\{folderName}
             String localAppData = System.getenv("LOCALAPPDATA");
             if (localAppData != null && !localAppData.isEmpty()) {
-                return Paths.get(localAppData, "Temp", folderName);
+                return getHermesInstancesPathWithParent(localAppData);
             }
-            // Fallback to Java temp dir
-            return Paths.get(System.getProperty("java.io.tmpdir"), folderName);
+            return getHermesInstancesPathWithParent(System.getProperty("java.io.tmpdir"));
         } else if (os.contains("mac")) {
-            // macOS → java.io.tmpdir/{folderName} (usually /var/folders/.../T)
-            return Paths.get(System.getProperty("java.io.tmpdir"), folderName);
+            return getHermesInstancesPathWithParent(System.getProperty("java.io.tmpdir"));
         } else {
-            // Linux/Unix
             String runtimeDir = System.getenv("XDG_RUNTIME_DIR");
             if (runtimeDir != null && !runtimeDir.isEmpty()) {
-                return Paths.get(runtimeDir, folderName);
+                return getHermesInstancesPathWithParent(runtimeDir);
             }
-            // Fallback to /tmp if XDG_RUNTIME_DIR not set
-            return Paths.get("/tmp", folderName);
+            return getHermesInstancesPathWithParent("/tmp");
         }
+    }
+
+    private static @NotNull Path getHermesInstancesPathWithParent(String parent) {
+        return Paths.get(parent, "MCSRHermes", "Instances");
     }
 
     public static void init() {
