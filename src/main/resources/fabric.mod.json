@@ -3,7 +3,7 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "Uninterpreted data output for external tools focused on the MCSR speedrunning community.",
+  "description": "Uninterpreted data output for external tools focused on the MCSR community.",
   "authors": [
     "DuncanRuns"
   ],
