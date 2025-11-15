@@ -28,7 +28,7 @@ public class StructureTracker {
 
             Set<String> structures = new HashSet<>();
             //? if >=1.16
-             net.minecraft.world.gen.StructureAccessor structureAccessor = world.getStructureAccessor();
+            net.minecraft.world.gen.StructureAccessor structureAccessor = world.getStructureAccessor();
             StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
                 //? if >=1.16 {
                 net.minecraft.structure.StructureStart<?> structureStart = structureAccessor.method_28388(blockPos, true, feature);

@@ -8,7 +8,6 @@ import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.level.LevelProperties;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,33 +39,6 @@ public class GameInfo {
         return EMPTY;
     }
 
-    public JsonObject getDifference(GameInfo previous) {
-        if (previous == null || previous == EMPTY) return GSON.toJsonTree(this).getAsJsonObject();
-        JsonObject diff = new JsonObject();
-        if (previous.equals(this)) return diff;
-        if (!Objects.equals(cheatsAllowed, previous.cheatsAllowed))
-            diff.addProperty("cheats_allowed", cheatsAllowed);
-        if (!Objects.equals(openToLan, previous.openToLan))
-            diff.addProperty("open_to_lan", openToLan);
-        if (!Objects.equals(hardcore, previous.hardcore))
-            diff.addProperty("hardcore", hardcore);
-        if (!Objects.equals(difficultyLocked, previous.difficultyLocked))
-            diff.addProperty("difficulty_locked", difficultyLocked);
-        if (!Objects.equals(difficulty, previous.difficulty))
-            diff.addProperty("difficulty", difficulty);
-        if (!Objects.equals(players, previous.players))
-            diff.add("players", GSON.toJsonTree(players));
-        if (!Objects.equals(defaultGamemode, previous.defaultGamemode))
-            diff.addProperty("default_gamemode", defaultGamemode);
-        if (!Objects.equals(dataPacks, previous.dataPacks))
-            diff.add("data_packs", GSON.toJsonTree(dataPacks));
-        if (!Objects.equals(enabledDataPacks, previous.enabledDataPacks))
-            diff.add("enabled_data_packs", GSON.toJsonTree(enabledDataPacks));
-        if (!Objects.equals(changedGameRules, previous.changedGameRules))
-            diff.add("changed_game_rules", changedGameRules);
-        return diff;
-    }
-
     public static GameInfo fromServer(MinecraftServer server) {
         GameInfo gameInfo = new GameInfo();
         gameInfo.cheatsAllowed = server.getPlayerManager().areCheatsAllowed();
@@ -74,7 +46,7 @@ public class GameInfo {
         //? if >=1.16 {
         net.minecraft.world.SaveProperties levelProperties = server.getSaveProperties();
         //?} else {
-        /*LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
+        /*net.minecraft.world.level.LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
         *///?}
         gameInfo.hardcore = levelProperties.isHardcore();
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
@@ -113,6 +85,32 @@ public class GameInfo {
         *///?}
     }
 
+    public JsonObject getDifference(GameInfo previous) {
+        if (previous == null || previous == EMPTY) return GSON.toJsonTree(this).getAsJsonObject();
+        JsonObject diff = new JsonObject();
+        if (previous.equals(this)) return diff;
+        if (!Objects.equals(cheatsAllowed, previous.cheatsAllowed))
+            diff.addProperty("cheats_allowed", cheatsAllowed);
+        if (!Objects.equals(openToLan, previous.openToLan))
+            diff.addProperty("open_to_lan", openToLan);
+        if (!Objects.equals(hardcore, previous.hardcore))
+            diff.addProperty("hardcore", hardcore);
+        if (!Objects.equals(difficultyLocked, previous.difficultyLocked))
+            diff.addProperty("difficulty_locked", difficultyLocked);
+        if (!Objects.equals(difficulty, previous.difficulty))
+            diff.addProperty("difficulty", difficulty);
+        if (!Objects.equals(players, previous.players))
+            diff.add("players", GSON.toJsonTree(players));
+        if (!Objects.equals(defaultGamemode, previous.defaultGamemode))
+            diff.addProperty("default_gamemode", defaultGamemode);
+        if (!Objects.equals(dataPacks, previous.dataPacks))
+            diff.add("data_packs", GSON.toJsonTree(dataPacks));
+        if (!Objects.equals(enabledDataPacks, previous.enabledDataPacks))
+            diff.add("enabled_data_packs", GSON.toJsonTree(enabledDataPacks));
+        if (!Objects.equals(changedGameRules, previous.changedGameRules))
+            diff.add("changed_game_rules", changedGameRules);
+        return diff;
+    }
 
     public static final class PlayerInfo {
         private String name;

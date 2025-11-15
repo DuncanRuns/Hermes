@@ -3,11 +3,11 @@ package me.duncanruns.hermes.modintegration;
 import net.fabricmc.loader.api.FabricLoader;
 
 public final class ModIntegration {
-    private ModIntegration() {
-    }
-
     public static final boolean HAS_SPEEDRUNIGT = FabricLoader.getInstance().isModLoaded("speedrunigt");
     public static final boolean HAS_ATUM = FabricLoader.getInstance().isModLoaded("atum");
+
+    private ModIntegration() {
+    }
 
     public static long speedRunIGT$getRTA() {
         if (HAS_SPEEDRUNIGT) {

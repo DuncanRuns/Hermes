@@ -32,6 +32,23 @@ public class GhostWriter {
         buffer.position(0);
     }
 
+    private static byte getFlags(ServerPlayerEntity player) {
+        //? if >=1.16 {
+        boolean isHandSwinging = player.handSwinging;
+        //?} else {
+        /*boolean isHandSwinging = player.isHandSwinging;
+         *///?}
+        byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
+        byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
+        byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);
+        byte sprinting = (byte) (player.isSprinting() ? (0x08) : 0);
+        byte isAttacked = (byte) (player.hurtTime > 0 ? (0x10) : 0);
+        byte isAlive = (byte) (player.isAlive() ? (0x20) : 0);
+        byte fallFlying = (byte) (player.isFallFlying() ? (0x40) : 0); // 1.9+
+        byte swimming = (byte) (player.isSwimming() ? (0x80) : 0); // 1.13+
+        return (byte) (swinging | usingItem | sneaking | sprinting | isAttacked | isAlive | fallFlying | swimming);
+    }
+
     public void onTick(long time, ServerPlayerEntity player) {
         if (full) return;
         if (buffer.position() + PACKET_SIZE > buffer.array().length) {
@@ -48,23 +65,6 @@ public class GhostWriter {
         buffer.putFloat(player.pitch); // 37->40
         buffer.put((byte) (player.inventory.selectedSlot % 9)); // 41
         buffer.put(getFlags(player)); // 42
-    }
-
-    private static byte getFlags(ServerPlayerEntity player) {
-        //? if >=1.16 {
-        boolean isHandSwinging = player.handSwinging;
-        //?} else {
-        /*boolean isHandSwinging = player.isHandSwinging;
-        *///?}
-        byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
-        byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
-        byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);
-        byte sprinting = (byte) (player.isSprinting() ? (0x08) : 0);
-        byte isAttacked = (byte) (player.hurtTime > 0 ? (0x10) : 0);
-        byte isAlive = (byte) (player.isAlive() ? (0x20) : 0);
-        byte fallFlying = (byte) (player.isFallFlying() ? (0x40) : 0); // 1.9+
-        byte swimming = (byte) (player.isSwimming() ? (0x80) : 0); // 1.13+
-        return (byte) (swinging | usingItem | sneaking | sprinting | isAttacked | isAlive | fallFlying | swimming);
     }
 
     public void onSave() {

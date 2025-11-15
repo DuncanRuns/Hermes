@@ -73,17 +73,6 @@ public class Rotator {
         }
     }
 
-    public String rotate(String input) {
-        char[] charArray = input.toCharArray();
-        for (int i = 0; i < charArray.length; i++) {
-            char c = charArray[i];
-            if (c >= minVal && c <= maxVal) {
-                charArray[i] = swapArray[c - minVal];
-            }
-        }
-        return new String(charArray);
-    }
-
     private static List<Character> toCharacterList(char[] chars) {
         List<Character> list = new ArrayList<>(chars.length);
         for (char c : chars) {
@@ -98,6 +87,17 @@ public class Rotator {
         for (int i = 0; i < chars.length; i++) {
             chars[i] = characterList.get(i);
         }
+    }
+
+    public String rotate(String input) {
+        char[] charArray = input.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char c = charArray[i];
+            if (c >= minVal && c <= maxVal) {
+                charArray[i] = swapArray[c - minVal];
+            }
+        }
+        return new String(charArray);
     }
 }
 

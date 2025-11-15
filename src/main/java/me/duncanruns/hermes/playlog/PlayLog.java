@@ -98,17 +98,6 @@ public class PlayLog {
         PLAY_LOGS.add(this);
     }
 
-    private void onInitialize(MinecraftServer server) {
-        JsonObject data = new JsonObject();
-        data.add("generator_options", getGeneratorOptions(server));
-        Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
-        EnteredSeedHolder.enteredSeed.remove();
-        data.addProperty("world_time", getTimeOfDay(server));
-        if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
-        write("initialize", data);
-        INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
-    }
-
     private static long getTimeOfDay(MinecraftServer server) {
         //? if >=1.16 {
         return server.getSaveProperties().getMainWorldProperties().getTime();
@@ -148,23 +137,6 @@ public class PlayLog {
         }
     }
 
-    public void onStat(StatHandler statHandler, PlayerEntity player, Stat<?> stat, int value) {
-        String name = stat.getName();
-        if (PlayLog.STAT_BLOCK_LIST.contains(name)) {
-            return;
-        } else if (PlayLog.STAT_SUFFIX_BLOCK_LIST.stream().anyMatch(name::endsWith) || PlayLog.STAT_PREFIX_BLOCK_LIST.stream().anyMatch(name::startsWith)) {
-            PlayLog.STAT_BLOCK_LIST.add(name); // Faster to check the next time around
-            return;
-        }
-        int diff = value - statHandler.getStat(stat);
-        JsonObject data = new JsonObject();
-        data.add("player", toPlayerData(player));
-        data.addProperty("stat", name);
-        data.addProperty("value", value);
-        data.addProperty("diff", diff);
-        write("stat", data);
-    }
-
     public static @NotNull JsonObject toPlayerData(PlayerEntity player) {
         JsonObject playerJson = new JsonObject();
         playerJson.addProperty("name", player.getGameProfile().getName());
@@ -185,6 +157,55 @@ public class PlayLog {
         posJson.addProperty("x", pos.x);
         posJson.addProperty("z", pos.z);
         return posJson;
+    }
+
+    private static @NotNull JsonObject getSpeedRunIGTObject() {
+        JsonObject speedrunigtJson = new JsonObject();
+        speedrunigtJson.addProperty("rta", ModIntegration.speedRunIGT$getRTA());
+        speedrunigtJson.addProperty("igt", ModIntegration.speedRunIGT$getIGT());
+        speedrunigtJson.addProperty("retime", ModIntegration.speedRunIGT$getRetime());
+        return speedrunigtJson;
+    }
+
+    public static void closeAll() {
+        ArrayList<PlayLog> toClose = new ArrayList<>(PLAY_LOGS);
+        if (!toClose.isEmpty()) {
+            Hermes.LOGGER.info("Closing {} play logs", toClose.size());
+            toClose.forEach(PlayLog::close);
+        }
+        EXECUTOR.shutdown();
+    }
+
+    public static void init() {
+        Hermes.registerClose(PlayLog::closeAll);
+    }
+
+    private void onInitialize(MinecraftServer server) {
+        JsonObject data = new JsonObject();
+        data.add("generator_options", getGeneratorOptions(server));
+        Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
+        EnteredSeedHolder.enteredSeed.remove();
+        data.addProperty("world_time", getTimeOfDay(server));
+        if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
+        write("initialize", data);
+        INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
+    }
+
+    public void onStat(StatHandler statHandler, PlayerEntity player, Stat<?> stat, int value) {
+        String name = stat.getName();
+        if (PlayLog.STAT_BLOCK_LIST.contains(name)) {
+            return;
+        } else if (PlayLog.STAT_SUFFIX_BLOCK_LIST.stream().anyMatch(name::endsWith) || PlayLog.STAT_PREFIX_BLOCK_LIST.stream().anyMatch(name::startsWith)) {
+            PlayLog.STAT_BLOCK_LIST.add(name); // Faster to check the next time around
+            return;
+        }
+        int diff = value - statHandler.getStat(stat);
+        JsonObject data = new JsonObject();
+        data.add("player", toPlayerData(player));
+        data.addProperty("stat", name);
+        data.addProperty("value", value);
+        data.addProperty("diff", diff);
+        write("stat", data);
     }
 
     /**
@@ -249,14 +270,6 @@ public class PlayLog {
 
     private void writeToRTFile(String line) throws IOException {
         rtFile.write(Rotator.ROT_HERMES.rotate(line + "\n").getBytes());
-    }
-
-    private static @NotNull JsonObject getSpeedRunIGTObject() {
-        JsonObject speedrunigtJson = new JsonObject();
-        speedrunigtJson.addProperty("rta", ModIntegration.speedRunIGT$getRTA());
-        speedrunigtJson.addProperty("igt", ModIntegration.speedRunIGT$getIGT());
-        speedrunigtJson.addProperty("retime", ModIntegration.speedRunIGT$getRetime());
-        return speedrunigtJson;
     }
 
     public void onScreenChange(Screen currentScreen) {
@@ -352,19 +365,6 @@ public class PlayLog {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    public static void closeAll() {
-        ArrayList<PlayLog> toClose = new ArrayList<>(PLAY_LOGS);
-        if (!toClose.isEmpty()) {
-            Hermes.LOGGER.info("Closing {} play logs", toClose.size());
-            toClose.forEach(PlayLog::close);
-        }
-        EXECUTOR.shutdown();
-    }
-
-    public static void init() {
-        Hermes.registerClose(PlayLog::closeAll);
     }
 
     public void onRespawn(ServerPlayerEntity player, boolean alive) {

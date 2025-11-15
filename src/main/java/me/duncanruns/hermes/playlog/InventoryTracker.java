@@ -15,6 +15,29 @@ import java.util.stream.IntStream;
 public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
 
+    // Porting note: NBT got eradicated in 1.20.5, so getTag() will be different
+    private static @NotNull String stackToString(ItemStack itemStack) {
+        if (itemStack.isEmpty()) return "";
+        return String.format("%d %s%s", itemStack.getCount(), Registry.ITEM.getId(itemStack.getItem()), itemStack.getTag() == null ? "" : itemStack.getTag().toString());
+    }
+
+    private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
+        if (a.size() != b.size()) return false;
+        for (int i = 0; i < a.size(); i++) {
+            if (!areItemsEqual(a.get(i), b.get(i))) return false;
+        }
+        return true;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private static boolean areItemsEqual(ItemStack a, ItemStack b) {
+        //? if >=1.16 {
+        return ItemStack.areEqual(a, b);
+        //?} else {
+        /*return ItemStack.areItemsEqual(a, b);
+         *///?}
+    }
+
     /**
      * @return A list of json objects representing the changes.
      */
@@ -50,28 +73,5 @@ public class InventoryTracker {
 
     private List<ItemStack> getEmptyInventory(int size) {
         return IntStream.range(0, size).mapToObj(i -> ItemStack.EMPTY).collect(Collectors.toList());
-    }
-
-    // Porting note: NBT got eradicated in 1.20.5, so getTag() will be different
-    private static @NotNull String stackToString(ItemStack itemStack) {
-        if (itemStack.isEmpty()) return "";
-        return String.format("%d %s%s", itemStack.getCount(), Registry.ITEM.getId(itemStack.getItem()), itemStack.getTag() == null ? "" : itemStack.getTag().toString());
-    }
-
-    private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
-        if (a.size() != b.size()) return false;
-        for (int i = 0; i < a.size(); i++) {
-            if (!areItemsEqual(a.get(i), b.get(i))) return false;
-        }
-        return true;
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private static boolean areItemsEqual(ItemStack a, ItemStack b) {
-        //? if >=1.16 {
-        return ItemStack.areEqual(a, b);
-        //?} else {
-        /*return ItemStack.areItemsEqual(a, b);
-        *///?}
     }
 }

@@ -14,7 +14,7 @@ public abstract class MinecraftServerMixin {
     @Unique
     private final GhostManager ghostManager = new GhostManager();
 
-    @Inject(method = "tick",at=@At("RETURN"))
+    @Inject(method = "tick", at = @At("RETURN"))
     private void onTick(CallbackInfo ci) {
         ghostManager.onTick((MinecraftServer) (Object) this);
     }

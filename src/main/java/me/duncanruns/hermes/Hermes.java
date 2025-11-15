@@ -89,6 +89,20 @@ public class Hermes implements ModInitializer {
         return out;
     }
 
+    public static void close() {
+        CLOSE_RUNNABLES.forEach(runnable -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                LOGGER.error("Failed to run a close runnable: {}", e.getMessage());
+            }
+        });
+    }
+
+    public static void registerClose(Runnable runnable) {
+        CLOSE_RUNNABLES.add(runnable);
+    }
+
     @Override
     public void onInitialize() {
         if (!Files.exists(LOCAL_HERMES_FOLDER)) {
@@ -106,19 +120,5 @@ public class Hermes implements ModInitializer {
         if (IS_CLIENT) {
             WorldLog.init();
         }
-    }
-
-    public static void close() {
-        CLOSE_RUNNABLES.forEach(runnable -> {
-            try {
-                runnable.run();
-            } catch (Exception e) {
-                LOGGER.error("Failed to run a close runnable: {}", e.getMessage());
-            }
-        });
-    }
-
-    public static void registerClose(Runnable runnable) {
-        CLOSE_RUNNABLES.add(runnable);
     }
 }
