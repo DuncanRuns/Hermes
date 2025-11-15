@@ -39,8 +39,8 @@ A log of worlds entered and exited where each line is a valid json object. Each 
 or `leave`), the world's save folder path, and the time. The word `entering` is chosen as it can either mean the world
 is being loaded into, or the world is already loaded and the player is just entering it (Pressing play on a SeedQueue
 world). This means that worlds generating in the background (e.g. via SeedQueue) will not be logged unless the player
-enters it. Note that fast resets are not distinguished from regular world exits. A fast reset log type does exist in the
-play log.
+enters it. Note that fast resets are not distinguished from regular world exits. The play log can be used to determine
+if the world properly saved.
 
 ### `.minecraft/saves/[World Name]/hermes/play.log`
 
@@ -82,7 +82,6 @@ play log.
     - This exists as stats aren't accurate enough to determine full item history because of taking from chests and such,
       and adding events for those specific missing parts would more be complex than just logging the actual inventory.
 - `command`- Every command ran by a player and who entered it.
-- `fast_reset` - Every time the fast reset's quit functionality runs.
 - `server_shutdown` - Runs when the server shuts down, even if using fast reset, which is also when the unciphered copy
   is made.
 
