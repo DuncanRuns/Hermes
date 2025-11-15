@@ -57,7 +57,7 @@ java {
 }
 
 fletchingTable {
-    j52j.register("main"){
+    j52j.register("main") {
         extension("json", "hermes.mixins.json5")
     }
 }
