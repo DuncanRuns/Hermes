@@ -304,13 +304,6 @@ public class PlayLog {
         write("command", data);
     }
 
-    /**
-     * Might be called from client thread, so write() being thread agnostic is important.
-     */
-    public void onFastReset() {
-        write("fast_reset", new JsonObject());
-    }
-
     public void onServerShutdown() {
         write("server_shutdown", new JsonObject());
         close();

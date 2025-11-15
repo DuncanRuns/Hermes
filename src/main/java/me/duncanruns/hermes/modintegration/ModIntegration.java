@@ -7,7 +7,6 @@ public final class ModIntegration {
     }
 
     public static final boolean HAS_SPEEDRUNIGT = FabricLoader.getInstance().isModLoaded("speedrunigt");
-    public static final boolean HAS_FAST_RESET = FabricLoader.getInstance().isModLoaded("fast_reset");
     public static final boolean HAS_ATUM = FabricLoader.getInstance().isModLoaded("atum");
 
     public static long speedRunIGT$getRTA() {

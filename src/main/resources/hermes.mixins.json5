@@ -2,7 +2,6 @@
   "required": true,
   "package": "me.duncanruns.hermes.mixin",
   "compatibilityLevel": "JAVA_8",
-  "plugin": "me.duncanruns.hermes.HermesMixinPlugin",
   "mixins": [
     "ghost.MinecraftServerMixin",
     "playlog.MinecraftServerMixin",
@@ -24,7 +23,6 @@
     "playlog.client.enteredseed.CreateWorldScreenMixin",
     //? if >=1.16
     "playlog.client.enteredseed.MoreOptionsDialogAccessor",
-    "playlog.client.fastreset.MinecraftServerMixin",
     "testwarning.DebugHudMixin",
     "worldlog.client.MinecraftClientMixin"
   ],
