@@ -16,7 +16,7 @@
     ]
   },
   "mixins": [
-    "hermes.mixins.json"
+    "hermes.mixins.json5"
   ],
   "depends": {
     "minecraft": "${minecraft}"

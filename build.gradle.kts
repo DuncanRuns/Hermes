@@ -76,7 +76,12 @@ tasks {
             "minecraft" to project.property("mod.mc_dep")
         )
 
-        filesMatching("fabric.mod.json") { expand(props) }
+        filesMatching("fabric.mod.json") {
+            expand(props)
+            filter { line ->
+                line.replace(".mixins.json5", ".mixins.json")
+            }
+        }
     }
 
     // Builds the version into a shared folder in `build/libs/${mod version}/`
