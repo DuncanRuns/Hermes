@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Consumer;
 
-// TODO save events to replace removed fast reset event
+
 public class PlayLog {
     private static final String WARNING = "WARNING: USING CIPHERED DATA DURING THE RUN IS NOT ALLOWED, PLEASE CONTACT THE SPEEDRUN.COM/MC MODERATION TEAM IF YOU WANT TO USE CIPHERED DATA.\n" +
             "\n" +
@@ -318,6 +318,10 @@ public class PlayLog {
         write("command", data);
     }
 
+    /* TODO: save events to replace removed fast reset event
+     * Ensure the shutdown event triggers on RETURN of shutdown
+     * Store a variable shuttingDown on shutdown HEAD, and store a string list of types of saves that are done to be included in shutdown event's data.
+     */
     public void onServerShutdown() {
         write("server_shutdown", new JsonObject());
         close();
