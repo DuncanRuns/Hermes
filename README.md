@@ -82,8 +82,14 @@ if the world properly saved.
     - This exists as stats aren't accurate enough to determine full item history because of taking from chests and such,
       and adding events for those specific missing parts would more be complex than just logging the actual inventory.
 - `command`- Every command ran by a player and who entered it.
-- `server_shutdown` - Runs when the server shuts down, even if using fast reset, which is also when the unciphered copy
-  is made.
+- `world_saved` - Every time a world (a specific dimension) is saved, and a string representing which world it is (may
+  vary based on game
+  version).
+- `players_saved` - Runs when all player data is saved.
+- `server_shutdown` - Runs when the server shuts down, even if using fast reset, includes a list of worlds saved during
+  the shutdown process and if player data was saved during the shutdown process, which is useful for determining if fast
+  reset was used.
+- `close` - Runs when the play log is closed, which is when the server shuts down, or when the game exits.
 
 All of these events will be logged with currentTimeMillis and speedrunigt times if available (rta, igt, retime)
 
