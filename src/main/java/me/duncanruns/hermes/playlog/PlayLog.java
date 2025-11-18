@@ -78,6 +78,10 @@ public class PlayLog {
     private JsonObject lastScreenData = null;
     private GameInfo lastGameInfo = GameInfo.empty();
 
+    private boolean serverShuttingDown = false;
+    private final List<String> shutdownWorldSaves = new ArrayList<>();
+    private boolean shutdownPlayersSaved = false;
+
     public static final Collection<String> STAT_BLOCK_LIST = new ArrayList<>(Arrays.asList(
             "minecraft.custom:minecraft.play_one_minute",
             "minecraft.custom:minecraft.sneak_time"
@@ -101,9 +105,9 @@ public class PlayLog {
     private static long getTimeOfDay(MinecraftServer server) {
         //? if >=1.16 {
         return server.getSaveProperties().getMainWorldProperties().getTime();
-         //?} else {
+        //?} else {
         /*return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
-        *///?}
+         *///?}
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
@@ -119,7 +123,7 @@ public class PlayLog {
         if (json == null) return null;
         clearSeed(json);
         return json;
-    //?} else {
+        //?} else {
         /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
         JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
         clearSeed(json);
@@ -318,12 +322,15 @@ public class PlayLog {
         write("command", data);
     }
 
-    /* TODO: save events to replace removed fast reset event
-     * Ensure the shutdown event triggers on RETURN of shutdown
-     * Store a variable shuttingDown on shutdown HEAD, and store a string list of types of saves that are done to be included in shutdown event's data.
-     */
-    public void onServerShutdown() {
-        write("server_shutdown", new JsonObject());
+    public void onServerShuttingDown() {
+        serverShuttingDown = true;
+    }
+
+    public void onServerFinishShutdown() {
+        JsonObject data = new JsonObject();
+        data.add("worlds_saved", GSON.toJsonTree(shutdownWorldSaves));
+        data.addProperty("players_saved", shutdownPlayersSaved);
+        write("server_shutdown", data);
         close();
     }
 
@@ -378,5 +385,17 @@ public class PlayLog {
         data.addProperty("was_alive", alive);
         System.out.println(data);
         write("respawn", data);
+    }
+
+    public void onWorldSave(String string) {
+        JsonObject data = new JsonObject();
+        data.addProperty("world", string);
+        write("world_saved", data);
+        if (serverShuttingDown) shutdownWorldSaves.add(string);
+    }
+
+    public void onPlayerDataSave() {
+        write("players_saved", new JsonObject());
+        if (serverShuttingDown) shutdownPlayersSaved = true;
     }
 }

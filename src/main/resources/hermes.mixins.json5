@@ -16,7 +16,8 @@
     "playlog.PlayerAdvancementTrackerMixin",
     "playlog.PlayerManagerMixin",
     "playlog.ServerPlayNetworkHandlerMixin",
-    "playlog.ServerStatHandlerMixin"
+    "playlog.ServerStatHandlerMixin",
+    "playlog.ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
