@@ -1,6 +1,6 @@
 package me.duncanruns.hermes.alive;
 
-import me.duncanruns.hermes.Hermes;
+import me.duncanruns.hermes.HermesMod;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public final class Alive {
-    private static final Path PATH = Hermes.LOCAL_HERMES_FOLDER.resolve("alive").normalize();
+    private static final Path PATH = HermesMod.LOCAL_HERMES_FOLDER.resolve("alive").normalize();
 
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r);
@@ -29,13 +29,13 @@ public final class Alive {
 
     public static void init() {
         try {
-            pid = Hermes.getProcessId();
+            pid = HermesMod.getProcessId();
         } catch (Exception e) {
-            Hermes.LOGGER.error("Failed to get PID: {}", e.getMessage());
+            HermesMod.LOGGER.error("Failed to get PID: {}", e.getMessage());
             pid = -1;
         }
         EXECUTOR.scheduleAtFixedRate(Alive::tick, 0, 1, java.util.concurrent.TimeUnit.SECONDS);
-        Hermes.registerClose(Alive::close);
+        HermesMod.registerClose(Alive::close);
     }
 
     private static void tick() {
@@ -57,12 +57,12 @@ public final class Alive {
     }
 
     private static void tryCreate() {
-        if (!Files.isDirectory(Hermes.LOCAL_HERMES_FOLDER.getParent())) return;
-        if (!Files.isDirectory(Hermes.LOCAL_HERMES_FOLDER)) {
+        if (!Files.isDirectory(HermesMod.LOCAL_HERMES_FOLDER.getParent())) return;
+        if (!Files.isDirectory(HermesMod.LOCAL_HERMES_FOLDER)) {
             try {
-                Files.createDirectories(Hermes.LOCAL_HERMES_FOLDER);
+                Files.createDirectories(HermesMod.LOCAL_HERMES_FOLDER);
             } catch (Exception e) {
-                Hermes.LOGGER.error("Failed to create Hermes folder: {}", e.getMessage());
+                HermesMod.LOGGER.error("Failed to create Hermes folder: {}", e.getMessage());
                 EXECUTOR.shutdown();
                 return;
             }
@@ -74,7 +74,7 @@ public final class Alive {
             fileLock = file.getChannel().tryLock(0L, Long.MAX_VALUE, true);
             tickAlive();
         } catch (IOException e) {
-            Hermes.LOGGER.error("Failed to create alive file: {}", e.getMessage());
+            HermesMod.LOGGER.error("Failed to create alive file: {}", e.getMessage());
             EXECUTOR.shutdown();
         }
     }

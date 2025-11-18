@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class Hermes implements ModInitializer {
+public class HermesMod implements ModInitializer {
     public static final String MOD_ID = "hermes";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static final Path GAME_DIR = FabricLoader.getInstance().getGameDir().normalize().toAbsolutePath();

@@ -1,7 +1,7 @@
 package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonObject;
-import me.duncanruns.hermes.Hermes;
+import me.duncanruns.hermes.HermesMod;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -50,7 +50,7 @@ public class InventoryTracker {
             PlayerInventory inventory = player.inventory;
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 -> 41 = offhand
-            List<ItemStack> newItems = Hermes.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream()).collect(Collectors.toList());
+            List<ItemStack> newItems = HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream()).collect(Collectors.toList());
             List<ItemStack> oldItems = inventories.computeIfAbsent(id, uuid -> getEmptyInventory(newItems.size()));
             if (areItemListsEqual(oldItems, newItems)) {
                 return;

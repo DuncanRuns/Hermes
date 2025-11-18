@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import me.duncanruns.hermes.Hermes;
+import me.duncanruns.hermes.HermesMod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import org.jetbrains.annotations.NotNull;
@@ -52,10 +52,10 @@ public final class InstanceInfo {
     }
 
     public static void init() {
-        Hermes.LOGGER.info("Global Hermes Folder: {}", GLOBAL_HERMES_PATH);
+        HermesMod.LOGGER.info("Global Hermes Folder: {}", GLOBAL_HERMES_PATH);
         if (!Files.exists(GLOBAL_HERMES_PATH)) {
             try {
-                Hermes.LOGGER.info("Creating Global Hermes Folder...");
+                HermesMod.LOGGER.info("Creating Global Hermes Folder...");
                 Files.createDirectories(GLOBAL_HERMES_PATH);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -64,16 +64,16 @@ public final class InstanceInfo {
 
         long pid;
         try {
-            pid = Hermes.getProcessId();
-            Hermes.LOGGER.info("Current PID: {}", pid);
+            pid = HermesMod.getProcessId();
+            HermesMod.LOGGER.info("Current PID: {}", pid);
         } catch (Exception e) {
             pid = -1;
-            Hermes.LOGGER.error("Failed to get PID: {}", e.getMessage());
+            HermesMod.LOGGER.error("Failed to get PID: {}", e.getMessage());
         }
 
         JsonObject instanceJson = new JsonObject();
         if (pid != -1) instanceJson.addProperty("pid", pid);
-        instanceJson.addProperty("is_server", !Hermes.IS_CLIENT);
+        instanceJson.addProperty("is_server", !HermesMod.IS_CLIENT);
         instanceJson.addProperty("game_dir", FabricLoader.getInstance().getGameDir().toAbsolutePath().toString());
         instanceJson.addProperty("game_version", SharedConstants.getGameVersion().getName());
         JsonArray modsArray = new JsonArray();
@@ -101,7 +101,7 @@ public final class InstanceInfo {
             file.seek(0);
             file.write(GSON.toJson(instanceJson).getBytes());
             fileLock = file.getChannel().tryLock(0L, Long.MAX_VALUE, true);
-            Hermes.registerClose(() -> close(pidFile));
+            HermesMod.registerClose(() -> close(pidFile));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

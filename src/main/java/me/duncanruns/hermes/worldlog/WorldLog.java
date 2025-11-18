@@ -3,7 +3,7 @@ package me.duncanruns.hermes.worldlog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import me.duncanruns.hermes.Hermes;
+import me.duncanruns.hermes.HermesMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.integrated.IntegratedServer;
 
@@ -28,13 +28,13 @@ public final class WorldLog {
 
     public static void init() {
         try {
-            Path worldLogsFolder = Hermes.LOCAL_HERMES_FOLDER.resolve("world_logs");
+            Path worldLogsFolder = HermesMod.LOCAL_HERMES_FOLDER.resolve("world_logs");
             if (!Files.exists(worldLogsFolder)) Files.createDirectories(worldLogsFolder);
             String fileName = "worlds_" + System.currentTimeMillis() + ".log";
             file = new RandomAccessFile(worldLogsFolder.resolve(fileName).toFile(), "rw");
             file.seek(0);
             file.setLength(0);
-            Files.write(Hermes.LOCAL_HERMES_FOLDER.resolve("latest_worlds_log.txt"), fileName.getBytes());
+            Files.write(HermesMod.LOCAL_HERMES_FOLDER.resolve("latest_worlds_log.txt"), fileName.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +42,7 @@ public final class WorldLog {
 
     public static void update(MinecraftClient client) {
         IntegratedServer server = client.getServer();
-        Path world = Optional.ofNullable(server).map(s -> Hermes.getSavePath(server).normalize()).orElse(null);
+        Path world = Optional.ofNullable(server).map(s -> HermesMod.getSavePath(server).normalize()).orElse(null);
 
         Path previousWorld = lastWorld;
         if (!Objects.equals(world, lastWorld)) {
@@ -53,7 +53,7 @@ public final class WorldLog {
 
     public static void write(Path worldPath, String type, long time) {
         JsonObject json = new JsonObject();
-        json.add("world", Hermes.pathToJsonObject(worldPath.normalize().toAbsolutePath()));
+        json.add("world", HermesMod.pathToJsonObject(worldPath.normalize().toAbsolutePath()));
         json.addProperty("type", type);
         json.addProperty("time", time);
         String jsonString = GSON.toJson(json);

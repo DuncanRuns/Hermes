@@ -1,6 +1,6 @@
 package me.duncanruns.hermes.ghost;
 
-import me.duncanruns.hermes.Hermes;
+import me.duncanruns.hermes.HermesMod;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -25,7 +25,7 @@ public class GhostWriter {
     private final ByteBuffer buffer;
 
     public GhostWriter(MinecraftServer server, UUID playerId) {
-        Path worldPath = Hermes.getSavePath(server);
+        Path worldPath = HermesMod.getSavePath(server);
         this.path = worldPath.resolve("hermes").resolve("ghosts").resolve(playerId.toString() + ".ghost");
         this.requiredParent = worldPath;
         buffer = ByteBuffer.wrap(new byte[PACKET_SIZE * 20 * 60 * 10]); // 0.48 MB, 10 minutes of data
@@ -52,7 +52,7 @@ public class GhostWriter {
     public void onTick(long time, ServerPlayerEntity player) {
         if (full) return;
         if (buffer.position() + PACKET_SIZE > buffer.array().length) {
-            Hermes.LOGGER.warn("Ghost buffer is full for {}! Won't be able to track more positions until next save.", path);
+            HermesMod.LOGGER.warn("Ghost buffer is full for {}! Won't be able to track more positions until next save.", path);
             full = true;
             return;
         }

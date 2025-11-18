@@ -12,7 +12,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.duncanruns.hermes.Hermes"
+      "me.duncanruns.hermes.HermesMod"
     ]
   },
   "mixins": [

@@ -3,7 +3,7 @@ package me.duncanruns.hermes.instancestate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import me.duncanruns.hermes.Hermes;
+import me.duncanruns.hermes.HermesMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 
@@ -61,7 +61,7 @@ public final class InstanceState {
             file.write(string.getBytes()); // Stage 3: Partial data (invalid json)
             // Stage 4: Full data (valid json)
         } catch (Exception e) {
-            Hermes.LOGGER.error("Failed to write Hermes state: {}", e.getMessage());
+            HermesMod.LOGGER.error("Failed to write Hermes state: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -84,11 +84,11 @@ public final class InstanceState {
 
     public static void init() {
         try {
-            file = new RandomAccessFile(Hermes.LOCAL_HERMES_FOLDER.resolve("state.json").toFile(), "rw");
+            file = new RandomAccessFile(HermesMod.LOCAL_HERMES_FOLDER.resolve("state.json").toFile(), "rw");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        Hermes.registerClose(() -> {
+        HermesMod.registerClose(() -> {
             try {
                 file.close();
                 EXECUTOR.shutdown();
@@ -97,14 +97,14 @@ public final class InstanceState {
             }
         });
         registerStateUpdater((json, server) ->
-                json.add("world", Optional.ofNullable(server).map(s -> Hermes.pathToJsonObject(Hermes.getSavePath(server).normalize().toAbsolutePath())).orElse(null))
+                json.add("world", Optional.ofNullable(server).map(s -> HermesMod.pathToJsonObject(HermesMod.getSavePath(server).normalize().toAbsolutePath())).orElse(null))
         );
-        if (!Hermes.IS_CLIENT) return;
+        if (!HermesMod.IS_CLIENT) return;
         AtomicReference<Path> lastWorldJoined = new AtomicReference<>(null);
         registerClientStateUpdater((json, client) -> {
-            Optional.ofNullable(client.getServer()).map(s -> Hermes.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
-            json.add("screen", Hermes.screenToJsonObject(client.currentScreen));
-            json.add("last_world_joined", Hermes.pathToJsonObject(lastWorldJoined.get()));
+            Optional.ofNullable(client.getServer()).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
+            json.add("screen", HermesMod.screenToJsonObject(client.currentScreen));
+            json.add("last_world_joined", HermesMod.pathToJsonObject(lastWorldJoined.get()));
         });
     }
 }

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import me.duncanruns.hermes.Hermes;
+import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
 import me.duncanruns.hermes.rot.Rotator;
@@ -90,7 +90,7 @@ public class PlayLog {
     );
 
     public PlayLog(MinecraftServer server) {
-        Path worldFolder = Hermes.getSavePath(server).normalize();
+        Path worldFolder = HermesMod.getSavePath(server).normalize();
         this.savePath = worldFolder.resolve("hermes").resolve("play.log");
         this.rtPath = worldFolder.resolve("hermes").resolve("restricted").resolve("play.log.enc");
         this.requiredParent = worldFolder;
@@ -114,7 +114,7 @@ public class PlayLog {
         //? if >=1.16 {
         JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
                 .encode(server.getSaveProperties().getGeneratorOptions(), com.mojang.serialization.JsonOps.INSTANCE, new JsonObject())
-                .resultOrPartial(s -> Hermes.LOGGER.warn("Failed to encode generator options: {}", s))
+                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
         if (json == null) return null;
         clearSeed(json);
@@ -170,14 +170,14 @@ public class PlayLog {
     public static void closeAll() {
         ArrayList<PlayLog> toClose = new ArrayList<>(PLAY_LOGS);
         if (!toClose.isEmpty()) {
-            Hermes.LOGGER.info("Closing {} play logs", toClose.size());
+            HermesMod.LOGGER.info("Closing {} play logs", toClose.size());
             toClose.forEach(PlayLog::close);
         }
         EXECUTOR.shutdown();
     }
 
     public static void init() {
-        Hermes.registerClose(PlayLog::closeAll);
+        HermesMod.registerClose(PlayLog::closeAll);
     }
 
     private void onInitialize(MinecraftServer server) {
@@ -264,7 +264,7 @@ public class PlayLog {
         try {
             Files.write(path, WARNING.getBytes());
         } catch (IOException e) {
-            Hermes.LOGGER.error("Failed to write warning: {}", e.getMessage());
+            HermesMod.LOGGER.error("Failed to write warning: {}", e.getMessage());
         }
     }
 
@@ -273,7 +273,7 @@ public class PlayLog {
     }
 
     public void onScreenChange(Screen currentScreen) {
-        JsonObject data = Hermes.screenToJsonObject(currentScreen);
+        JsonObject data = HermesMod.screenToJsonObject(currentScreen);
         if (Objects.equals(data, lastScreenData)) return;
         lastScreenData = data;
         write("screen", data);
@@ -289,7 +289,7 @@ public class PlayLog {
             JsonObject display = new JsonObject();
             display.addProperty("hidden", a.isHidden());
             display.addProperty("announce_to_chat", a.shouldAnnounceToChat());
-            if (Hermes.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
+            if (HermesMod.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
             return display;
         }).orElse(null));
         write("advancement", data);
@@ -331,7 +331,7 @@ public class PlayLog {
         try {
             saveUnencrypted();
         } catch (IOException e) {
-            Hermes.LOGGER.error("Failed to save unencrypted play log: {}", e.getMessage());
+            HermesMod.LOGGER.error("Failed to save unencrypted play log: {}", e.getMessage());
         }
     }
 
