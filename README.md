@@ -77,8 +77,9 @@ if the world properly saved.
         - Names
         - Uuids
         - Gamemodes
-- `inventory_slots` - Every update to a player's inventory. If a slot isn't changed, it won't be logged. The inventory
-  can be assumed empty from player join, as the entire inventory will be logged again if a player relogs with items.
+- `inventory_slots` - Every update to a player's inventory, checked every tick. If a slot isn't changed, it won't be
+  logged. The inventory can be assumed empty from player join, and the entire inventory will be logged again if a player
+  relogs with items.
     - This exists as stats aren't accurate enough to determine full item history because of taking from chests and such,
       and adding events for those specific missing parts would more be complex than just logging the actual inventory.
 - `command`- Every command ran by a player and who entered it.
