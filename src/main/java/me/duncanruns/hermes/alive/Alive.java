@@ -21,7 +21,6 @@ public final class Alive {
     });
 
     private static RandomAccessFile file = null;
-    private static FileLock fileLock = null;
     private static long pid;
 
     private Alive() {
@@ -84,7 +83,6 @@ public final class Alive {
         EXECUTOR.shutdownNow();
         if (file != null) {
             try {
-                fileLock.release();
                 file.close();
                 Files.delete(PATH);
             } catch (IOException ignored) {
