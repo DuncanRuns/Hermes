@@ -51,8 +51,10 @@ public final class Alive {
         try {
             file.seek(8);
             file.writeLong(now);
+            file.getChannel().force(false);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            HermesMod.LOGGER.error("Failed to write alive file: {}", e.getMessage());
+            close();
         }
     }
 
@@ -71,7 +73,6 @@ public final class Alive {
             file = new RandomAccessFile(PATH.toFile(), "rw");
             file.setLength(0);
             file.writeLong(pid);
-            fileLock = file.getChannel().tryLock(0L, Long.MAX_VALUE, true);
             tickAlive();
         } catch (IOException e) {
             HermesMod.LOGGER.error("Failed to create alive file: {}", e.getMessage());
