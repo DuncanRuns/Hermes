@@ -50,12 +50,12 @@ public class InventoryTracker {
             PlayerInventory inventory = player.inventory;
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 -> 41 = offhand
-            List<ItemStack> newItems = HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream()).collect(Collectors.toList());
+            List<ItemStack> newItems = HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream()).map(ItemStack::copy).collect(Collectors.toList());
             List<ItemStack> oldItems = inventories.computeIfAbsent(id, uuid -> getEmptyInventory(newItems.size()));
             if (areItemListsEqual(oldItems, newItems)) {
                 return;
             }
-            inventories.put(id, newItems.stream().map(ItemStack::copy).collect(Collectors.toList()));
+            inventories.put(id, newItems);
 
             JsonObject data = new JsonObject();
             data.add("player", PlayLog.toPlayerData(player));
