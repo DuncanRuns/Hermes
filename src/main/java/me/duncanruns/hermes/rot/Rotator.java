@@ -131,9 +131,5 @@ public class Rotator {
         rotate(chars);
         halfReverse(chars);
     }
-
-    public static void main(String[] args) {
-        System.out.println(ROT_HERMES.rotateAndHalfReverse("29<Fm<))<G/X,c%@9$2R9p9q=,q9g998S<F.9p9y<qm9lg.8y?[%S)].Zq.r<.88n?/qn8.F<Sqn{zFm%<mF<nn<<9<9Z%?SF9{)8?<?.9p9q<qm<%))9<<dq9)c9GpRFXOc?I%$99qr/q2g"));
-    }
 }
 
