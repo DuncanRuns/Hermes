@@ -1,7 +1,6 @@
 package me.duncanruns.hermes.rot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -51,10 +50,17 @@ public class Rotator {
     }
 
     public Rotator(char[] chars, long shuffleSeed) {
-        if (chars.length % 2 != 0) {
-            throw new IllegalArgumentException("chars must have even length");
-        }
+        this(chars, shuffleSeed, getShift(chars));
+    }
 
+    private static int getShift(char[] chars) {
+        if (chars.length % 2 != 0) {
+            throw new IllegalArgumentException("Length must be even if shift is not specified.");
+        }
+        return chars.length / 2;
+    }
+
+    public Rotator(char[] chars, long shuffleSeed, int shift) {
         if (shuffleSeed != 0L) shuffle(chars, shuffleSeed);
 
         maxVal = Character.MIN_VALUE;
@@ -67,7 +73,6 @@ public class Rotator {
         for (int i = 0; i < swapArray.length; i++) {
             swapArray[i] = (char) (i + minVal);
         }
-        int shift = chars.length / 2;
         for (int i = 0; i < chars.length; i++) {
             swapArray[chars[i] - minVal] = chars[(i + shift) % chars.length];
         }
@@ -82,22 +87,53 @@ public class Rotator {
     }
 
     private static void shuffle(char[] chars, long shuffleSeed) {
-        List<Character> characterList = toCharacterList(chars);
-        Collections.shuffle(characterList, new Random(shuffleSeed));
+        List<Character> pool = toCharacterList(chars);
+        Random random = new Random(shuffleSeed);
         for (int i = 0; i < chars.length; i++) {
-            chars[i] = characterList.get(i);
+            chars[i] = (pool.remove(random.nextInt(pool.size())));
         }
     }
 
     public String rotate(String input) {
         char[] charArray = input.toCharArray();
+        rotate(charArray);
+        return new String(charArray);
+    }
+
+    public void rotate(char[] charArray) {
         for (int i = 0; i < charArray.length; i++) {
             char c = charArray[i];
             if (c >= minVal && c <= maxVal) {
                 charArray[i] = swapArray[c - minVal];
             }
         }
-        return new String(charArray);
+    }
+
+    private static void halfReverse(char[] chars) {
+        for (int i = 0; i < chars.length / 2; i += 2) {
+            swap(chars, i, chars.length - 1 - i);
+        }
+    }
+
+    private static void swap(char[] chars, int i, int i2) {
+        char tmp = chars[i];
+        chars[i] = chars[i2];
+        chars[i2] = tmp;
+    }
+
+    public String rotateAndHalfReverse(String input) {
+        char[] chars = input.toCharArray();
+        rotateAndHalfReverse(chars);
+        return new String(chars);
+    }
+
+    private void rotateAndHalfReverse(char[] chars) {
+        rotate(chars);
+        halfReverse(chars);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(ROT_HERMES.rotateAndHalfReverse("29<Fm<))<G/X,c%@9$2R9p9q=,q9g998S<F.9p9y<qm9lg.8y?[%S)].Zq.r<.88n?/qn8.F<Sqn{zFm%<mF<nn<<9<9Z%?SF9{)8?<?.9p9q<qm<%))9<<dq9)c9GpRFXOc?I%$99qr/q2g"));
     }
 }
 

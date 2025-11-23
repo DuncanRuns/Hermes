@@ -275,7 +275,7 @@ public class PlayLog {
     }
 
     private void writeToRTFile(String line) throws IOException {
-        rtFile.write(Rotator.ROT_HERMES.rotate(line + "\n").getBytes());
+        rtFile.write((Rotator.ROT_HERMES.rotateAndHalfReverse(line) + "\n").getBytes());
     }
 
     public void onScreenChange(Screen currentScreen) {
@@ -354,7 +354,7 @@ public class PlayLog {
         rtFile.seek(saveProgress);
         while (rtFile.getFilePointer() < rtFile.length()) {
             String line = rtFile.readLine();
-            unencryptedFile.write((Rotator.ROT_HERMES.rotate(line) + "\n").getBytes());
+            unencryptedFile.write((Rotator.ROT_HERMES.rotateAndHalfReverse(line) + "\n").getBytes());
         }
         unencryptedFile.close();
         rtFile.seek(rtFile.length());
