@@ -15,7 +15,7 @@
     "playlog.MinecraftServerMixin",
     "playlog.PlayerAdvancementTrackerMixin",
     "playlog.PlayerManagerMixin",
-    "playlog.ServerPlayNetworkHandlerMixin",
+    "playlog.CommandManagerMixin",
     "playlog.ServerStatHandlerMixin",
     "playlog.ServerWorldMixin"
   ],

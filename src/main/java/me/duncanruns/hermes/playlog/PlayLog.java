@@ -143,7 +143,8 @@ public class PlayLog {
         }
     }
 
-    public static @NotNull JsonObject toPlayerData(PlayerEntity player) {
+    public static JsonObject toPlayerData(PlayerEntity player) {
+        if (player == null) return null;
         JsonObject playerJson = new JsonObject();
         playerJson.addProperty("name", player.getGameProfile().getName());
         playerJson.addProperty("uuid", player.getGameProfile().getId().toString());
@@ -317,10 +318,10 @@ public class PlayLog {
         }
     }
 
-    public void onCommand(ServerPlayerEntity player, String input) {
+    public void onCommand(ServerPlayerEntity player, String command) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(player));
-        data.addProperty("command", input);
+        data.addProperty("command", command);
         write("command", data);
     }
 
