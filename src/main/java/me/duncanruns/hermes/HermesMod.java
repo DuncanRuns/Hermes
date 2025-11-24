@@ -21,9 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class HermesMod implements ModInitializer {
@@ -31,6 +31,7 @@ public class HermesMod implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static final Path GAME_DIR = FabricLoader.getInstance().getGameDir().normalize().toAbsolutePath();
     public static final Path LOCAL_HERMES_FOLDER = GAME_DIR.resolve("hermes");
+    public static final Path GLOBAL_HERMES_FOLDER = getGlobalPath();
     public static final boolean IS_CLIENT = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     private static final List<Runnable> CLOSE_RUNNABLES = new ArrayList<>();
 
@@ -113,12 +114,48 @@ public class HermesMod implements ModInitializer {
                 throw new RuntimeException(e);
             }
         }
+        if (!Files.exists(GLOBAL_HERMES_FOLDER)) {
+            try {
+                Files.createDirectories(GLOBAL_HERMES_FOLDER);
+            } catch (Exception e) {
+                LOGGER.error("Failed to create Global Hermes folder: {}", e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
         InstanceInfo.init();
         Alive.init();
         PlayLog.init();
         InstanceState.init();
         if (IS_CLIENT) {
             WorldLog.init();
+        }
+    }
+
+    /**
+     * @author me-nx, DuncanRuns
+     */
+    private static Path getGlobalPath() {
+        // Copy of mojang logic to not depend on it, helps with porting
+        String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+        if (osName.contains("win")) {
+            for (Supplier<String> possibleEnv : Arrays.<Supplier<String>>asList(
+                    () -> System.getenv("LOCALAPPDATA"),
+                    () -> System.getenv("APPDATA"),
+                    () -> System.getProperty("user.home")
+            )) {
+                String base = possibleEnv.get();
+                if (base == null) continue;
+                return Paths.get(base, "MCSRHermes");
+            }
+            throw new RuntimeException("Failed to find a suitable path for Hermes");
+        } else if (osName.contains("mac")) {
+            return Paths.get(System.getProperty("user.home"), "Library", "Application Support", "MCSRHermes");
+        } else if (osName.contains("linux") || osName.contains("unix")) {
+            return Optional.ofNullable(System.getenv("XDG_RUNTIME_DIR"))
+                    .map((runtimeDir) -> Paths.get(runtimeDir, "MCSRHermes"))
+                    .orElse(Paths.get(System.getProperty("user.home"), ".local", "share", "MCSRHermes"));
+        } else {
+            return Paths.get(System.getProperty("user.home"), "MCSRHermes");
         }
     }
 }

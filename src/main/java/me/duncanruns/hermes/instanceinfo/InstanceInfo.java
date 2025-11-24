@@ -14,11 +14,10 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Random;
 
 public final class InstanceInfo {
-    public static final Path GLOBAL_HERMES_PATH = getGlobalHermesPath();
+    public static final Path DIRECTORY = HermesMod.GLOBAL_HERMES_FOLDER.resolve("Instances");
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
     private static RandomAccessFile file;
@@ -27,50 +26,33 @@ public final class InstanceInfo {
     private InstanceInfo() {
     }
 
-    private static Path getGlobalHermesPath() {
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if (os.contains("win")) {
-            String localAppData = System.getenv("LOCALAPPDATA");
-            if (localAppData != null && !localAppData.isEmpty()) {
-                return getHermesInstancesPathWithParent(localAppData);
-            }
-            return getHermesInstancesPathWithParent(System.getProperty("java.io.tmpdir"));
-        } else if (os.contains("mac")) {
-            return getHermesInstancesPathWithParent(System.getProperty("java.io.tmpdir"));
-        } else {
-            String runtimeDir = System.getenv("XDG_RUNTIME_DIR");
-            if (runtimeDir != null && !runtimeDir.isEmpty()) {
-                return getHermesInstancesPathWithParent(runtimeDir);
-            }
-            return getHermesInstancesPathWithParent("/tmp");
-        }
-    }
-
-    private static @NotNull Path getHermesInstancesPathWithParent(String parent) {
-        return Paths.get(parent, "MCSRHermes", "Instances");
-    }
 
     public static void init() {
-        HermesMod.LOGGER.info("Global Hermes Folder: {}", GLOBAL_HERMES_PATH);
-        if (!Files.exists(GLOBAL_HERMES_PATH)) {
-            try {
-                HermesMod.LOGGER.info("Creating Global Hermes Folder...");
-                Files.createDirectories(GLOBAL_HERMES_PATH);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        ensureFolder();
+        createInstanceInfoFile();
+    }
 
-        long pid;
+    private static void createInstanceInfoFile() {
+        long pid = getPid();
+        JsonObject instanceJson = getInstanceInfoJson(pid);
+        Path instanceInfoFilePath = getFilePath(pid);
+        writeAndLock(instanceInfoFilePath, instanceJson);
+    }
+
+    private static void writeAndLock(Path instanceInfoFilePath, JsonObject instanceJson) {
         try {
-            pid = HermesMod.getProcessId();
-            HermesMod.LOGGER.info("Current PID: {}", pid);
-        } catch (Exception e) {
-            pid = -1;
-            HermesMod.LOGGER.error("Failed to get PID: {}", e.getMessage());
+            file = new RandomAccessFile(instanceInfoFilePath.toFile(), "rw");
+            file.setLength(0);
+            file.seek(0);
+            file.write(GSON.toJson(instanceJson).getBytes());
+            fileLock = file.getChannel().tryLock(0L, Long.MAX_VALUE, true);
+            HermesMod.registerClose(() -> close(instanceInfoFilePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
 
+    private static @NotNull JsonObject getInstanceInfoJson(long pid) {
         JsonObject instanceJson = new JsonObject();
         if (pid != -1) instanceJson.addProperty("pid", pid);
         instanceJson.addProperty("is_server", !HermesMod.IS_CLIENT);
@@ -86,26 +68,40 @@ public final class InstanceInfo {
             modsArray.add(modObject);
         });
         instanceJson.add("mods", modsArray);
+        return instanceJson;
+    }
 
+    private static @NotNull Path getFilePath(long pid) {
         String fileName;
         if (pid == -1) {
             fileName = "unknown-" + System.currentTimeMillis() + "-" + new Random().nextLong();
         } else {
             fileName = String.valueOf(pid);
         }
-        Path pidFile = GLOBAL_HERMES_PATH.resolve(fileName + ".json");
+        return DIRECTORY.resolve(fileName + ".json");
+    }
 
+    private static long getPid() {
+        long pid;
         try {
-            file = new RandomAccessFile(pidFile.toFile(), "rw");
-            file.setLength(0);
-            file.seek(0);
-            file.write(GSON.toJson(instanceJson).getBytes());
-            fileLock = file.getChannel().tryLock(0L, Long.MAX_VALUE, true);
-            HermesMod.registerClose(() -> close(pidFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            pid = HermesMod.getProcessId();
+            HermesMod.LOGGER.info("Current PID: {}", pid);
+        } catch (Exception e) {
+            pid = -1;
+            HermesMod.LOGGER.error("Failed to get PID: {}", e.getMessage());
         }
+        return pid;
+    }
 
+    private static void ensureFolder() {
+        if (!Files.exists(DIRECTORY)) {
+            try {
+                HermesMod.LOGGER.info("Creating MCSRHermes/Instances Folder...");
+                Files.createDirectories(DIRECTORY);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private static void close(Path pidFile) {
