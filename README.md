@@ -10,13 +10,13 @@ or in-game functionality.
 On initialize, a json file named [PID].json (PID = process id) will be placed in a global location and contain the game
 path, game version, and all fabric mods loaded (display names, ids, versions). A shared lock is held on the file to
 indicate the instance is still alive. The file should be deleted on exit, but bad shutdowns may lead to the file
-lingering. A copy of the file will also be made in `.minecraft/hermes/instances/`, and will also be locked and deleted
+lingering. A copy of the file will also be made in `[Game Directory]/hermes/instances/`, and will also be locked and deleted
 on exit.
 
 Locations:
 
 - For all platforms, inside the game directory:
-  `./hermes/instances/[PID].json`
+  `[Game Directory]/hermes/instances/[PID].json`
 - Windows (if LOCALAPPDATA is defined):
   `C:\Users\[User]\AppData\Local\MCSRHermes\instances\[PID].json`
 - Windows (if LOCALAPPDATA is not defined, but APPDATA is):
@@ -33,15 +33,15 @@ Locations:
 When making software that uses Hermes, it's recommended to copy the logic from `private static Path getGlobalPath()`
 in [HermesMod.java](src/main/java/me/duncanruns/hermes/HermesMod.java).
 
-### `.minecraft/hermes/alive`
+### `[Game Directory]/hermes/alive`
 
 A file used to indicate that the instance is still alive. The first 8 bytes are the PID, and the next 8 are the
 timestamp which is updated every second. The file should be deleted on exit, but bad shutdowns may lead to the file
 lingering. To check for the existence of an instance, first check for the [PID].json file, optionally check with the OS
-if a process with that PID exists, then check if the PID in the `.minecraft/hermes/alive` file matches, and that the
+if a process with that PID exists, then check if the PID in the `[Game Directory]/hermes/alive` file matches, and that the
 timestamp is within a reasonable range.
 
-### `.minecraft/hermes/state.json`
+### `[Game Directory]/hermes/state.json`
 
 A file that updates with a few useful pieces of information for external tools and macros. This serves as a practical
 replacement for the state output mod. Contained in the file is:
@@ -50,11 +50,11 @@ replacement for the state output mod. Contained in the file is:
 - The current world (null while not in a world)
 - The last joined world (null until first world join)
 
-### `.minecraft/hermes/latest_worlds_log.txt`
+### `[Game Directory]/hermes/latest_worlds_log.txt`
 
 - Contains the path of the latest `worlds_[timestamp created].log` file.
 
-### `.minecraft/hermes/world_logs/worlds_[timestamp created].log`
+### `[Game Directory]/hermes/world_logs/worlds_[Timestamp Created].log`
 
 A log of worlds entered and exited where each line is a valid json object. Each object contains a log type (`entering`
 or `leave`), the world's save folder path, and the time. The word `entering` is chosen as it can either mean the world
@@ -63,7 +63,7 @@ world). This means that worlds generating in the background (e.g. via SeedQueue)
 enters it. Note that fast resets are not distinguished from regular world exits. The play log can be used to determine
 if the world properly saved.
 
-### `.minecraft/saves/[World Name]/hermes/play.log`
+### `[Game Directory]/saves/[World Name]/hermes/play.log`
 
 > Data related to player activity in the world will logged in real-time in a ciphered format in a "restricted" folder
 > that most external tools should not be able to access (The cipher isn't very secure, and is only meant to convey
@@ -115,7 +115,7 @@ if the world properly saved.
 
 All of these events will be logged with currentTimeMillis and speedrunigt times if available (rta, igt, retime)
 
-### `.minecraft/saves/[World Name]/hermes/ghosts/[Player UUID].ghost`
+### `[Game Directory]/saves/[World Name]/hermes/ghosts/[Player UUID].ghost`
 
 Ghosts contain enough information to fully animate what a player looked like during the run (minus inventory data which
 can be found in the play log). The data is taken from the server-side player, so might not accurately represent the
