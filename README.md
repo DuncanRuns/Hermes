@@ -10,7 +10,28 @@ or in-game functionality.
 On initialize, a json file named [PID].json (PID = process id) will be placed in a global location and contain the game
 path, game version, and all fabric mods loaded (display names, ids, versions). A shared lock is held on the file to
 indicate the instance is still alive. The file should be deleted on exit, but bad shutdowns may lead to the file
-lingering.
+lingering. A copy of the file will also be made in `.minecraft/hermes/instances/`, and will also be locked and deleted
+on exit.
+
+Locations:
+
+- For all platforms, inside the game directory:
+  `./hermes/instances/[PID].json`
+- Windows (if LOCALAPPDATA is defined):
+  `C:\Users\[User]\AppData\Local\MCSRHermes\instances\[PID].json`
+- Windows (if LOCALAPPDATA is not defined, but APPDATA is):
+  `C:\Users\[User]\AppData\Roaming\MCSRHermes\instances\[PID].json`
+- Windows (if LOCALAPPDATA and APPDATA are not defined):
+  `C:\Users\[User]\MCSRHermes\instances\[PID].json`
+- Mac:
+  `~/Library/Application Support/MCSRHermes/instances/[PID].json`
+- Linux (if XDG_RUNTIME_DIR is defined):
+  `$XDG_RUNTIME_DIR/MCSRHermes/instances/[PID].json`
+- Linux (if XDG_RUNTIME_DIR is not defined):
+  `~/.local/share/MCSRHermes/instances/[PID].json`
+
+When making software that uses Hermes, it's recommended to copy the logic from `private static Path getGlobalPath()`
+in [HermesMod.java](src/main/java/me/duncanruns/hermes/HermesMod.java).
 
 ### `.minecraft/hermes/alive`
 
