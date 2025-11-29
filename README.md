@@ -1,3 +1,5 @@
+<img src="src/main/resources/assets/hermes/icon.png" width="128" alt="Hermes Logo">
+
 # Hermes
 
 Hermes is a mod that outputs a lot of information about the game for external tools to use. It provides no configuration
