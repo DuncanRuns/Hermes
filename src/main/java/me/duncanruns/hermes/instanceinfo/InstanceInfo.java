@@ -25,15 +25,15 @@ public final class InstanceInfo {
     }
 
 
-    public static void init() {
+    public static void init(Path worldLogPath) {
         ensureGlobalFolder();
         ensureLocalFolder();
-        createInstanceInfoFiles();
+        createInstanceInfoFiles(worldLogPath);
     }
 
-    private static void createInstanceInfoFiles() {
+    private static void createInstanceInfoFiles(Path worldLogPath) {
         long pid = getPid();
-        String instanceJson = getInstanceInfoJson(pid);
+        String instanceJson = getInstanceInfoJson(pid, worldLogPath);
         writeAndLock(getFilePath(GLOBAL_FOLDER, pid), instanceJson);
         writeAndLock(getFilePath(LOCAL_FOLDER, pid), instanceJson);
     }
@@ -58,9 +58,10 @@ public final class InstanceInfo {
         }
     }
 
-    private static @NotNull String getInstanceInfoJson(long pid) {
+    private static @NotNull String getInstanceInfoJson(long pid, Path worldLogPath) {
         JsonObject instanceJson = new JsonObject();
         if (pid != -1) instanceJson.addProperty("pid", pid);
+        if (worldLogPath != null) instanceJson.add("world_log", HermesMod.pathToJsonObject(worldLogPath));
         instanceJson.addProperty("is_server", !HermesMod.IS_CLIENT);
         instanceJson.addProperty("game_dir", FabricLoader.getInstance().getGameDir().toAbsolutePath().toString());
         instanceJson.addProperty("game_version", SharedConstants.getGameVersion().getName());

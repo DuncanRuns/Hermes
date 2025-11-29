@@ -122,13 +122,14 @@ public class HermesMod implements ModInitializer {
                 throw new RuntimeException(e);
             }
         }
-        InstanceInfo.init();
         Alive.init();
         PlayLog.init();
         InstanceState.init();
+        Path worldLogPath = null;
         if (IS_CLIENT) {
-            WorldLog.init();
+            worldLogPath = WorldLog.init();
         }
+        InstanceInfo.init(worldLogPath);
     }
 
     /**

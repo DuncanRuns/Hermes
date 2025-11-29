@@ -8,10 +8,10 @@ or in-game functionality.
 ### `[PID].json`
 
 On initialize, a json file named [PID].json (PID = process id) will be placed in a global location and contain the game
-path, game version, and all fabric mods loaded (display names, ids, versions). A shared lock is held on the file to
-indicate the instance is still alive. The file should be deleted on exit, but bad shutdowns may lead to the file
-lingering. A copy of the file will also be made in `[Game Directory]/hermes/instances/`, and will also be locked and deleted
-on exit.
+path, Hermes world log path, game version, and all fabric mods loaded (display names, ids, versions). A shared lock is
+held on the file to indicate the instance is still alive. The file should be deleted on exit, but bad shutdowns may lead
+to the file lingering. A copy of the file will also be made in `[Game Directory]/hermes/instances/`, and will also be
+locked and deleted on exit.
 
 Locations:
 
@@ -38,8 +38,8 @@ in [HermesMod.java](src/main/java/me/duncanruns/hermes/HermesMod.java).
 A file used to indicate that the instance is still alive. The first 8 bytes are the PID, and the next 8 are the
 timestamp which is updated every second. The file should be deleted on exit, but bad shutdowns may lead to the file
 lingering. To check for the existence of an instance, first check for the [PID].json file, optionally check with the OS
-if a process with that PID exists, then check if the PID in the `[Game Directory]/hermes/alive` file matches, and that the
-timestamp is within a reasonable range.
+if a process with that PID exists, then check if the PID in the `[Game Directory]/hermes/alive` file matches, and that
+the timestamp is within a reasonable range.
 
 ### `[Game Directory]/hermes/state.json`
 

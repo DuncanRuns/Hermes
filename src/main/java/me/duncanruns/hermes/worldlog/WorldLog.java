@@ -26,15 +26,17 @@ public final class WorldLog {
     private WorldLog() {
     }
 
-    public static void init() {
+    public static Path init() {
         try {
             Path worldLogsFolder = HermesMod.LOCAL_HERMES_FOLDER.resolve("world_logs");
             if (!Files.exists(worldLogsFolder)) Files.createDirectories(worldLogsFolder);
             String fileName = "worlds_" + System.currentTimeMillis() + ".log";
-            file = new RandomAccessFile(worldLogsFolder.resolve(fileName).toFile(), "rw");
+            Path worldLogPath = worldLogsFolder.resolve(fileName);
+            file = new RandomAccessFile(worldLogPath.toFile(), "rw");
             file.seek(0);
             file.setLength(0);
             Files.write(HermesMod.LOCAL_HERMES_FOLDER.resolve("latest_worlds_log.txt"), fileName.getBytes());
+            return worldLogPath;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
