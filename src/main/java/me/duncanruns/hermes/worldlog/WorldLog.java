@@ -35,7 +35,7 @@ public final class WorldLog {
             file = new RandomAccessFile(worldLogPath.toFile(), "rw");
             file.seek(0);
             file.setLength(0);
-            Files.write(HermesMod.LOCAL_HERMES_FOLDER.resolve("latest_worlds_log.txt"), fileName.getBytes());
+            Files.write(HermesMod.LOCAL_HERMES_FOLDER.resolve("latest_world_log.txt"), fileName.getBytes());
             return worldLogPath;
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -52,7 +52,7 @@ replacement for the state output mod. Contained in the file is:
 - The current world (null while not in a world)
 - The last joined world (null until first world join)
 
-### `[Game Directory]/hermes/latest_worlds_log.txt`
+### `[Game Directory]/hermes/latest_world_log.txt`
 
 - Contains the path of the latest `worlds_[timestamp created].log` file.
 
