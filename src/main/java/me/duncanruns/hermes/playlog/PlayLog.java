@@ -8,6 +8,7 @@ import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
 import me.duncanruns.hermes.rot.Rotator;
+import net.minecraft.SharedConstants;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
@@ -189,6 +190,8 @@ public class PlayLog {
 
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
+        data.addProperty("hermes_version", HermesMod.VERSION);
+        data.addProperty("mc_version", SharedConstants.getGameVersion().getName());
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
