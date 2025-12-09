@@ -191,7 +191,6 @@ public class PlayLog {
         JsonObject data = new JsonObject();
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
-        EnteredSeedHolder.enteredSeed.remove();
         data.addProperty("world_time", getTime(server));
         if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
         write("initialize", data);

@@ -21,7 +21,6 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
         enteredSeed = EnteredSeedHolder.enteredSeed.get();
-        EnteredSeedHolder.enteredSeed.remove();
     }
 
     @Inject(method = "createWorlds", at = @At("RETURN"))
