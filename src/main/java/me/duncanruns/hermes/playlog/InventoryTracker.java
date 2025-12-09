@@ -1,12 +1,11 @@
 package me.duncanruns.hermes.playlog;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,10 +14,13 @@ import java.util.stream.IntStream;
 public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
 
-    // Porting note: NBT got eradicated in 1.20.5, so getTag() will be different
-    private static @NotNull String stackToString(ItemStack itemStack) {
-        if (itemStack.isEmpty()) return "";
-        return String.format("%d %s%s", itemStack.getCount(), Registry.ITEM.getId(itemStack.getItem()), itemStack.getTag() == null ? "" : itemStack.getTag().toString());
+    private static JsonElement stackToJson(ItemStack itemStack) {
+        if (itemStack.isEmpty()) return null;
+        //? if >=1.16 {
+        return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
+        //?} else {
+        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
+        *///?}
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -62,7 +64,7 @@ public class InventoryTracker {
             JsonObject changedSlots = new JsonObject();
             for (int i = 0; i < newItems.size(); i++) {
                 if (!areItemsEqual(oldItems.get(i), newItems.get(i))) {
-                    changedSlots.addProperty(String.valueOf(i), stackToString(newItems.get(i)));
+                    changedSlots.add(String.valueOf(i), stackToJson(newItems.get(i)));
                 }
             }
             data.add("slots", changedSlots);
