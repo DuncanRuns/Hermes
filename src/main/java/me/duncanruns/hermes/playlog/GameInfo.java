@@ -3,6 +3,7 @@ package me.duncanruns.hermes.playlog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.datafixer.NbtOps;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
@@ -21,15 +22,25 @@ public class GameInfo {
     private static final GameInfo EMPTY = new GameInfo();
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static final JsonObject DEFAULT_GAMERULES = gameRulesToJson(new GameRules());
+    @SerializedName("cheats_allowed")
     private Boolean cheatsAllowed;
+    @SerializedName("open_to_lan")
     private Boolean openToLan;
+    @SerializedName("hardcore")
     private Boolean hardcore;
+    @SerializedName("difficulty_locked")
     private Boolean difficultyLocked;
+    @SerializedName("difficulty")
     private String difficulty;
+    @SerializedName("players")
     private List<PlayerInfo> players;
+    @SerializedName("default_gamemode")
     private String defaultGamemode;
+    @SerializedName("data_packs")
     private List<String> dataPacks;
+    @SerializedName("enabled_data_packs")
     private List<String> enabledDataPacks;
+    @SerializedName("changed_game_rules")
     private JsonObject changedGameRules;
 
     private GameInfo() {
