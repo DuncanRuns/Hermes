@@ -34,7 +34,7 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
         playLog.onTick((MinecraftServer) (Object) this);
     }
 
-    @Inject(method = "shutdown",at=@At("HEAD"))
+    @Inject(method = "shutdown", at = @At("HEAD"))
     private void onServerShuttingDown(CallbackInfo ci) {
         playLog.onServerShuttingDown();
     }

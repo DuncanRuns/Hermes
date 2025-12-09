@@ -54,13 +54,6 @@ public class Rotator {
         this(bytes, shuffleSeed, getShift(bytes));
     }
 
-    private static int getShift(byte[] characters) {
-        if (characters.length % 2 != 0) {
-            throw new IllegalArgumentException("Length must be even if shift is not specified.");
-        }
-        return characters.length / 2;
-    }
-
     public Rotator(byte[] characters, long shuffleSeed, int shift) {
         if (shuffleSeed != 0L) shuffle(characters, shuffleSeed);
 
@@ -79,6 +72,13 @@ public class Rotator {
         }
     }
 
+    private static int getShift(byte[] characters) {
+        if (characters.length % 2 != 0) {
+            throw new IllegalArgumentException("Length must be even if shift is not specified.");
+        }
+        return characters.length / 2;
+    }
+
     private static List<Byte> toByteList(byte[] bytes) {
         List<Byte> list = new ArrayList<>(bytes.length);
         for (byte c : bytes) {
@@ -95,15 +95,6 @@ public class Rotator {
         }
     }
 
-    public void rotate(byte[] bytes) {
-        for (int i = 0; i < bytes.length; i++) {
-            byte c = bytes[i];
-            if (c >= minVal && c <= maxVal) {
-                bytes[i] = swapArray[c - minVal];
-            }
-        }
-    }
-
     private static void halfReverse(byte[] bytes) {
         for (int i = 0; i < bytes.length / 2; i += 2) {
             swap(bytes, i, bytes.length - 1 - i);
@@ -114,6 +105,15 @@ public class Rotator {
         byte tmp = bytes[i];
         bytes[i] = bytes[i2];
         bytes[i2] = tmp;
+    }
+
+    public void rotate(byte[] bytes) {
+        for (int i = 0; i < bytes.length; i++) {
+            byte c = bytes[i];
+            if (c >= minVal && c <= maxVal) {
+                bytes[i] = swapArray[c - minVal];
+            }
+        }
     }
 
     public void rotateAndHalfReverse(byte[] bytes) {

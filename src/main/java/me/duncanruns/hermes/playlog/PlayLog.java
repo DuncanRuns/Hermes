@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.modintegration.ModIntegration;
-import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
 import me.duncanruns.hermes.rot.Rotator;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancement.Advancement;

@@ -102,34 +102,6 @@ public class HermesMod implements ModInitializer {
         CLOSE_RUNNABLES.add(runnable);
     }
 
-    @Override
-    public void onInitialize() {
-        if (!Files.exists(LOCAL_HERMES_FOLDER)) {
-            try {
-                Files.createDirectories(LOCAL_HERMES_FOLDER);
-            } catch (Exception e) {
-                LOGGER.error("Failed to create Hermes folder: {}", e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }
-        if (!Files.exists(GLOBAL_HERMES_FOLDER)) {
-            try {
-                Files.createDirectories(GLOBAL_HERMES_FOLDER);
-            } catch (Exception e) {
-                LOGGER.error("Failed to create Global Hermes folder: {}", e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }
-        Alive.init();
-        PlayLog.init();
-        InstanceState.init();
-        Path worldLogPath = null;
-        if (IS_CLIENT) {
-            worldLogPath = WorldLog.init();
-        }
-        InstanceInfo.init(worldLogPath);
-    }
-
     /**
      * @author me-nx, DuncanRuns
      */
@@ -156,5 +128,33 @@ public class HermesMod implements ModInitializer {
         } else {
             return Paths.get(System.getProperty("user.home"), "MCSRHermes");
         }
+    }
+
+    @Override
+    public void onInitialize() {
+        if (!Files.exists(LOCAL_HERMES_FOLDER)) {
+            try {
+                Files.createDirectories(LOCAL_HERMES_FOLDER);
+            } catch (Exception e) {
+                LOGGER.error("Failed to create Hermes folder: {}", e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
+        if (!Files.exists(GLOBAL_HERMES_FOLDER)) {
+            try {
+                Files.createDirectories(GLOBAL_HERMES_FOLDER);
+            } catch (Exception e) {
+                LOGGER.error("Failed to create Global Hermes folder: {}", e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
+        Alive.init();
+        PlayLog.init();
+        InstanceState.init();
+        Path worldLogPath = null;
+        if (IS_CLIENT) {
+            worldLogPath = WorldLog.init();
+        }
+        InstanceInfo.init(worldLogPath);
     }
 }

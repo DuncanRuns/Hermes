@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
-    @Shadow public abstract MinecraftServer getServer();
+    @Shadow
+    public abstract MinecraftServer getServer();
 
     @Inject(method = "respawnPlayer", at = @At("RETURN"))
     private void onRespawnPlayer(CallbackInfoReturnable<ServerPlayerEntity> cir, @Local(argsOnly = true) ServerPlayerEntity player, @Local(argsOnly = true) boolean alive) {

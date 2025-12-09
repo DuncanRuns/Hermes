@@ -19,6 +19,15 @@ public abstract class MinecraftServerMixin implements WorldPathHolder {
     @Unique
     private Path worldPath;
 
+    @Unique
+    private static Path getSavePath(MinecraftServer server) {
+        //? if >=1.16 {
+        return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
+        //?} else {
+        /*return server.getLevelStorage().getSavesDirectory().resolve(server.getLevelName());
+         *///?}
+    }
+
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(CallbackInfo ci) {
         worldPath = getSavePath((MinecraftServer) (Object) this);
@@ -27,14 +36,5 @@ public abstract class MinecraftServerMixin implements WorldPathHolder {
     @Override
     public Path hermes$getWorldPath() {
         return worldPath;
-    }
-
-    @Unique
-    private static Path getSavePath(MinecraftServer server) {
-        //? if >=1.16 {
-        return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
-        //?} else {
-        /*return server.getLevelStorage().getSavesDirectory().resolve(server.getLevelName());
-         *///?}
     }
 }

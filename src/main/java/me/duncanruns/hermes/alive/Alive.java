@@ -4,7 +4,6 @@ import me.duncanruns.hermes.HermesMod;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Executors;
