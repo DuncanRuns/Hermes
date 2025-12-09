@@ -15,7 +15,8 @@ import java.util.Optional;
 public abstract class CommandManagerMixin {
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;execute(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)I", shift = At.Shift.AFTER))
     private void onSuccessfulCommand(ServerCommandSource commandSource, String command, CallbackInfoReturnable<Integer> cir) {
-        ServerPlayerEntity player = (ServerPlayerEntity) Optional.ofNullable(commandSource.getEntity()).filter(e -> e instanceof ServerPlayerEntity).orElse(null);
-        PlayLogHelper.getPlayLog(commandSource.getMinecraftServer()).onCommand(player, command);
+        Optional.ofNullable(commandSource.getEntity())
+                .filter(e -> e instanceof ServerPlayerEntity)
+                .ifPresent(entity -> PlayLogHelper.getPlayLog(commandSource.getMinecraftServer()).onCommand((ServerPlayerEntity) entity, command));
     }
 }
