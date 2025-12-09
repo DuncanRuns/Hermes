@@ -1,7 +1,5 @@
 package me.duncanruns.hermes.playlog;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.datafixer.NbtOps;
@@ -19,8 +17,6 @@ import java.util.stream.Collectors;
  * It's possible that later Minecraft versions would mean more information should be added or that previous versions would mean some information should be removed.
  */
 public class GameInfo {
-    private static final GameInfo EMPTY = new GameInfo();
-    private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static final JsonObject DEFAULT_GAMERULES = gameRulesToJson(new GameRules());
     @SerializedName("cheats_allowed")
     private Boolean cheatsAllowed;
@@ -40,14 +36,10 @@ public class GameInfo {
     private List<String> dataPacks;
     @SerializedName("enabled_data_packs")
     private List<String> enabledDataPacks;
-    @SerializedName("changed_game_rules")
-    private JsonObject changedGameRules;
+    @SerializedName("non_default_game_rules")
+    private JsonObject nonDefaultGameRules;
 
     private GameInfo() {
-    }
-
-    public static GameInfo empty() {
-        return EMPTY;
     }
 
     public static GameInfo fromServer(MinecraftServer server) {
@@ -78,7 +70,7 @@ public class GameInfo {
         /*gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(ResourcePackProfile::getName).sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(ResourcePackProfile::getName).sorted().collect(Collectors.toList());
         *///?}
-        gameInfo.changedGameRules = getChangedGameRules(server);
+        gameInfo.nonDefaultGameRules = getChangedGameRules(server);
         return gameInfo;
     }
 
@@ -96,31 +88,14 @@ public class GameInfo {
         *///?}
     }
 
-    public JsonObject getDifference(GameInfo previous) {
-        if (previous == null || previous == EMPTY) return GSON.toJsonTree(this).getAsJsonObject();
-        JsonObject diff = new JsonObject();
-        if (previous.equals(this)) return diff;
-        if (!Objects.equals(cheatsAllowed, previous.cheatsAllowed))
-            diff.addProperty("cheats_allowed", cheatsAllowed);
-        if (!Objects.equals(openToLan, previous.openToLan))
-            diff.addProperty("open_to_lan", openToLan);
-        if (!Objects.equals(hardcore, previous.hardcore))
-            diff.addProperty("hardcore", hardcore);
-        if (!Objects.equals(difficultyLocked, previous.difficultyLocked))
-            diff.addProperty("difficulty_locked", difficultyLocked);
-        if (!Objects.equals(difficulty, previous.difficulty))
-            diff.addProperty("difficulty", difficulty);
-        if (!Objects.equals(players, previous.players))
-            diff.add("players", GSON.toJsonTree(players));
-        if (!Objects.equals(defaultGamemode, previous.defaultGamemode))
-            diff.addProperty("default_gamemode", defaultGamemode);
-        if (!Objects.equals(dataPacks, previous.dataPacks))
-            diff.add("data_packs", GSON.toJsonTree(dataPacks));
-        if (!Objects.equals(enabledDataPacks, previous.enabledDataPacks))
-            diff.add("enabled_data_packs", GSON.toJsonTree(enabledDataPacks));
-        if (!Objects.equals(changedGameRules, previous.changedGameRules))
-            diff.add("changed_game_rules", changedGameRules);
-        return diff;
+    public JsonObject getDifference(JsonObject previous, JsonObject current) {
+        JsonObject difference = new JsonObject();
+        current.entrySet().forEach(e -> {
+            if (!Objects.equals(previous.get(e.getKey()), e.getValue())) {
+                difference.add(e.getKey(), e.getValue());
+            }
+        });
+        return difference;
     }
 
     public static final class PlayerInfo {

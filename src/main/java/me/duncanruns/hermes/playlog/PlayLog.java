@@ -80,7 +80,7 @@ public class PlayLog {
     private boolean isClosing = false;
     private final List<String> queuedLines = new ArrayList<>();
     private JsonObject lastScreenData = null;
-    private GameInfo lastGameInfo = GameInfo.empty();
+    private JsonObject lastGameInfo = null;
 
     private boolean serverShuttingDown = false;
     private final List<String> shutdownWorldSaves = new ArrayList<>();
@@ -315,8 +315,8 @@ public class PlayLog {
     }
 
     private void checkGameInfo(MinecraftServer minecraftServer) {
-        GameInfo newGameInfo = GameInfo.fromServer(minecraftServer);
-        JsonObject difference = newGameInfo.getDifference(lastGameInfo);
+        JsonObject newGameInfo = GSON.toJsonTree(GameInfo.fromServer(minecraftServer)).getAsJsonObject();
+        JsonObject difference = lastGameInfo == null ? newGameInfo : GameInfo.fromServer(minecraftServer).getDifference(lastGameInfo, newGameInfo);
         if (difference.size() > 0) {
             lastGameInfo = newGameInfo;
             write("game_info", difference);
