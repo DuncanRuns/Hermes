@@ -4,7 +4,9 @@ import me.duncanruns.hermes.playlog.PlayLogHelper;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlayerAdvancementTracker;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,8 +21,23 @@ public abstract class PlayerAdvancementTrackerMixin {
     @Shadow
     public abstract AdvancementProgress getProgress(Advancement advancement);
 
+    //? if >=1.16 {
+    @Shadow
+    @Final
+    private net.minecraft.server.PlayerManager field_25325;
+    //?} else {
+    /*@Shadow
+    @Final
+    private MinecraftServer server;
+    *///?}
+
     @Inject(method = "grantCriterion", at = @At("RETURN"))
     private void onAdvancement(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
-        PlayLogHelper.getPlayLog(owner.getServer()).onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner);
+        //? if >=1.16 {
+        MinecraftServer server = field_25325.getServer();
+        //?} else {
+        /*MinecraftServer server = this.server;
+        *///?}
+        PlayLogHelper.getPlayLog(server).onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner);
     }
 }
