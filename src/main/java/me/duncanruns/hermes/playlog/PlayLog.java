@@ -104,7 +104,7 @@ public class PlayLog {
         PLAY_LOGS.add(this);
     }
 
-    private static long getTimeOfDay(MinecraftServer server) {
+    private static long getTime(MinecraftServer server) {
         //? if >=1.16 {
         return server.getSaveProperties().getMainWorldProperties().getTime();
         //?} else {
@@ -192,7 +192,7 @@ public class PlayLog {
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         EnteredSeedHolder.enteredSeed.remove();
-        data.addProperty("world_time", getTimeOfDay(server));
+        data.addProperty("world_time", getTime(server));
         if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
         write("initialize", data);
         INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
