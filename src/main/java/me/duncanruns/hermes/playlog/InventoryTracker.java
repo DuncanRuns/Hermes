@@ -49,7 +49,7 @@ public class InventoryTracker {
             UUID id = player.getGameProfile().getId();
             PlayerInventory inventory = player.inventory;
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
-            // 0 -> 35 = main, 36 -> 39 = armor, 40 -> 41 = offhand
+            // 0 -> 35 = main, 36 -> 39 = armor, 40 = offhand
             List<ItemStack> newItems = HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream()).map(ItemStack::copy).collect(Collectors.toList());
             List<ItemStack> oldItems = inventories.computeIfAbsent(id, uuid -> getEmptyInventory(newItems.size()));
             if (areItemListsEqual(oldItems, newItems)) {
