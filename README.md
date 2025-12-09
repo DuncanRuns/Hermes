@@ -72,9 +72,9 @@ if the world properly saved.
 > intention). Then on server shutdown (world exit), an unciphered copy is made. A warning.txt file is also placed in the
 > restricted folder to make it extra obvious.
 
-- `initialize` - Runs when the play log is initialized (creating or joining a world), contains generator options,
-  entered seed (if creating), the world time (total ticks ran in world, should be 0 for new world), and if atum is
-  installed, a field noting if atum is running.
+- `initialize` - Runs when the play log is initialized (creating or joining a world), contains game version, Hermes
+  version, generator options, entered seed (if creating), the world time (total ticks ran in world, should be 0 for new
+  world), and if atum is installed, a field noting if atum is running.
 - `stat` - Every stat update, the player it's for, the new value, and the difference from the last one. Excludes
   stats that naturally update every tick or extremely spammy ones (e.g. walking/sprinting/flying)
 - `screen` - Every screen change, the class (will look like class_xxxxx bc of intermediary), the title (
@@ -90,7 +90,7 @@ if the world properly saved.
   ticks, similar to advancements.
 - `game_info` - The "Game Info" whenever a change happens to it. If a field is not present, that means it hasn't changed
   from the last `game_info` event. Game Info includes:
-    - Changed Game Rules (compares to a default `new GameRules()`)
+    - Non-default Game Rules
     - If cheats are allowed
     - If the world is opened to LAN
     - Hardcore/difficulty/difficulty locked
