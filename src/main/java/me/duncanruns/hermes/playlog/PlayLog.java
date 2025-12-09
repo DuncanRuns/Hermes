@@ -17,10 +17,12 @@ import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -276,7 +278,10 @@ public class PlayLog {
     }
 
     private void writeToRTFile(String line) throws IOException {
-        rtFile.write((Rotator.ROT_HERMES.rotateAndHalfReverse(line) + "\n").getBytes());
+        byte[] bytes = line.getBytes(StandardCharsets.UTF_8);
+        Rotator.ROT_HERMES.rotateAndHalfReverse(bytes);
+        rtFile.write(bytes);
+        rtFile.write('\n');
     }
 
     public void onScreenChange(Screen currentScreen) {
@@ -354,11 +359,23 @@ public class PlayLog {
         unencryptedFile.seek(saveProgress);
         rtFile.seek(saveProgress);
         while (rtFile.getFilePointer() < rtFile.length()) {
-            String line = rtFile.readLine();
-            unencryptedFile.write((Rotator.ROT_HERMES.rotateAndHalfReverse(line) + "\n").getBytes());
+            byte[] line = readLineToBytes();
+            Rotator.ROT_HERMES.rotateAndHalfReverse(line);
+            unencryptedFile.write(line);
+            unencryptedFile.write('\n');
         }
         unencryptedFile.close();
         rtFile.seek(rtFile.length());
+    }
+
+    private byte[] readLineToBytes() throws IOException {
+        List<Byte> bytes = new ArrayList<>();
+        while (true) {
+            int c = rtFile.read();
+            if (c == -1 || c == '\n') break;
+            bytes.add((byte) c);
+        }
+        return ArrayUtils.toPrimitive(bytes.toArray(new Byte[0]));
     }
 
     public void close() {

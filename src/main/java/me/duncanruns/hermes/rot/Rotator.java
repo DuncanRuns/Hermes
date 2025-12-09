@@ -1,5 +1,6 @@
 package me.duncanruns.hermes.rot;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -33,103 +34,91 @@ public class Rotator {
     public static final Rotator ROT_HERMES = new Rotator("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7499203634667178692L);
     public static final Rotator ROT47 = new Rotator("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
 
-    private final char[] swapArray;
+    private final byte[] swapArray;
     private char minVal;
     private char maxVal;
 
-    public Rotator(String chars) {
-        this(chars.toCharArray());
+    public Rotator(String characters) {
+        this(characters.getBytes(StandardCharsets.UTF_8));
     }
 
-    public Rotator(char[] chars) {
-        this(chars, 0L);
+    public Rotator(byte[] bytes) {
+        this(bytes, 0L);
     }
 
-    public Rotator(String chars, long shuffleSeed) {
-        this(chars.toCharArray(), shuffleSeed);
+    public Rotator(String characters, long shuffleSeed) {
+        this(characters.getBytes(StandardCharsets.UTF_8), shuffleSeed);
     }
 
-    public Rotator(char[] chars, long shuffleSeed) {
-        this(chars, shuffleSeed, getShift(chars));
+    public Rotator(byte[] bytes, long shuffleSeed) {
+        this(bytes, shuffleSeed, getShift(bytes));
     }
 
-    private static int getShift(char[] chars) {
-        if (chars.length % 2 != 0) {
+    private static int getShift(byte[] characters) {
+        if (characters.length % 2 != 0) {
             throw new IllegalArgumentException("Length must be even if shift is not specified.");
         }
-        return chars.length / 2;
+        return characters.length / 2;
     }
 
-    public Rotator(char[] chars, long shuffleSeed, int shift) {
-        if (shuffleSeed != 0L) shuffle(chars, shuffleSeed);
+    public Rotator(byte[] characters, long shuffleSeed, int shift) {
+        if (shuffleSeed != 0L) shuffle(characters, shuffleSeed);
 
         maxVal = Character.MIN_VALUE;
         minVal = Character.MAX_VALUE;
-        for (char c : chars) {
+        for (byte c : characters) {
             maxVal = (char) Math.max(maxVal, c);
             minVal = (char) Math.min(minVal, c);
         }
-        swapArray = new char[maxVal - minVal + 1];
+        swapArray = new byte[maxVal - minVal + 1];
         for (int i = 0; i < swapArray.length; i++) {
-            swapArray[i] = (char) (i + minVal);
+            swapArray[i] = (byte) (i + minVal);
         }
-        for (int i = 0; i < chars.length; i++) {
-            swapArray[chars[i] - minVal] = chars[(i + shift) % chars.length];
+        for (int i = 0; i < characters.length; i++) {
+            swapArray[characters[i] - minVal] = characters[(i + shift) % characters.length];
         }
     }
 
-    private static List<Character> toCharacterList(char[] chars) {
-        List<Character> list = new ArrayList<>(chars.length);
-        for (char c : chars) {
+    private static List<Byte> toByteList(byte[] bytes) {
+        List<Byte> list = new ArrayList<>(bytes.length);
+        for (byte c : bytes) {
             list.add(c);
         }
         return list;
     }
 
-    private static void shuffle(char[] chars, long shuffleSeed) {
-        List<Character> pool = toCharacterList(chars);
+    private static void shuffle(byte[] bytes, long shuffleSeed) {
+        List<Byte> pool = toByteList(bytes);
         Random random = new Random(shuffleSeed);
-        for (int i = 0; i < chars.length; i++) {
-            chars[i] = (pool.remove(random.nextInt(pool.size())));
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (pool.remove(random.nextInt(pool.size())));
         }
     }
 
-    public String rotate(String input) {
-        char[] charArray = input.toCharArray();
-        rotate(charArray);
-        return new String(charArray);
-    }
-
-    public void rotate(char[] charArray) {
-        for (int i = 0; i < charArray.length; i++) {
-            char c = charArray[i];
+    public void rotate(byte[] bytes) {
+        for (int i = 0; i < bytes.length; i++) {
+            byte c = bytes[i];
             if (c >= minVal && c <= maxVal) {
-                charArray[i] = swapArray[c - minVal];
+                bytes[i] = swapArray[c - minVal];
             }
         }
     }
 
-    private static void halfReverse(char[] chars) {
-        for (int i = 0; i < chars.length / 2; i += 2) {
-            swap(chars, i, chars.length - 1 - i);
+    private static void halfReverse(byte[] bytes) {
+        for (int i = 0; i < bytes.length / 2; i += 2) {
+            swap(bytes, i, bytes.length - 1 - i);
         }
     }
 
-    private static void swap(char[] chars, int i, int i2) {
-        char tmp = chars[i];
-        chars[i] = chars[i2];
-        chars[i2] = tmp;
+    private static void swap(byte[] bytes, int i, int i2) {
+        byte tmp = bytes[i];
+        bytes[i] = bytes[i2];
+        bytes[i2] = tmp;
     }
 
-    public String rotateAndHalfReverse(String input) {
-        char[] chars = input.toCharArray();
-        rotateAndHalfReverse(chars);
-        return new String(chars);
-    }
-
-    private void rotateAndHalfReverse(char[] chars) {
-        rotate(chars);
-        halfReverse(chars);
+    public void rotateAndHalfReverse(byte[] bytes) {
+        rotate(bytes);
+        halfReverse(bytes);
     }
 }
 
