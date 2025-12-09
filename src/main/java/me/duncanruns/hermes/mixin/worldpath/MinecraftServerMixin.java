@@ -24,7 +24,7 @@ public abstract class MinecraftServerMixin implements WorldPathHolder {
         //? if >=1.16 {
         return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
         //?} else {
-        /*return server.getLevelStorage().getSavesDirectory().resolve(server.getLevelName());
+        /*return server.getLevelStorage().resolveFile(server.getLevelName(), ".").toPath();
          *///?}
     }
 

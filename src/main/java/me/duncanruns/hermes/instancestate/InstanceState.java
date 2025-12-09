@@ -3,6 +3,7 @@ package me.duncanruns.hermes.instancestate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import me.duncanruns.hermes.ClientToServerHelper;
 import me.duncanruns.hermes.HermesMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
@@ -34,7 +35,7 @@ public final class InstanceState {
         assert file != null;
         JsonObject json = new JsonObject();
         CLIENT_STATE_UPDATERS.forEach(u -> u.accept(json, client));
-        GENERAL_STATE_UPDATERS.forEach(u -> u.accept(json, client.getServer()));
+        GENERAL_STATE_UPDATERS.forEach(u -> u.accept(json, ClientToServerHelper.getServer(client)));
         output(GSON.toJson(json));
     }
 
@@ -102,7 +103,7 @@ public final class InstanceState {
         if (!HermesMod.IS_CLIENT) return;
         AtomicReference<Path> lastWorldJoined = new AtomicReference<>(null);
         registerClientStateUpdater((json, client) -> {
-            Optional.ofNullable(client.getServer()).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
+            Optional.ofNullable(ClientToServerHelper.getServer(client)).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
             json.add("screen", HermesMod.screenToJsonObject(client.currentScreen));
             json.add("last_world_joined", HermesMod.pathToJsonObject(lastWorldJoined.get()));
         });
