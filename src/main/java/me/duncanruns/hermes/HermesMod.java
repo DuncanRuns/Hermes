@@ -7,6 +7,7 @@ import me.duncanruns.hermes.instanceinfo.InstanceInfo;
 import me.duncanruns.hermes.instancestate.InstanceState;
 import me.duncanruns.hermes.playlog.PlayLog;
 import me.duncanruns.hermes.worldlog.WorldLog;
+import me.duncanruns.hermes.worldpath.WorldPathHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -53,11 +54,7 @@ public class HermesMod implements ModInitializer {
     }
 
     public static Path getSavePath(MinecraftServer server) {
-        //? if >=1.16 {
-        return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
-        //?} else {
-        /*return server.getLevelStorage().getSavesDirectory().resolve(server.getLevelName());
-        *///?}
+        return ((WorldPathHolder) server).hermes$getWorldPath();
     }
 
     public static long getProcessId() {

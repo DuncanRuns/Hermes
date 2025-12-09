@@ -17,7 +17,8 @@
     "playlog.PlayerManagerMixin",
     "playlog.CommandManagerMixin",
     "playlog.ServerStatHandlerMixin",
-    "playlog.ServerWorldMixin"
+    "playlog.ServerWorldMixin",
+    "worldpath.MinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
