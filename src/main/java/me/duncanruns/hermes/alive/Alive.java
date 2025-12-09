@@ -23,6 +23,8 @@ public final class Alive {
     private static RandomAccessFile file = null;
     private static long pid;
 
+    private static boolean closing = false;
+
     private Alive() {
     }
 
@@ -38,6 +40,7 @@ public final class Alive {
     }
 
     private static void tick() {
+        if (closing) return;
         if (file == null) {
             tryCreate();
         } else {
@@ -80,6 +83,7 @@ public final class Alive {
     }
 
     private static void close() {
+        closing = true;
         EXECUTOR.shutdownNow();
         if (file != null) {
             try {
