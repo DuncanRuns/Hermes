@@ -20,7 +20,7 @@ public abstract class PlayerAdvancementTrackerMixin {
     public abstract AdvancementProgress getProgress(Advancement advancement);
 
     @Inject(method = "grantCriterion", at = @At("RETURN"))
-    private void a(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
+    private void onAdvancement(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
         PlayLogHelper.getPlayLog(owner.getServer()).onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner);
     }
 }
