@@ -88,7 +88,7 @@ public class GameInfo {
         *///?}
     }
 
-    public JsonObject getDifference(JsonObject previous, JsonObject current) {
+    public static JsonObject getDifference(JsonObject previous, JsonObject current) {
         JsonObject difference = new JsonObject();
         current.entrySet().forEach(e -> {
             if (!Objects.equals(previous.get(e.getKey()), e.getValue())) {

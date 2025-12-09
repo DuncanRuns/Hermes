@@ -317,7 +317,7 @@ public class PlayLog {
 
     private void checkGameInfo(MinecraftServer minecraftServer) {
         JsonObject newGameInfo = GSON.toJsonTree(GameInfo.fromServer(minecraftServer)).getAsJsonObject();
-        JsonObject difference = lastGameInfo == null ? newGameInfo : GameInfo.fromServer(minecraftServer).getDifference(lastGameInfo, newGameInfo);
+        JsonObject difference = lastGameInfo == null ? newGameInfo : GameInfo.getDifference(lastGameInfo, newGameInfo);
         if (difference.size() > 0) {
             lastGameInfo = newGameInfo;
             write("game_info", difference);
