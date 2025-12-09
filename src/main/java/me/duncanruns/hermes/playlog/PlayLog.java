@@ -122,15 +122,13 @@ public class PlayLog {
                 .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
-        if (json == null) return null;
-        clearSeed(json);
-        return json;
         //?} else {
         /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
         JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
+        *///?}
+        if (json == null) return null;
         clearSeed(json);
         return json;
-        *///?}
     }
 
     private static void clearSeed(JsonElement jsonElement) {
