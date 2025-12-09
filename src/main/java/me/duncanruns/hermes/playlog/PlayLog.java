@@ -240,7 +240,8 @@ public class PlayLog {
                 writeToRTFile(line);
                 rtFile.getChannel().force(false);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                HermesMod.LOGGER.error("Failed to write to play log: {}", e.getMessage());
+                closeInternal();
             }
             return;
         }
@@ -259,7 +260,8 @@ public class PlayLog {
                 queuedLines.clear();
                 writeWarning();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                HermesMod.LOGGER.error("Failed to create play log: {}", e.getMessage());
+                closeInternal();
             }
         }
     }
@@ -360,15 +362,20 @@ public class PlayLog {
     }
 
     public void close() {
-        if (isClosing) return;
         PLAY_LOGS.remove(this);
+        if (isClosing) return;
         write("close", new JsonObject());
-        EXECUTOR.execute(this::closeInternal);
+        try {
+            EXECUTOR.execute(this::closeInternal);
+        } catch (RejectedExecutionException ignored) {
+            // Probably shutting down, ignore
+        }
     }
 
     private void closeInternal() {
         if (isClosing) return;
         isClosing = true;
+        PLAY_LOGS.remove(this);
         trySaveUnencrypted();
         if (rtFile != null) {
             try {
