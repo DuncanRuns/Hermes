@@ -17,9 +17,9 @@ import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
@@ -71,6 +71,7 @@ public class PlayLog {
     private final Path savePath; // example: .minecraft/saves/Random Speedrun #3/hermes/play.log
     private final Path rtPath; // example: .minecraft/saves/Random Speedrun #3/hermes/restricted/play.log.enc
     private RandomAccessFile rtFile;
+    private final ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream(128);
 
     private final InventoryTracker inventoryTracker = new InventoryTracker();
     private final DimensionTracker dimensionTracker = new DimensionTracker();
@@ -360,7 +361,7 @@ public class PlayLog {
         unencryptedFile.seek(saveProgress);
         rtFile.seek(saveProgress);
         while (rtFile.getFilePointer() < rtFile.length()) {
-            byte[] line = readLineToBytes();
+            byte[] line = readLineFromRTFile();
             Rotator.ROT_HERMES.rotateAndHalfReverse(line);
             unencryptedFile.write(line);
             unencryptedFile.write('\n');
@@ -369,14 +370,16 @@ public class PlayLog {
         rtFile.seek(rtFile.length());
     }
 
-    private byte[] readLineToBytes() throws IOException {
-        List<Byte> bytes = new ArrayList<>();
-        while (true) {
-            int c = rtFile.read();
-            if (c == -1 || c == '\n') break;
-            bytes.add((byte) c);
+    private byte[] readLineFromRTFile() throws IOException {
+        try {
+            int c;
+            while ((c = rtFile.read()) != -1 && c != '\n') {
+                lineBuffer.write(c);
+            }
+            return lineBuffer.toByteArray();
+        } finally {
+            lineBuffer.reset();
         }
-        return ArrayUtils.toPrimitive(bytes.toArray(new Byte[0]));
     }
 
     public void close() {
