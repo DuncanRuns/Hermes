@@ -1,6 +1,7 @@
 package me.duncanruns.hermes.api;
 
 import com.google.gson.JsonObject;
+import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.instancestate.InstanceState;
 import me.duncanruns.hermes.playlog.PlayLog;
 import me.duncanruns.hermes.playlog.PlayLogHelper;
@@ -68,5 +69,12 @@ public final class HermesModAPI {
      */
     public static void registerPlayLogInitializationEvent(Consumer<MinecraftServer> consumer) {
         PlayLog.registerInitializationEvent(consumer);
+    }
+
+    /**
+     * Gets the cached save path of the given server.
+     */
+    public static Path getSavePath(MinecraftServer server) {
+        return HermesMod.getSavePath(server);
     }
 }
