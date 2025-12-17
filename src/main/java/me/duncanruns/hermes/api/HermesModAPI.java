@@ -45,7 +45,7 @@ public final class HermesModAPI {
      * Writes to the play log of the given server. Shouldn't throw errors, fails silently in case of any issues.
      */
     public static void writeToPlayLog(MinecraftServer server, String type, JsonObject data) {
-        PlayLogHelper.getPlayLog(server).write(type, data);
+        PlayLogHelper.getPlayLog(server).ifPresent(p -> p.write(type, data));
     }
 
     /**

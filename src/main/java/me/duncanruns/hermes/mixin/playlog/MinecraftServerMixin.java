@@ -10,6 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Optional;
+
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin implements PlayLogServer {
     @Unique
@@ -45,8 +47,8 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
     }
 
     @Override
-    public PlayLog hermes$getPlayLog() {
-        return playLog;
+    public Optional<PlayLog> hermes$getPlayLog() {
+        return Optional.ofNullable(playLog);
     }
 
     @Override

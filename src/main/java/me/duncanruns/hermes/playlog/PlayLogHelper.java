@@ -14,7 +14,7 @@ public final class PlayLogHelper {
     private PlayLogHelper() {
     }
 
-    public static PlayLog getPlayLog(MinecraftServer server) {
+    public static Optional<PlayLog> getPlayLog(MinecraftServer server) {
         return ((PlayLogServer) server).hermes$getPlayLog();
     }
 
@@ -22,6 +22,6 @@ public final class PlayLogHelper {
     public static Optional<PlayLog> getCurrentPlayLog() {
         return Optional.ofNullable(MinecraftClient.getInstance())
                 .map(MinecraftClient::getServer)
-                .map(PlayLogHelper::getPlayLog);
+                .flatMap(PlayLogHelper::getPlayLog);
     }
 }

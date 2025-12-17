@@ -29,6 +29,6 @@ public abstract class ServerWorldMixin extends World {
         //?} else {
         /*String worldName = this.dimension.getType().toString();
          *///?}
-        PlayLogHelper.getPlayLog(((ServerWorld) (Object) this).getServer()).onWorldSave(worldName);
+        PlayLogHelper.getPlayLog(((ServerWorld) (Object) this).getServer()).ifPresent(p -> p.onWorldSave(worldName));
     }
 }

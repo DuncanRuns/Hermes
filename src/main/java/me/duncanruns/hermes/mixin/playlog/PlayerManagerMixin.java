@@ -1,6 +1,7 @@
 package me.duncanruns.hermes.mixin.playlog;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import me.duncanruns.hermes.playlog.PlayLog;
 import me.duncanruns.hermes.playlog.PlayLogHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -19,11 +20,11 @@ public abstract class PlayerManagerMixin {
 
     @Inject(method = "respawnPlayer", at = @At("RETURN"))
     private void onRespawnPlayer(CallbackInfoReturnable<ServerPlayerEntity> cir, @Local(argsOnly = true) ServerPlayerEntity player, @Local(argsOnly = true) boolean alive) {
-        PlayLogHelper.getPlayLog(player.server).onRespawn(player, alive);
+        PlayLogHelper.getPlayLog(player.server).ifPresent(p -> p.onRespawn(player, alive));
     }
 
     @Inject(method = "saveAllPlayerData", at = @At("RETURN"))
     private void onSave(CallbackInfo info) {
-        PlayLogHelper.getPlayLog(getServer()).onPlayerDataSave();
+        PlayLogHelper.getPlayLog(getServer()).ifPresent(PlayLog::onPlayerDataSave);
     }
 }

@@ -17,6 +17,6 @@ public abstract class CommandManagerMixin {
     private void onSuccessfulCommand(ServerCommandSource commandSource, String command, CallbackInfoReturnable<Integer> cir) {
         Optional.ofNullable(commandSource.getEntity())
                 .filter(e -> e instanceof ServerPlayerEntity)
-                .ifPresent(entity -> PlayLogHelper.getPlayLog(commandSource.getMinecraftServer()).onCommand((ServerPlayerEntity) entity, command));
+                .ifPresent(entity -> PlayLogHelper.getPlayLog(commandSource.getMinecraftServer()).ifPresent(p -> p.onCommand((ServerPlayerEntity) entity, command)));
     }
 }

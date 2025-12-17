@@ -38,6 +38,6 @@ public abstract class PlayerAdvancementTrackerMixin {
         //?} else {
         /*MinecraftServer server = this.server;
         *///?}
-        PlayLogHelper.getPlayLog(server).onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner);
+        PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner));
     }
 }

@@ -22,7 +22,7 @@ public abstract class ServerStatHandlerMixin extends StatHandler {
 
     @Inject(method = "setStat", at = @At("HEAD"))
     private void onSetStat(PlayerEntity player, Stat<?> stat, int value, CallbackInfo ci) {
-        PlayLogHelper.getPlayLog(server).onStat(this, player, stat, value);
+        PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onStat(this, player, stat, value));
     }
 
 }
