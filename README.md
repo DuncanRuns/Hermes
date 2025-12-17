@@ -174,6 +174,28 @@ A `me.duncanruns.hermes.api.HermesModAPI` class is provided for modders to use H
 javadoc comments somewhat explaining their usage. Refer to the documentation of features above to get a better idea of
 what the methods might be used for.
 
+### Disabling Features
+
+Certain features of Hermes may be disabled by other mods, which may be wanted for security reasons. The following
+features can be disabled:
+
+- `playlog`
+- `ghost`
+
+To disable features, add the following to your mod's `fabric.mod.json`:
+
+```json
+{
+  // ...
+  "custom": {
+    "hermes:disable": [
+      "playlog",
+      "ghost"
+    ]
+  }
+}
+```
+
 ### Codebase Structure
 
 For working on Hermes, a few notes on how the codebase is structured:
