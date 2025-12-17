@@ -273,7 +273,7 @@ public class PlayLog {
     private void writeWarning() {
         Path path = rtPath.resolveSibling("warning.txt");
         try {
-            Files.write(path, WARNING.getBytes());
+            Files.write(path, WARNING.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             HermesMod.LOGGER.error("Failed to write warning: {}", e.getMessage());
         }

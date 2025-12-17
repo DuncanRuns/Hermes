@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
@@ -43,7 +44,7 @@ public final class InstanceInfo {
             RandomAccessFile file = new RandomAccessFile(path.toFile(), "rw");
             file.setLength(0);
             file.seek(0);
-            file.write(contents.getBytes());
+            file.write(contents.getBytes(StandardCharsets.UTF_8));
             FileLock fileLock = file.getChannel().tryLock(0L, Long.MAX_VALUE, true);
             HermesMod.registerClose(() -> {
                 try {

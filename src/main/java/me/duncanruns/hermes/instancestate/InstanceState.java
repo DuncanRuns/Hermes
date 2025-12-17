@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public final class InstanceState {
             file.seek(0);
             file.setLength(0);
             // Stage 2: No Data
-            file.write(string.getBytes()); // Stage 3: Partial data (invalid json)
+            file.write(string.getBytes(StandardCharsets.UTF_8)); // Stage 3: Partial data (invalid json)
             // Stage 4: Full data (valid json)
         } catch (Exception e) {
             HermesMod.LOGGER.error("Failed to write Hermes state: {}", e.getMessage());

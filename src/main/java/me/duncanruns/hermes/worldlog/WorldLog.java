@@ -9,6 +9,7 @@ import net.minecraft.server.integrated.IntegratedServer;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -35,7 +36,7 @@ public final class WorldLog {
             file = new RandomAccessFile(worldLogPath.toFile(), "rw");
             file.seek(0);
             file.setLength(0);
-            Files.write(HermesMod.LOCAL_HERMES_FOLDER.resolve("latest_world_log.txt"), fileName.getBytes());
+            Files.write(HermesMod.LOCAL_HERMES_FOLDER.resolve("latest_world_log.txt"), fileName.getBytes(StandardCharsets.UTF_8));
             return worldLogPath;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -62,7 +63,7 @@ public final class WorldLog {
         try {
             EXECUTOR.execute(() -> {
                 try {
-                    file.write((jsonString + "\n").getBytes());
+                    file.write((jsonString + "\n").getBytes(StandardCharsets.UTF_8));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
