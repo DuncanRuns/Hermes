@@ -15,7 +15,9 @@ import java.util.stream.StreamSupport;
 public class HermesDisabledFeatures {
     private static final Gson GSON = new com.google.gson.Gson();
     private static final String PLAY_LOG = "playlog";
+    private static final String GHOST = "ghost";
     private static boolean playLogDisabled = false;
+    private static boolean ghostDisabled = false;
     private static final List<String> disabledFeatures = new ArrayList<>();
 
     static {
@@ -36,16 +38,28 @@ public class HermesDisabledFeatures {
     }
 
     private static void disable(String feature, String modId) {
-        if (feature.equals(PLAY_LOG)) {
-            if (playLogDisabled) return;
-            playLogDisabled = true;
-            disabledFeatures.add(PLAY_LOG);
-            HermesMod.LOGGER.info("Play log disabled by mod '{}'", modId);
+        switch (feature) {
+            case PLAY_LOG:
+                if (playLogDisabled) return;
+                playLogDisabled = true;
+                disabledFeatures.add(PLAY_LOG);
+                HermesMod.LOGGER.info("Play Log feature disabled by mod '{}'", modId);
+                break;
+            case GHOST:
+                if (ghostDisabled) return;
+                ghostDisabled = true;
+                disabledFeatures.add(GHOST);
+                HermesMod.LOGGER.info("Ghost feature disabled by mod '{}'", modId);
+                break;
         }
     }
 
     public static boolean isPlayLogDisabled() {
         return playLogDisabled;
+    }
+
+    public static boolean isGhostDisabled() {
+        return ghostDisabled;
     }
 
     public static List<String> getDisabledFeatures() {

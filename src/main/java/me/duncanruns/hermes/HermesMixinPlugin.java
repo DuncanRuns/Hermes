@@ -13,6 +13,8 @@ public class HermesMixinPlugin implements IMixinConfigPlugin {
         System.out.println("test");
         if (mixinClassName.startsWith("me.duncanruns.hermes.mixin.playlog")) {
             return !HermesDisabledFeatures.isPlayLogDisabled();
+        } else if (mixinClassName.startsWith("me.duncanruns.hermes.mixin.ghost")) {
+            return !HermesDisabledFeatures.isGhostDisabled();
         }
         return true;
     }
