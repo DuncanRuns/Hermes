@@ -181,7 +181,7 @@ Certain features of Hermes may be disabled by other mods. To disable features, a
 
 ```json
 {
-  // ...
+  "//": "...",
   "custom": {
     "hermes:disable": [
       "playlog",
