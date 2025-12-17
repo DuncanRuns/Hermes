@@ -38,5 +38,6 @@
   "server": [
     "instancestate.server.MinecraftServerMixin",
     "server.MinecraftServerMixin"
-  ]
+  ],
+  "plugin": "me.duncanruns.hermes.HermesMixinPlugin"
 }

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import me.duncanruns.hermes.HermesDisabledFeatures;
 import me.duncanruns.hermes.HermesMod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
@@ -66,8 +67,9 @@ public final class InstanceInfo {
         instanceJson.addProperty("is_server", !HermesMod.IS_CLIENT);
         instanceJson.addProperty("game_dir", FabricLoader.getInstance().getGameDir().toAbsolutePath().toString());
         instanceJson.addProperty("game_version", SharedConstants.getGameVersion().getName());
-        JsonArray modsArray = new JsonArray();
+        instanceJson.add("disabled_features", GSON.toJsonTree(HermesDisabledFeatures.getDisabledFeatures()));
 
+        JsonArray modsArray = new JsonArray();
         FabricLoader.getInstance().getAllMods().forEach(modContainer -> {
             JsonObject modObject = new JsonObject();
             modObject.addProperty("name", modContainer.getMetadata().getName());
