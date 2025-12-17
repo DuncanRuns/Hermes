@@ -10,10 +10,10 @@ or in-game functionality.
 ### `[PID].json`
 
 On initialize, a json file named [PID].json (PID = process id) will be placed in a global location and contain the game
-path, Hermes world log path, game version, and all fabric mods loaded (display names, ids, versions). A shared lock is
-held on the file to indicate the instance is still alive. The file should be deleted on exit, but bad shutdowns may lead
-to the file lingering. A copy of the file will also be made in `[Game Directory]/hermes/instances/`, and will also be
-locked and deleted on exit.
+path, Hermes world log path, game version, all fabric mods loaded (display names, ids, versions), and disabled
+features (other mods can disable Hermes features). A shared lock is held on the file to indicate the instance is still
+alive. The file should be deleted on exit, but bad shutdowns may lead to the file lingering. A copy of the file will
+also be made in `[Game Directory]/hermes/instances/`, and will also be locked and deleted on exit.
 
 Locations:
 
