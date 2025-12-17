@@ -50,7 +50,8 @@ public final class WorldLog {
         Path previousWorld = lastWorld;
         if (!Objects.equals(world, lastWorld)) {
             lastWorld = world;
-            write(world == null ? previousWorld : world, (world == null ? "leave" : "entering"), System.currentTimeMillis());
+            if (previousWorld != null) write(previousWorld, "leave", System.currentTimeMillis());
+            if (world != null) write(world, "entering", System.currentTimeMillis());
         }
     }
 
