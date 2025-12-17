@@ -176,13 +176,8 @@ what the methods might be used for.
 
 ### Disabling Features
 
-Certain features of Hermes may be disabled by other mods, which may be wanted for security reasons. The following
-features can be disabled:
-
-- `playlog`
-- `ghost`
-
-To disable features, add the following to your mod's `fabric.mod.json`:
+Certain features of Hermes may be disabled by other mods. To disable features, add the following to your mod's
+`fabric.mod.json`:
 
 ```json
 {
@@ -195,6 +190,8 @@ To disable features, add the following to your mod's `fabric.mod.json`:
   }
 }
 ```
+
+All features that can be disabled are included in the example above.
 
 ### Codebase Structure
 
