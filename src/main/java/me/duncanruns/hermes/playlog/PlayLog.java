@@ -76,6 +76,7 @@ public class PlayLog {
     private final InventoryTracker inventoryTracker = new InventoryTracker();
     private final DimensionTracker dimensionTracker = new DimensionTracker();
     private final StructureTracker structureTracker = new StructureTracker();
+    private final EffectsTracker effectsTracker = new EffectsTracker();
 
     private boolean isCreated = false;
     private boolean isClosing = false;
@@ -314,6 +315,7 @@ public class PlayLog {
         inventoryTracker.tick(minecraftServer).forEach(jsonObject -> write("inventory_slots", jsonObject));
         dimensionTracker.tick(minecraftServer).forEach(jsonObject -> write("dimension", jsonObject));
         structureTracker.tick(minecraftServer).forEach(jsonObject -> write("inside_structures", jsonObject));
+        effectsTracker.tick(minecraftServer).forEach(jsonObject -> write("status_effects", jsonObject));
     }
 
     private void checkGameInfo(MinecraftServer minecraftServer) {

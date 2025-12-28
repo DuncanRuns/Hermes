@@ -105,6 +105,8 @@ if the world properly saved.
   relogs with items.
     - This exists as stats aren't accurate enough to determine full item history because of taking from chests and such,
       and adding events for those specific missing parts would more be complex than just logging the actual inventory.
+- `status_effects` - All status effects and their amplifier for each player. Updates for a player if they gain/lose a
+  status effect, if the amplifier changes, or they relog with effects.
 - `command`- Every command ran by a player and who entered it.
 - `world_saved` - Every time a world (a specific dimension) is saved, and a string representing which world it is (may
   vary based on game
