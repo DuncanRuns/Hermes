@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class HermesDisabledFeatures {
-    private static final Gson GSON = new com.google.gson.Gson();
     private static final String PLAY_LOG = "playlog";
     private static final String GHOST = "ghost";
     private static boolean playLogDisabled = false;
