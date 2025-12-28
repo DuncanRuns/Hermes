@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesDisabledFeatures;
 import me.duncanruns.hermes.HermesMod;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.SharedConstants;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -66,7 +65,7 @@ public final class InstanceInfo {
         if (worldLogPath != null) instanceJson.add("world_log", HermesMod.pathToJsonObject(worldLogPath));
         instanceJson.addProperty("is_server", !HermesMod.IS_CLIENT);
         instanceJson.addProperty("game_dir", FabricLoader.getInstance().getGameDir().toAbsolutePath().toString());
-        instanceJson.addProperty("game_version", SharedConstants.getGameVersion().getName());
+        instanceJson.addProperty("game_version", FabricLoader.getInstance().getModContainer("minecraft").orElseThrow(() -> new IllegalStateException("Failed to find minecraft version via fabric loader")).getMetadata().getVersion().getFriendlyString());
         instanceJson.add("disabled_features", GSON.toJsonTree(HermesDisabledFeatures.getDisabledFeatures()));
 
         JsonArray modsArray = new JsonArray();
