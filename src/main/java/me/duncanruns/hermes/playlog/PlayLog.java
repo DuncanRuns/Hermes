@@ -414,7 +414,6 @@ public class PlayLog {
         data.add("player", toPlayerData(player));
         data.add("position", toPositionData(player.getPos()));
         data.addProperty("was_alive", alive);
-        System.out.println(data);
         write("respawn", data);
     }
 
