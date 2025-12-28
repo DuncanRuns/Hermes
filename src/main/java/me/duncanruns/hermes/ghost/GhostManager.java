@@ -17,11 +17,11 @@ public class GhostManager implements AutoCloseable {
     }
 
     public void onSave() {
-        writers.values().forEach(GhostWriter::onSave);
+        writers.values().forEach(GhostWriter::saveToFile);
     }
 
     @Override
     public void close() {
-        writers.values().forEach(GhostWriter::close);
+        writers.values().forEach(ghostWriter -> ghostWriter.close(true));
     }
 }

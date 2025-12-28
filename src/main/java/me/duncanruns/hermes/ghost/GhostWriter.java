@@ -21,6 +21,7 @@ public class GhostWriter {
     private boolean isCreated = false;
     private RandomAccessFile file;
     private boolean full = false;
+    private boolean closing = false;
 
     private final ByteBuffer buffer;
 
@@ -50,7 +51,7 @@ public class GhostWriter {
     }
 
     public void onTick(long time, ServerPlayerEntity player) {
-        if (full) return;
+        if (full || closing) return;
         if (buffer.position() + PACKET_SIZE > buffer.array().length) {
             HermesMod.LOGGER.warn("Ghost buffer is full for {}! Won't be able to track more positions until next save.", path);
             full = true;
@@ -68,7 +69,7 @@ public class GhostWriter {
         buffer.put(getFlags(player)); // 46
     }
 
-    public void onSave() {
+    public void saveToFile() {
         if (buffer.position() == 0) return;
         try {
             if (!isCreated) {
@@ -80,21 +81,28 @@ public class GhostWriter {
                 file.seek(file.length());
                 isCreated = true;
             }
+            if (file == null) return;
             file.write(buffer.array(), 0, buffer.position());
-            buffer.position(0);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            HermesMod.LOGGER.error("Failed to write ghost: {}", e.getMessage());
+            close(false);
+        } finally {
+            full = false;
+            buffer.position(0);
         }
     }
 
-    public void close() {
-        onSave();
+    public void close(boolean save) {
+        closing = true;
+        if (save) saveToFile();
         try {
             if (file != null) {
                 file.close();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            HermesMod.LOGGER.error("Failed to close ghost: {}", e.getMessage());
+        } finally {
+            file = null;
         }
     }
 }
