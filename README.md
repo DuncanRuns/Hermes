@@ -132,9 +132,10 @@ bytes represents a single tick for that player. The layout is as follows:
 | 24-31     | double             | Z Position           |
 | 32-35     | float              | Yaw                  |
 | 36-39     | float              | Pitch                |
-| 40 (0xF0) | N/A                | 4 unused bits        |
-| 40 (0x0F) | 4-bit unsigned int | Selected Hotbar Slot |
-| 41        | N/A                | Flags (see below)    |
+| 40-43     | float              | Health               |
+| 44 (0xF0) | N/A                | 4 unused bits        |
+| 44 (0x0F) | 4-bit unsigned int | Selected Hotbar Slot |
+| 45        | N/A                | Flags (see below)    |
 
 The flags are as follows:
 

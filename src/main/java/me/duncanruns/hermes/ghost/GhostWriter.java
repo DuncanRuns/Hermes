@@ -15,7 +15,7 @@ import java.util.UUID;
  * It's possible the format could change, and anything that reads the file should know the version of Hermes that wrote it.
  */
 public class GhostWriter {
-    private static final int PACKET_SIZE = 42;
+    private static final int PACKET_SIZE = 46;
     private final Path path;
     private final Path requiredParent;
     private boolean isCreated = false;
@@ -28,7 +28,7 @@ public class GhostWriter {
         Path worldPath = HermesMod.getSavePath(server);
         this.path = worldPath.resolve("hermes").resolve("ghosts").resolve(playerId.toString() + ".ghost");
         this.requiredParent = worldPath;
-        buffer = ByteBuffer.wrap(new byte[PACKET_SIZE * 20 * 60 * 10]); // 0.48 MB, 10 minutes of data
+        buffer = ByteBuffer.wrap(new byte[PACKET_SIZE * 20 * 60 * 10]); // 0.552 MB, 10 minutes of data
         buffer.position(0);
     }
 
@@ -63,8 +63,9 @@ public class GhostWriter {
         buffer.putDouble(pos.z); // 25->32
         buffer.putFloat(player.headYaw); // 33->36
         buffer.putFloat(player.pitch); // 37->40
-        buffer.put((byte) (player.inventory.selectedSlot % 9)); // 41
-        buffer.put(getFlags(player)); // 42
+        buffer.putFloat(player.getHealth()); // 41->44
+        buffer.put((byte) (player.inventory.selectedSlot % 9)); // 45
+        buffer.put(getFlags(player)); // 46
     }
 
     public void onSave() {
