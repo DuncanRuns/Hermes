@@ -3,7 +3,8 @@ package me.duncanruns.hermes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.alive.Alive;
-import me.duncanruns.hermes.instanceinfo.InstanceInfo;
+import me.duncanruns.hermes.core.HermesCore;
+import me.duncanruns.hermes.core.InstanceInfo;
 import me.duncanruns.hermes.instancestate.InstanceState;
 import me.duncanruns.hermes.playlog.PlayLog;
 import me.duncanruns.hermes.worldlog.WorldLog;
@@ -19,22 +20,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class HermesMod implements ModInitializer {
     public static final String MOD_ID = "hermes";
-    public static String VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString();
+    public static String VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new IllegalStateException("Failed to find hermes version via fabric loader")).getMetadata().getVersion().getFriendlyString();
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final Path GAME_DIR = FabricLoader.getInstance().getGameDir().normalize().toAbsolutePath();
-    public static final Path LOCAL_HERMES_FOLDER = GAME_DIR.resolve("hermes");
-    public static final Path GLOBAL_HERMES_FOLDER = getGlobalPath();
-    public static final boolean IS_CLIENT = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     private static final List<Runnable> CLOSE_RUNNABLES = new ArrayList<>();
 
     @SafeVarargs
@@ -58,19 +54,6 @@ public class HermesMod implements ModInitializer {
         return ((WorldPathHolder) server).hermes$getWorldPath();
     }
 
-    public static long getProcessId() {
-        String jvmName = ManagementFactory.getRuntimeMXBean().getName();
-        int atIndex = jvmName.indexOf('@');
-        if (atIndex > 0) {
-            try {
-                return Long.parseLong(jvmName.substring(0, atIndex));
-            } catch (NumberFormatException e) {
-                // Unexpected format, fallback
-            }
-        }
-        throw new IllegalStateException("Unable to determine process ID from JVM name: " + jvmName);
-    }
-
     /**
      * Converts a path to a json object. If the path is within the game directory, it will be marked as relative and
      * relativized to the game directory. Otherwise, it will be an absolute path with relative set to false.
@@ -78,9 +61,9 @@ public class HermesMod implements ModInitializer {
     public static JsonObject pathToJsonObject(Path path) {
         if (path == null) return null;
         JsonObject out = new JsonObject();
-        if (path.toAbsolutePath().startsWith(GAME_DIR)) {
+        if (path.toAbsolutePath().startsWith(HermesCore.GAME_DIR)) {
             out.addProperty("relative", true);
-            out.addProperty("path", GAME_DIR.relativize(path).toString().replace("\\", "/"));
+            out.addProperty("path", HermesCore.GAME_DIR.relativize(path).toString().replace("\\", "/"));
         } else {
             out.addProperty("relative", false);
             out.addProperty("path", path.toString().replace("\\", "/"));
@@ -102,59 +85,23 @@ public class HermesMod implements ModInitializer {
         CLOSE_RUNNABLES.add(runnable);
     }
 
-    /**
-     * @author me-nx, DuncanRuns
-     */
-    private static Path getGlobalPath() {
-        // Copy of mojang logic to not depend on it, helps with porting
-        String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
-        if (osName.contains("win")) {
-            for (Supplier<String> possibleEnv : Arrays.<Supplier<String>>asList(
-                    () -> System.getenv("LOCALAPPDATA"),
-                    () -> System.getenv("APPDATA"),
-                    () -> System.getProperty("user.home")
-            )) {
-                String base = possibleEnv.get();
-                if (base == null) continue;
-                return Paths.get(base, "MCSRHermes");
-            }
-            throw new RuntimeException("Failed to find a suitable path for Hermes");
-        } else if (osName.contains("mac")) {
-            return Paths.get(System.getProperty("user.home"), "Library", "Application Support", "MCSRHermes");
-        } else if (osName.contains("linux") || osName.contains("unix")) {
-            return Optional.ofNullable(System.getenv("XDG_RUNTIME_DIR"))
-                    .map((runtimeDir) -> Paths.get(runtimeDir, "MCSRHermes"))
-                    .orElse(Paths.get(System.getProperty("user.home"), ".local", "share", "MCSRHermes"));
-        } else {
-            return Paths.get(System.getProperty("user.home"), "MCSRHermes");
-        }
-    }
-
     @Override
     public void onInitialize() {
-        if (!Files.exists(LOCAL_HERMES_FOLDER)) {
+        if (!Files.exists(HermesCore.LOCAL_HERMES_FOLDER)) {
             try {
-                Files.createDirectories(LOCAL_HERMES_FOLDER);
+                Files.createDirectories(HermesCore.LOCAL_HERMES_FOLDER);
             } catch (Exception e) {
                 LOGGER.error("Failed to create Hermes folder: {}", e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }
-        if (!Files.exists(GLOBAL_HERMES_FOLDER)) {
-            try {
-                Files.createDirectories(GLOBAL_HERMES_FOLDER);
-            } catch (Exception e) {
-                LOGGER.error("Failed to create Global Hermes folder: {}", e.getMessage());
                 throw new RuntimeException(e);
             }
         }
         Alive.init();
         PlayLog.init();
         InstanceState.init();
-        Path worldLogPath = null;
-        if (IS_CLIENT) {
-            worldLogPath = WorldLog.init();
+        if (HermesCore.IS_CLIENT) {
+            InstanceInfo.setWorldLogPath(WorldLog.init());
         }
-        InstanceInfo.init(worldLogPath);
+        HermesDisabledFeatures.getDisabledFeatures().forEach(InstanceInfo::addDisabledFeature);
+        InstanceInfo.init();
     }
 }

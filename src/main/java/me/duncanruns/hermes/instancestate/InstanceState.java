@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.ClientToServerHelper;
 import me.duncanruns.hermes.HermesMod;
+import me.duncanruns.hermes.core.HermesCore;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 
@@ -86,7 +87,7 @@ public final class InstanceState {
 
     public static void init() {
         try {
-            file = new RandomAccessFile(HermesMod.LOCAL_HERMES_FOLDER.resolve("state.json").toFile(), "rw");
+            file = new RandomAccessFile(HermesCore.LOCAL_HERMES_FOLDER.resolve("state.json").toFile(), "rw");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -101,7 +102,7 @@ public final class InstanceState {
         registerStateUpdater((json, server) ->
                 json.add("world", Optional.ofNullable(server).map(s -> HermesMod.pathToJsonObject(HermesMod.getSavePath(server).normalize().toAbsolutePath())).orElse(null))
         );
-        if (!HermesMod.IS_CLIENT) return;
+        if (!HermesCore.IS_CLIENT) return;
         AtomicReference<Path> lastWorldJoined = new AtomicReference<>(null);
         registerClientStateUpdater((json, client) -> {
             Optional.ofNullable(ClientToServerHelper.getServer(client)).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);

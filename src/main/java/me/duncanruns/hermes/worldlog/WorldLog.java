@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
+import me.duncanruns.hermes.core.HermesCore;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.integrated.IntegratedServer;
 
@@ -29,14 +30,14 @@ public final class WorldLog {
 
     public static Path init() {
         try {
-            Path worldLogsFolder = HermesMod.LOCAL_HERMES_FOLDER.resolve("world_logs");
+            Path worldLogsFolder = HermesCore.LOCAL_HERMES_FOLDER.resolve("world_logs");
             if (!Files.exists(worldLogsFolder)) Files.createDirectories(worldLogsFolder);
             String fileName = "worlds_" + System.currentTimeMillis() + ".log";
             Path worldLogPath = worldLogsFolder.resolve(fileName);
             file = new RandomAccessFile(worldLogPath.toFile(), "rw");
             file.seek(0);
             file.setLength(0);
-            Files.write(HermesMod.LOCAL_HERMES_FOLDER.resolve("latest_world_log.txt"), fileName.getBytes(StandardCharsets.UTF_8));
+            Files.write(HermesCore.LOCAL_HERMES_FOLDER.resolve("latest_world_log.txt"), fileName.getBytes(StandardCharsets.UTF_8));
             return worldLogPath;
         } catch (IOException e) {
             throw new RuntimeException(e);

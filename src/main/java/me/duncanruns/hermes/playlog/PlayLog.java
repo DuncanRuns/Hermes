@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
+import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.rot.Rotator;
 import net.minecraft.SharedConstants;
@@ -304,7 +305,7 @@ public class PlayLog {
             JsonObject display = new JsonObject();
             display.addProperty("hidden", a.isHidden());
             display.addProperty("announce_to_chat", a.shouldAnnounceToChat());
-            if (HermesMod.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
+            if (HermesCore.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
             return display;
         }).orElse(null));
         write("advancement", data);

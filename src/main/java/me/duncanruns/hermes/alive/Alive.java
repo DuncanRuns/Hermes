@@ -1,6 +1,7 @@
 package me.duncanruns.hermes.alive;
 
 import me.duncanruns.hermes.HermesMod;
+import me.duncanruns.hermes.core.HermesCore;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -10,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public final class Alive {
-    private static final Path PATH = HermesMod.LOCAL_HERMES_FOLDER.resolve("alive").normalize();
+    private static final Path PATH = HermesCore.LOCAL_HERMES_FOLDER.resolve("alive").normalize();
 
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r);
@@ -29,7 +30,7 @@ public final class Alive {
 
     public static void init() {
         try {
-            pid = HermesMod.getProcessId();
+            pid = HermesCore.getProcessId();
         } catch (Exception e) {
             HermesMod.LOGGER.error("Failed to get PID: {}", e.getMessage());
             pid = -1;
@@ -60,10 +61,10 @@ public final class Alive {
     }
 
     private static void tryCreate() {
-        if (!Files.isDirectory(HermesMod.LOCAL_HERMES_FOLDER.getParent())) return;
-        if (!Files.isDirectory(HermesMod.LOCAL_HERMES_FOLDER)) {
+        if (!Files.isDirectory(HermesCore.LOCAL_HERMES_FOLDER.getParent())) return;
+        if (!Files.isDirectory(HermesCore.LOCAL_HERMES_FOLDER)) {
             try {
-                Files.createDirectories(HermesMod.LOCAL_HERMES_FOLDER);
+                Files.createDirectories(HermesCore.LOCAL_HERMES_FOLDER);
             } catch (Exception e) {
                 HermesMod.LOGGER.error("Failed to create Hermes folder: {}", e.getMessage());
                 EXECUTOR.shutdown();

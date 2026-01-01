@@ -33,6 +33,9 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modCompileOnly("${property("deps.atum")}")
     modCompileOnly("${property("deps.speedrunigt")}")
+
+    modImplementation("${property("deps.hermes-core")}")
+    include("${property("deps.hermes-core")}")
 }
 
 loom {
