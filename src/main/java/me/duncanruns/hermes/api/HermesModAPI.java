@@ -1,6 +1,7 @@
 package me.duncanruns.hermes.api;
 
 import com.google.gson.JsonObject;
+import me.duncanruns.hermes.HermesDisabledFeatures;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.instancestate.InstanceState;
 import me.duncanruns.hermes.playlog.PlayLog;
@@ -49,7 +50,8 @@ public final class HermesModAPI {
     }
 
     /**
-     * Writes to the play log of the current world, silently ignores if there is no current world.
+     * Writes to the play log of the current world, silently ignores if there is no current world or the play log is
+     * disabled.
      */
     @Environment(EnvType.CLIENT)
     public static void writeToCurrentPlayLog(String type, JsonObject data) {
@@ -76,5 +78,19 @@ public final class HermesModAPI {
      */
     public static Path getSavePath(MinecraftServer server) {
         return HermesMod.getSavePath(server);
+    }
+
+    /**
+     * Returns whether the play log feature is disabled.
+     */
+    public static boolean isPlayLogDisabled() {
+        return HermesDisabledFeatures.isPlayLogDisabled();
+    }
+
+    /**
+     * Returns whether the ghost feature is disabled.
+     */
+    public static boolean isGhostDisabled() {
+        return HermesDisabledFeatures.isGhostDisabled();
     }
 }
