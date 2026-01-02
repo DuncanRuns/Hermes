@@ -15,7 +15,9 @@ public final class PlayLogHelper {
     }
 
     public static Optional<PlayLog> getPlayLog(MinecraftServer server) {
-        return ((PlayLogServer) server).hermes$getPlayLog();
+        if (server instanceof PlayLogServer)
+            return ((PlayLogServer) server).hermes$getPlayLog();
+        return Optional.empty();
     }
 
     @Environment(EnvType.CLIENT)
