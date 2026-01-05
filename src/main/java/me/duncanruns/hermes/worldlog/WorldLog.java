@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
+import me.duncanruns.hermes.modintegration.ModIntegration;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.integrated.IntegratedServer;
 
@@ -61,6 +62,7 @@ public final class WorldLog {
         json.add("world", HermesMod.pathToJsonObject(worldPath.normalize().toAbsolutePath()));
         json.addProperty("type", type);
         json.addProperty("time", time);
+        if (ModIntegration.INTEGRATE_ATUM) json.addProperty("atum_running", ModIntegration.atum$isRunning());
         String jsonString = GSON.toJson(json);
         try {
             EXECUTOR.execute(() -> {
