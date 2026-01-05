@@ -17,14 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class PlayerAdvancementTrackerMixin {
     @Shadow
     private ServerPlayerEntity owner;
-
-    @Shadow
-    public abstract AdvancementProgress getProgress(Advancement advancement);
-
     //? if >=1.16 {
     @Shadow
     @Final
     private net.minecraft.server.PlayerManager field_25325;
+
+    @Shadow
+    public abstract AdvancementProgress getProgress(Advancement advancement);
     //?} else {
     /*@Shadow
     @Final

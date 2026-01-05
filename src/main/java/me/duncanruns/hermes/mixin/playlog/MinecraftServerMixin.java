@@ -1,6 +1,5 @@
 package me.duncanruns.hermes.mixin.playlog;
 
-import me.duncanruns.hermes.HermesDisabledFeatures;
 import me.duncanruns.hermes.playlog.PlayLog;
 import me.duncanruns.hermes.playlog.PlayLogServer;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;

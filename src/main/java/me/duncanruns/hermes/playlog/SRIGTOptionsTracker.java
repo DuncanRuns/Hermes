@@ -10,6 +10,14 @@ import java.util.Optional;
 public class SRIGTOptionsTracker {
     private JsonObject lastOptions = null;
 
+    private static JsonObject getSpeedRunIGTOptions() {
+        JsonObject out = new JsonObject();
+        out.addProperty("current_run_category", ModIntegration.speedRunIGT$getRunCategory());
+        // speedrunigt options, filtered because mcsrranked options are also included
+        ModIntegration.speedRunIGT$getOptions().entrySet().stream().filter(e -> e.getKey().startsWith("speedrunigt:")).forEach(e -> out.addProperty(e.getKey(), e.getValue()));
+        return out;
+    }
+
     public Optional<JsonObject> tick() {
         if (!ModIntegration.INTEGRATE_SPEEDRUNIGT) return Optional.empty();
 
@@ -20,13 +28,5 @@ public class SRIGTOptionsTracker {
         lastOptions = newOptions;
 
         return Optional.of(diff);
-    }
-
-    private static JsonObject getSpeedRunIGTOptions() {
-        JsonObject out = new JsonObject();
-        out.addProperty("current_run_category", ModIntegration.speedRunIGT$getRunCategory());
-        // speedrunigt options, filtered because mcsrranked options are also included
-        ModIntegration.speedRunIGT$getOptions().entrySet().stream().filter(e -> e.getKey().startsWith("speedrunigt:")).forEach(e -> out.addProperty(e.getKey(), e.getValue()));
-        return out;
     }
 }

@@ -1,9 +1,6 @@
 package me.duncanruns.hermes.modintegration;
 
-import com.google.gson.JsonObject;
-import com.redlimerl.speedrunigt.option.OptionArgument;
 import com.redlimerl.speedrunigt.option.SpeedRunOption;
-import com.redlimerl.speedrunigt.option.SpeedRunOptions;
 import com.redlimerl.speedrunigt.timer.InGameTimer;
 import net.minecraft.util.Identifier;
 
