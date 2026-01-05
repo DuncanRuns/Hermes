@@ -88,16 +88,6 @@ public class GameInfo {
         *///?}
     }
 
-    public static JsonObject getDifference(JsonObject previous, JsonObject current) {
-        JsonObject difference = new JsonObject();
-        current.entrySet().forEach(e -> {
-            if (!Objects.equals(previous.get(e.getKey()), e.getValue())) {
-                difference.add(e.getKey(), e.getValue());
-            }
-        });
-        return difference;
-    }
-
     public static final class PlayerInfo {
         private String name;
         private String uuid;

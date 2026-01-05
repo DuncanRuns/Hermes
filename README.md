@@ -116,6 +116,7 @@ if the world properly saved.
   the shutdown process and if player data was saved during the shutdown process, which is useful for determining if fast
   reset was used.
 - `close` - Runs when the play log is closed, which is when the server shuts down, or when the game exits.
+- `speedrunigt_options` - Various options for the mod SpeedRunIGT. Logs whenever an option changes.
 
 All of these events will be logged with currentTimeMillis and speedrunigt times if available (rta, igt, retime)
 

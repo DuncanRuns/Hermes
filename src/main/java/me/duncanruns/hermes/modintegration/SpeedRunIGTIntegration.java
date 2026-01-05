@@ -1,6 +1,15 @@
 package me.duncanruns.hermes.modintegration;
 
+import com.google.gson.JsonObject;
+import com.redlimerl.speedrunigt.option.OptionArgument;
+import com.redlimerl.speedrunigt.option.SpeedRunOption;
+import com.redlimerl.speedrunigt.option.SpeedRunOptions;
 import com.redlimerl.speedrunigt.timer.InGameTimer;
+import net.minecraft.util.Identifier;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class SpeedRunIGTIntegration {
     private SpeedRunIGTIntegration() {
@@ -16,5 +25,16 @@ public final class SpeedRunIGTIntegration {
 
     public static long getRetime() {
         return InGameTimer.getInstance().getRetimedInGameTime();
+    }
+
+    public static String getRunCategory() {
+        return InGameTimer.getInstance().getCategory().getID();
+    }
+
+    public static Map<String, String> getOptions() throws NoSuchFieldException, IllegalAccessException {
+        Field field = SpeedRunOption.class.getDeclaredField("options");
+        field.setAccessible(true);
+        Map<Identifier, String> options = (Map<Identifier, String>) field.get(null);
+        return options.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
     }
 }

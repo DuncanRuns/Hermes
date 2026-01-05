@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -83,6 +84,16 @@ public class HermesMod implements ModInitializer {
 
     public static void registerClose(Runnable runnable) {
         CLOSE_RUNNABLES.add(runnable);
+    }
+
+    public static JsonObject getJsonDifference(JsonObject previous, JsonObject current) {
+        JsonObject difference = new JsonObject();
+        current.entrySet().forEach(e -> {
+            if (!Objects.equals(previous.get(e.getKey()), e.getValue())) {
+                difference.add(e.getKey(), e.getValue());
+            }
+        });
+        return difference;
     }
 
     @Override

@@ -78,6 +78,7 @@ public class PlayLog {
     private final DimensionTracker dimensionTracker = new DimensionTracker();
     private final StructureTracker structureTracker = new StructureTracker();
     private final EffectsTracker effectsTracker = new EffectsTracker();
+    private final SRIGTOptionsTracker srigtOptionsTracker = new SRIGTOptionsTracker();
 
     private boolean isCreated = false;
     private boolean isClosing = false;
@@ -317,11 +318,12 @@ public class PlayLog {
         dimensionTracker.tick(minecraftServer).forEach(jsonObject -> write("dimension", jsonObject));
         structureTracker.tick(minecraftServer).forEach(jsonObject -> write("inside_structures", jsonObject));
         effectsTracker.tick(minecraftServer).forEach(jsonObject -> write("status_effects", jsonObject));
+        srigtOptionsTracker.tick().ifPresent(jsonObject -> write("speedrunigt_options", jsonObject));
     }
 
     private void checkGameInfo(MinecraftServer minecraftServer) {
         JsonObject newGameInfo = GSON.toJsonTree(GameInfo.fromServer(minecraftServer)).getAsJsonObject();
-        JsonObject difference = lastGameInfo == null ? newGameInfo : GameInfo.getDifference(lastGameInfo, newGameInfo);
+        JsonObject difference = lastGameInfo == null ? newGameInfo : HermesMod.getJsonDifference(lastGameInfo, newGameInfo);
         if (difference.size() > 0) {
             lastGameInfo = newGameInfo;
             write("game_info", difference);

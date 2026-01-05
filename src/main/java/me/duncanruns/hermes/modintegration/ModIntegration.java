@@ -1,6 +1,11 @@
 package me.duncanruns.hermes.modintegration;
 
+import me.duncanruns.hermes.HermesMod;
 import net.fabricmc.loader.api.FabricLoader;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 public final class ModIntegration {
     public static final boolean HAS_SPEEDRUNIGT = FabricLoader.getInstance().isModLoaded("speedrunigt");
@@ -35,5 +40,23 @@ public final class ModIntegration {
             return AtumIntegration.isRunning();
         }
         return false;
+    }
+
+    public static String speedRunIGT$getRunCategory() {
+        if (HAS_SPEEDRUNIGT) {
+            return SpeedRunIGTIntegration.getRunCategory();
+        }
+        return "";
+    }
+
+    public static Map<String, String> speedRunIGT$getOptions() {
+        if (HAS_SPEEDRUNIGT) {
+            try {
+                return SpeedRunIGTIntegration.getOptions();
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                HermesMod.LOGGER.error("Failed to get SpeedRunIGT options: {}", e.getMessage());
+            }
+        }
+        return Collections.emptyMap();
     }
 }
