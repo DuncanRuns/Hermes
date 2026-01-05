@@ -1,6 +1,5 @@
 package me.duncanruns.hermes;
 
-import com.google.gson.Gson;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
@@ -15,8 +14,12 @@ import java.util.stream.StreamSupport;
 public class HermesDisabledFeatures {
     private static final String PLAY_LOG = "playlog";
     private static final String GHOST = "ghost";
+    private static final String ATUM_INTEGRATION = "atum_integration_v1";
+    private static final String SPEEDRUNIGT_INTEGRATION = "speedrunigt_integration_v1";
     private static boolean playLogDisabled = false;
     private static boolean ghostDisabled = false;
+    private static boolean atumIntegrationDisabled = false;
+    private static boolean speedRunIGTIntegrationDisabled = false;
     private static final List<String> disabledFeatures = new ArrayList<>();
 
     static {
@@ -50,6 +53,18 @@ public class HermesDisabledFeatures {
                 disabledFeatures.add(GHOST);
                 HermesMod.LOGGER.info("Ghost feature disabled by mod '{}'", modId);
                 break;
+            case ATUM_INTEGRATION:
+                if (atumIntegrationDisabled) return;
+                atumIntegrationDisabled = true;
+                disabledFeatures.add(ATUM_INTEGRATION);
+                HermesMod.LOGGER.info("Atum integration feature disabled by mod '{}'", modId);
+                break;
+            case SPEEDRUNIGT_INTEGRATION:
+                if (speedRunIGTIntegrationDisabled) return;
+                speedRunIGTIntegrationDisabled = true;
+                disabledFeatures.add(SPEEDRUNIGT_INTEGRATION);
+                HermesMod.LOGGER.info("SpeedRunIGT integration feature disabled by mod '{}'", modId);
+                break;
         }
     }
 
@@ -59,6 +74,14 @@ public class HermesDisabledFeatures {
 
     public static boolean isGhostDisabled() {
         return ghostDisabled;
+    }
+
+    public static boolean isAtumIntegrationDisabled() {
+        return atumIntegrationDisabled;
+    }
+
+    public static boolean isSpeedRunIGTIntegrationDisabled() {
+        return speedRunIGTIntegrationDisabled;
     }
 
     public static List<String> getDisabledFeatures() {

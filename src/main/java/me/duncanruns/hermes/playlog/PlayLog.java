@@ -198,7 +198,7 @@ public class PlayLog {
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
-        if (ModIntegration.HAS_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
+        if (ModIntegration.INTEGRATE_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
         write("initialize", data);
         INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
     }
@@ -231,7 +231,7 @@ public class PlayLog {
         lineJson.addProperty("time", currentTime);
         lineJson.addProperty("type", type);
         lineJson.add("data", data);
-        if (ModIntegration.HAS_SPEEDRUNIGT) lineJson.add("speedrunigt", getSpeedRunIGTObject());
+        if (ModIntegration.INTEGRATE_SPEEDRUNIGT) lineJson.add("speedrunigt", getSpeedRunIGTObject());
 
         try {
             EXECUTOR.execute(() -> write(GSON.toJson(lineJson)));

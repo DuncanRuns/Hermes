@@ -11,7 +11,7 @@ public class SRIGTOptionsTracker {
     private JsonObject lastOptions = null;
 
     public Optional<JsonObject> tick() {
-        if (!ModIntegration.HAS_SPEEDRUNIGT) return Optional.empty();
+        if (!ModIntegration.INTEGRATE_SPEEDRUNIGT) return Optional.empty();
 
         JsonObject newOptions = getSpeedRunIGTOptions();
         if (Objects.equals(lastOptions, newOptions)) return Optional.empty();
