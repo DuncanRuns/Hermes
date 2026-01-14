@@ -23,4 +23,9 @@ public abstract class MinecraftServerMixin {
     private void onSave(CallbackInfoReturnable<Boolean> cir) {
         ghostManager.onSave();
     }
+
+    @Inject(method = "shutdown", at = @At("RETURN"))
+    private void onClose(CallbackInfo ci) {
+        ghostManager.close();
+    }
 }

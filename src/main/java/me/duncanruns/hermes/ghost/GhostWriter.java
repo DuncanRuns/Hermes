@@ -93,6 +93,7 @@ public class GhostWriter {
     }
 
     public void close(boolean save) {
+        if (closing) return;
         closing = true;
         if (save) saveToFile();
         try {
