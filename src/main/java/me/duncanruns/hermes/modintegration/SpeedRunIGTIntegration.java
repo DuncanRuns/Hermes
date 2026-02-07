@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class SpeedRunIGTIntegration {
+    private static Field optionsField = null;
+
     private SpeedRunIGTIntegration() {
     }
 
@@ -28,10 +30,14 @@ public final class SpeedRunIGTIntegration {
         return InGameTimer.getInstance().getCategory().getID();
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, String> getOptions() throws NoSuchFieldException, IllegalAccessException {
-        Field field = SpeedRunOption.class.getDeclaredField("options");
-        field.setAccessible(true);
-        Map<Identifier, String> options = (Map<Identifier, String>) field.get(null);
+        if (optionsField == null) {
+            optionsField = SpeedRunOption.class.getDeclaredField("options");
+            optionsField.setAccessible(true);
+        }
+
+        Map<Identifier, String> options = (Map<Identifier, String>) optionsField.get(null);
         return options.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
     }
 }
