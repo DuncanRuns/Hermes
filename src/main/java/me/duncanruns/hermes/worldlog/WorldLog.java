@@ -59,7 +59,7 @@ public final class WorldLog {
 
     public static void write(Path worldPath, String type, long time) {
         JsonObject json = new JsonObject();
-        json.add("world", HermesMod.pathToJsonObject(worldPath.normalize().toAbsolutePath()));
+        json.add("world", HermesCore.pathToJsonObject(worldPath.normalize().toAbsolutePath()));
         json.addProperty("type", type);
         json.addProperty("time", time);
         if (ModIntegration.INTEGRATE_ATUM) json.addProperty("atum_running", ModIntegration.atum$isRunning());

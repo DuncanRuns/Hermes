@@ -100,14 +100,14 @@ public final class InstanceState {
             }
         });
         registerStateUpdater((json, server) ->
-                json.add("world", Optional.ofNullable(server).map(s -> HermesMod.pathToJsonObject(HermesMod.getSavePath(server).normalize().toAbsolutePath())).orElse(null))
+                json.add("world", Optional.ofNullable(server).map(s -> HermesCore.pathToJsonObject(HermesMod.getSavePath(server).normalize().toAbsolutePath())).orElse(null))
         );
         if (!HermesCore.IS_CLIENT) return;
         AtomicReference<Path> lastWorldJoined = new AtomicReference<>(null);
         registerClientStateUpdater((json, client) -> {
             Optional.ofNullable(ClientToServerHelper.getServer(client)).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
             json.add("screen", HermesMod.screenToJsonObject(client.currentScreen));
-            json.add("last_world_joined", HermesMod.pathToJsonObject(lastWorldJoined.get()));
+            json.add("last_world_joined", HermesCore.pathToJsonObject(lastWorldJoined.get()));
         });
     }
 }

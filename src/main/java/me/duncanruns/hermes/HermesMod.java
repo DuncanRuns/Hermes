@@ -55,23 +55,6 @@ public class HermesMod implements ModInitializer {
         return ((WorldPathHolder) server).hermes$getWorldPath();
     }
 
-    /**
-     * Converts a path to a json object. If the path is within the game directory, it will be marked as relative and
-     * relativized to the game directory. Otherwise, it will be an absolute path with relative set to false.
-     */
-    public static JsonObject pathToJsonObject(Path path) {
-        if (path == null) return null;
-        JsonObject out = new JsonObject();
-        if (path.toAbsolutePath().startsWith(HermesCore.GAME_DIR)) {
-            out.addProperty("relative", true);
-            out.addProperty("path", HermesCore.GAME_DIR.relativize(path).toString().replace("\\", "/"));
-        } else {
-            out.addProperty("relative", false);
-            out.addProperty("path", path.toString().replace("\\", "/"));
-        }
-        return out;
-    }
-
     public static void close() {
         CLOSE_RUNNABLES.forEach(runnable -> {
             try {
