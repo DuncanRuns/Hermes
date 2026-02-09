@@ -33,16 +33,19 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void onTick(CallbackInfo ci) {
+        assert playLog != null;
         playLog.onTick((MinecraftServer) (Object) this);
     }
 
     @Inject(method = "shutdown", at = @At("HEAD"))
     private void onServerShuttingDown(CallbackInfo ci) {
+        if (playLog == null) return;
         playLog.onServerShuttingDown();
     }
 
     @Inject(method = "shutdown", at = @At("RETURN"))
     private void onServerShutdown(CallbackInfo ci) {
+        if (playLog == null) return;
         playLog.onServerFinishShutdown();
     }
 
