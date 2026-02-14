@@ -105,9 +105,11 @@ public final class InstanceState {
         if (!HermesCore.IS_CLIENT) return;
         AtomicReference<Path> lastWorldJoined = new AtomicReference<>(null);
         registerClientStateUpdater((json, client) -> {
-            Optional.ofNullable(ClientToServerHelper.getServer(client)).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
+            MinecraftServer server = ClientToServerHelper.getServer(client);
+            Optional.ofNullable(server).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
             json.add("screen", HermesMod.screenToJsonObject(client.currentScreen));
             json.add("last_world_joined", HermesCore.pathToJsonObject(lastWorldJoined.get()));
+            json.addProperty("open_to_lan", Optional.ofNullable(server).map(MinecraftServer::isRemote).orElse(null));
         });
     }
 }

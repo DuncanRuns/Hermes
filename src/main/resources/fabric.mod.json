@@ -5,7 +5,12 @@
   "name": "${name}",
   "description": "Uninterpreted data output for external tools focused on the MCSR community.",
   "authors": [
-    "DuncanRuns"
+    {
+      "name": "DuncanRuns",
+      "contact": {
+        "homepage": "https://github.com/DuncanRuns/"
+      }
+    }
   ],
   "license": "CC0-1.0",
   "icon": "assets/hermes/icon.png",

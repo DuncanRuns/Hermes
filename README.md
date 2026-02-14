@@ -51,6 +51,7 @@ replacement for the state output mod. Contained in the file is:
 - The current screen (class, title, if pause screen)
 - The current world (null while not in a world)
 - The last joined world (null until first world join)
+- If the current world is open to LAN (null if not in a world, otherwise a boolean)
 
 ### `[Game Directory]/hermes/latest_world_log.txt`
 
