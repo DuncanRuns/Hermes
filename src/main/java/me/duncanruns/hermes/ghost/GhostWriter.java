@@ -6,6 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 import java.io.RandomAccessFile;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +31,7 @@ public class GhostWriter {
         this.path = worldPath.resolve("hermes").resolve("ghosts").resolve(playerId.toString() + ".ghost");
         this.requiredParent = worldPath;
         buffer = ByteBuffer.wrap(new byte[PACKET_SIZE * 20 * 60 * 10]); // 0.552 MB, 10 minutes of data
-        buffer.position(0);
+        ((Buffer) buffer).position(0);
     }
 
     private static byte getFlags(ServerPlayerEntity player) {
@@ -88,7 +89,7 @@ public class GhostWriter {
             close(false);
         } finally {
             full = false;
-            buffer.position(0);
+            ((Buffer) buffer).position(0);
         }
     }
 
