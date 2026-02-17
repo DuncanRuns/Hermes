@@ -87,10 +87,11 @@ public final class Alive {
         EXECUTOR.shutdownNow();
         if (file != null) {
             try {
+                file.seek(8);
+                file.writeLong(-1);
                 file.close();
-                Files.delete(PATH);
             } catch (IOException e) {
-                HermesMod.LOGGER.error("Failed to delete alive file: {}", e.getMessage());
+                HermesMod.LOGGER.error("Failed to close alive file: {}", e.getMessage());
             }
         }
     }
