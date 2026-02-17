@@ -2,7 +2,7 @@ package me.duncanruns.hermes;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import me.duncanruns.hermes.alive.Alive;
+import me.duncanruns.hermes.core.Alive;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.core.InstanceInfo;
 import me.duncanruns.hermes.instancestate.InstanceState;
@@ -81,6 +81,7 @@ public class HermesMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        HermesCore.ERROR_LOGGER = LOGGER::error;
         if (!Files.exists(HermesCore.LOCAL_HERMES_FOLDER)) {
             try {
                 Files.createDirectories(HermesCore.LOCAL_HERMES_FOLDER);
