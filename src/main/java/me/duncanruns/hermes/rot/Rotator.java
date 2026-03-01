@@ -95,9 +95,9 @@ public class Rotator {
         }
     }
 
-    private static void halfReverse(byte[] bytes) {
-        for (int i = 0; i < bytes.length / 2; i += 2) {
-            swap(bytes, i, bytes.length - 1 - i);
+    private static void halfReverse(byte[] bytes, int length) {
+        for (int i = 0; i < length / 2; i += 2) {
+            swap(bytes, i, length - 1 - i);
         }
     }
 
@@ -108,7 +108,11 @@ public class Rotator {
     }
 
     public void rotate(byte[] bytes) {
-        for (int i = 0; i < bytes.length; i++) {
+        rotate(bytes, bytes.length);
+    }
+
+    public void rotate(byte[] bytes, int length) {
+        for (int i = 0; i < length; i++) {
             byte c = bytes[i];
             if (c >= minVal && c <= maxVal) {
                 bytes[i] = swapArray[c - minVal];
@@ -117,8 +121,12 @@ public class Rotator {
     }
 
     public void rotateAndHalfReverse(byte[] bytes) {
-        rotate(bytes);
-        halfReverse(bytes);
+        rotateAndHalfReverse(bytes, bytes.length);
+    }
+
+    public void rotateAndHalfReverse(byte[] bytes, int length) {
+        rotate(bytes, length);
+        halfReverse(bytes, length);
     }
 }
 

@@ -20,7 +20,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
@@ -72,7 +71,6 @@ public class PlayLog {
     private final Path savePath; // example: .minecraft/saves/Random Speedrun #3/hermes/play.log
     private final Path rtPath; // example: .minecraft/saves/Random Speedrun #3/hermes/restricted/play.log.enc
     private RandomAccessFile rtFile;
-    private final ByteArrayOutputStream lineBuffer = new ByteArrayOutputStream(128);
 
     private final InventoryTracker inventoryTracker = new InventoryTracker();
     private final DimensionTracker dimensionTracker = new DimensionTracker();
@@ -361,30 +359,46 @@ public class PlayLog {
         if (!isCreated) return;
         if (!Files.exists(rtPath)) return;
 
-        RandomAccessFile unencryptedFile = new RandomAccessFile(savePath.toFile(), "rw");
-        long saveProgress = unencryptedFile.length();
-        unencryptedFile.seek(saveProgress);
-        rtFile.seek(saveProgress);
-        while (rtFile.getFilePointer() < rtFile.length()) {
-            byte[] line = readLineFromRTFile();
-            Rotator.ROT_HERMES.rotateAndHalfReverse(line);
-            unencryptedFile.write(line);
-            unencryptedFile.write('\n');
-        }
-        unencryptedFile.close();
-        rtFile.seek(rtFile.length());
-    }
+        try (RandomAccessFile unencryptedFile = new RandomAccessFile(savePath.toFile(), "rw")) {
+            long saveProgress = unencryptedFile.length();
+            long fileLength = rtFile.length();
 
-    private byte[] readLineFromRTFile() throws IOException {
-        try {
-            int c;
-            while ((c = rtFile.read()) != -1 && c != '\n') {
-                lineBuffer.write(c);
+            if (saveProgress >= fileLength) return;
+
+            rtFile.seek(saveProgress);
+            unencryptedFile.seek(saveProgress);
+
+            byte[] readBuffer = new byte[64 * 1024];
+            byte[] lineBuffer = new byte[8192];
+            int linePos = 0;
+
+            int bytesRead;
+            while ((bytesRead = rtFile.read(readBuffer)) != -1) {
+
+                for (int i = 0; i < bytesRead; i++) {
+                    byte b = readBuffer[i];
+
+                    if (b == '\n') {
+                        Rotator.ROT_HERMES.rotateAndHalfReverse(lineBuffer, linePos);
+                        unencryptedFile.write(lineBuffer, 0, linePos);
+                        unencryptedFile.write('\n');
+                        linePos = 0;
+                    } else {
+                        if (linePos == lineBuffer.length) {
+                            lineBuffer = Arrays.copyOf(lineBuffer, lineBuffer.length * 2);
+                        }
+                        lineBuffer[linePos++] = b;
+                    }
+                }
             }
-            return lineBuffer.toByteArray();
-        } finally {
-            lineBuffer.reset();
+
+            if (linePos > 0) {
+                Rotator.ROT_HERMES.rotateAndHalfReverse(lineBuffer, linePos);
+                unencryptedFile.write(lineBuffer, 0, linePos);
+            }
         }
+
+        rtFile.seek(rtFile.length());
     }
 
     public void close() {
