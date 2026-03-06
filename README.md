@@ -33,7 +33,7 @@ Locations:
   `~/.local/share/MCSRHermes/instances/[PID].json`
 
 When making software that uses Hermes, it's recommended to copy the logic from `private static Path getGlobalPath()`
-in [HermesMod.java](src/main/java/me/duncanruns/hermes/HermesMod.java).
+in [HermesCore.java](https://github.com/DuncanRuns/HermesCore/blob/main/src/main/java/me/duncanruns/hermes/core/HermesCore.java).
 
 ### `[Game Directory]/hermes/alive`
 
