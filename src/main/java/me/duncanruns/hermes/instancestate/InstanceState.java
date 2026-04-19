@@ -110,6 +110,18 @@ public final class InstanceState {
             json.add("screen", HermesMod.screenToJsonObject(client.currentScreen));
             json.add("last_world_joined", HermesCore.pathToJsonObject(lastWorldJoined.get()));
             json.addProperty("open_to_lan", Optional.ofNullable(server).map(MinecraftServer::isRemote).orElse(null));
+            json.addProperty("debug_hud_enabled", ClientHelper.isDebugEnabled());
+            json.addProperty("debug_profiler_enabled", ClientHelper.isDebugProfilerEnabled());
         });
+    }
+
+    private static final class ClientHelper {
+        private static boolean isDebugProfilerEnabled() {
+            return MinecraftClient.getInstance().options.debugProfilerEnabled;
+        }
+
+        private static boolean isDebugEnabled() {
+            return MinecraftClient.getInstance().options.debugEnabled;
+        }
     }
 }
