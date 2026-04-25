@@ -6,19 +6,19 @@ import com.google.gson.JsonObject;
 import me.duncanruns.hermes.ClientToServerHelper;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
+import me.duncanruns.hermes.instancestate.updaters.WorldStateUpdater;
+import me.duncanruns.hermes.instancestate.updaters.client.ScreenStateUpdater;
+import me.duncanruns.hermes.instancestate.updaters.client.ClientWorldStateUpdater;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 public final class InstanceState {
@@ -99,17 +99,11 @@ public final class InstanceState {
                 throw new RuntimeException(e);
             }
         });
-        registerStateUpdater((json, server) ->
-                json.add("world", Optional.ofNullable(server).map(s -> HermesCore.pathToJsonObject(HermesMod.getSavePath(server).normalize().toAbsolutePath())).orElse(null))
-        );
-        if (!HermesCore.IS_CLIENT) return;
-        AtomicReference<Path> lastWorldJoined = new AtomicReference<>(null);
-        registerClientStateUpdater((json, client) -> {
-            MinecraftServer server = ClientToServerHelper.getServer(client);
-            Optional.ofNullable(server).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
-            json.add("screen", HermesMod.screenToJsonObject(client.currentScreen));
-            json.add("last_world_joined", HermesCore.pathToJsonObject(lastWorldJoined.get()));
-            json.addProperty("open_to_lan", Optional.ofNullable(server).map(MinecraftServer::isRemote).orElse(null));
-        });
+
+        registerStateUpdater(new WorldStateUpdater());
+        if (HermesCore.IS_CLIENT) {
+            registerClientStateUpdater(new ScreenStateUpdater());
+            registerClientStateUpdater(new ClientWorldStateUpdater());
+        }
     }
 }
