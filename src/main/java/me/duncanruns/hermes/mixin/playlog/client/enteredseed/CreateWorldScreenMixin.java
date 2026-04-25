@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.OptionalLong;
+
 @Mixin(CreateWorldScreen.class)
 public abstract class CreateWorldScreenMixin extends Screen {
     //? if >=1.16 {
@@ -37,9 +39,15 @@ public abstract class CreateWorldScreenMixin extends Screen {
 
     @Unique
     private String getSeed() {
-        //? if >=1.16 {
+        //? if >=1.16 <= 1.16.1 {
         return ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedText();
-        //?} else {
+         //?} else if >= 1.16.2 {
+        /*OptionalLong seed = ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedOpt();
+        if (seed.isPresent()) {
+            return Long.toString(seed.getAsLong());
+        }
+        return "";
+        *///?} else {
         /*return this.seed;
          *///?}
     }

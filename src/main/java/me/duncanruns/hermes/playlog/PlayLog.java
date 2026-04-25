@@ -63,8 +63,10 @@ public class PlayLog {
     });
     private static final Collection<PlayLog> PLAY_LOGS = new ConcurrentLinkedQueue<>();
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
-    //? if >=1.16
+    //? if >=1.16 <=1.16.1
     private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
+    //? if >=1.16.2
+    /*private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());*/
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
     private final Path requiredParent;

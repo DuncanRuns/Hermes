@@ -2,9 +2,7 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.datafixer.NbtOps;
 import net.minecraft.resource.ResourcePackManager;
-import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
 
@@ -62,7 +60,11 @@ public class GameInfo {
             return pi;
         }).collect(Collectors.toList());
         gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
-        ResourcePackManager<ResourcePackProfile> dataPackManager = server.getDataPackManager();
+        //? if >=1.16.2 {
+        /*ResourcePackManager dataPackManager = server.getDataPackManager();
+        *///?} else {
+        ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
+        //?}
         //? if >=1.16 {
         gameInfo.dataPacks = dataPackManager.getNames().stream().sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledNames().stream().sorted().collect(Collectors.toList());
@@ -81,9 +83,11 @@ public class GameInfo {
     }
 
     private static JsonObject gameRulesToJson(GameRules gameRules) {
-        //? if >=1.16 {
-        return NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
-        //?} else {
+        //? if >=1.16 <=1.16.1 {
+        return net.minecraft.datafixer.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+        //?} else if >= 1.16.2 {
+        /*return net.minecraft.nbt.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+        *///?} else {
         /*return com.mojang.datafixers.Dynamic.convert(NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
         *///?}
     }
