@@ -44,11 +44,12 @@ public class GameInfo {
         GameInfo gameInfo = new GameInfo();
         gameInfo.cheatsAllowed = server.getPlayerManager().areCheatsAllowed();
         gameInfo.openToLan = server.isRemote();
-        //? if >=1.16 {
-        net.minecraft.world.SaveProperties levelProperties = server.getSaveProperties();
-        //?} else {
+        //? if <=1.15.2 {
         /*net.minecraft.world.level.LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
-        *///?}
+        *///?} else {
+        net.minecraft.world.SaveProperties levelProperties = server.getSaveProperties();
+        //?}
+
         gameInfo.hardcore = levelProperties.isHardcore();
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
         gameInfo.difficulty = levelProperties.getDifficulty().getName();
@@ -60,18 +61,19 @@ public class GameInfo {
             return pi;
         }).collect(Collectors.toList());
         gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
-        //? if >=1.16.2 {
-        /*ResourcePackManager dataPackManager = server.getDataPackManager();
-        *///?} else {
+        //? if <=1.16.1 {
         ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
-        //?}
-        //? if >=1.16 {
+         //?} else {
+        /*ResourcePackManager dataPackManager = server.getDataPackManager();
+        *///?}
+
+        //? if <=1.15.2 {
+        /*gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
+        gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
+        *///?} else {
         gameInfo.dataPacks = dataPackManager.getNames().stream().sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledNames().stream().sorted().collect(Collectors.toList());
-        //?} else {
-        /*gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(ResourcePackProfile::getName).sorted().collect(Collectors.toList());
-        gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(ResourcePackProfile::getName).sorted().collect(Collectors.toList());
-        *///?}
+        //?}
         gameInfo.nonDefaultGameRules = getChangedGameRules(server);
         return gameInfo;
     }
@@ -83,12 +85,12 @@ public class GameInfo {
     }
 
     private static JsonObject gameRulesToJson(GameRules gameRules) {
-        //? if >=1.16 <=1.16.1 {
+        //? if <=1.15.2 {
+        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+         *///?} else if <=1.16.1 {
         return net.minecraft.datafixer.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
-        //?} else if >= 1.16.2 {
+         //?} else {
         /*return net.minecraft.nbt.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
-        *///?} else {
-        /*return com.mojang.datafixers.Dynamic.convert(NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
         *///?}
     }
 

@@ -16,11 +16,11 @@ public class InventoryTracker {
 
     private static JsonElement stackToJson(ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
-        //? if >=1.16 {
-        return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
-        //?} else {
+        //? if <=1.15.2 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
-        *///?}
+         *///?} else {
+        return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
+        //?}
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -33,11 +33,11 @@ public class InventoryTracker {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
-        //? if >=1.16 {
-        return ItemStack.areEqual(a, b);
-        //?} else {
+        //? if <=1.15.2 {
         /*return ItemStack.areItemsEqual(a, b);
-         *///?}
+         *///?} else {
+        return ItemStack.areEqual(a, b);
+        //?}
     }
 
     /**

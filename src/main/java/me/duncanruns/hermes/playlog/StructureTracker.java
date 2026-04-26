@@ -30,16 +30,15 @@ public class StructureTracker {
             //? if >=1.16
             net.minecraft.world.gen.StructureAccessor structureAccessor = world.getStructureAccessor();
             StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
-                //? if >=1.16 <=1.16.1 {
+                //? if <=1.15.2 {
+                /*if (!feature.isInsideStructure(world, blockPos)) return;
+                *///?} else if <=1.16.1 {
                 net.minecraft.structure.StructureStart<?> structureStart = structureAccessor.method_28388(blockPos, true, feature);
                 if (!structureStart.hasChildren()) return;
-                //?} else if >= 1.16.2 {
+                //?} else {
                 /*net.minecraft.structure.StructureStart<?> structureStart = structureAccessor.getStructureAt(blockPos, true, feature);
                 if (!structureStart.hasChildren()) return;
-
-                *///?} else {
-                /*if (!feature.isInsideStructure(world, blockPos)) return;
-                 *///?}
+                *///?}
                 structures.add(structureName);
             });
 
