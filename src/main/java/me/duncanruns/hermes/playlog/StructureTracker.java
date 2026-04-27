@@ -20,7 +20,11 @@ public class StructureTracker {
             if (player.age % 20 != 0) return;
 
             // The following line to get block pos may look weird, but is how the game does it for advancements (after a few levels of abstraction)
+            //? if <=1.14.4 {
+            /*BlockPos blockPos = new BlockPos((float) player.x, (float) player.y, (float) player.z);
+            *///?} else {
             BlockPos blockPos = new BlockPos((float) player.getX(), (float) player.getY(), (float) player.getZ());
+            //?}
             ServerWorld world = player.getServerWorld();
             if (!world.canSetBlock(blockPos)) return;
 

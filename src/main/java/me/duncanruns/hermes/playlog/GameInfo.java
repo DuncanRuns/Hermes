@@ -61,7 +61,9 @@ public class GameInfo {
             return pi;
         }).collect(Collectors.toList());
         gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
-        //? if <=1.16.1 {
+        //? if <=1.14.4 {
+        /*ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackContainerManager();
+        *///?} else if <=1.16.1 {
         ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
          //?} else {
         /*ResourcePackManager dataPackManager = server.getDataPackManager();

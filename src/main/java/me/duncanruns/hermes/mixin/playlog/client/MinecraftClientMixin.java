@@ -17,6 +17,12 @@ public abstract class MinecraftClientMixin {
         IntegratedServer server = client.getServer();
         if (server == null) return;
         assert client.currentScreen != null;
-        server.submit(() -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onScreenChange(client.currentScreen)));
+        Runnable runnable = () -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onScreenChange(client.currentScreen));
+        //? if <=1.14.4 {
+        /*server.method_20493(runnable);
+         *///?} else {
+        server.submit(runnable);
+        //?}
+
     }
 }
