@@ -1,6 +1,7 @@
 package me.duncanruns.hermes.ghost;
 
 import me.duncanruns.hermes.HermesMod;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -58,15 +59,24 @@ public class GhostWriter {
             full = true;
             return;
         }
+
+        //? if <=1.16.5 {
+        float pitch = player.pitch;
+        PlayerInventory inventory = player.inventory;
+        //?} else {
+        /*float pitch = player.getPitch();
+        PlayerInventory inventory = player.getInventory();
+        *///?}
+
         buffer.putLong(time); // 1->8
         Vec3d pos = player.getPos();
         buffer.putDouble(pos.x); // 9->16
         buffer.putDouble(pos.y); // 17->24
         buffer.putDouble(pos.z); // 25->32
         buffer.putFloat(player.headYaw); // 33->36
-        buffer.putFloat(player.pitch); // 37->40
+        buffer.putFloat(pitch); // 37->40
         buffer.putFloat(player.getHealth()); // 41->44
-        buffer.put((byte) (player.inventory.selectedSlot % 9)); // 45
+        buffer.put((byte) (inventory.selectedSlot % 9)); // 45
         buffer.put(getFlags(player)); // 46
     }
 

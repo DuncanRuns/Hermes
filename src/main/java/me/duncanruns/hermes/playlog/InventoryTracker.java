@@ -50,7 +50,11 @@ public class InventoryTracker {
         List<JsonObject> changes = new ArrayList<>();
         minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
             UUID id = player.getGameProfile().getId();
+            //? if <=1.16.5 {
             PlayerInventory inventory = player.inventory;
+            //?} else {
+            /*PlayerInventory inventory = player.getInventory();
+            *///?}
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 = offhand
             List<ItemStack> newItems = HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream()).map(ItemStack::copy).collect(Collectors.toList());

@@ -14,7 +14,7 @@ public abstract class MinecraftClientMixin {
         InstanceState.update((MinecraftClient) (Object) this);
     }
 
-    @Inject(method = "openScreen", at = @At("RETURN"))
+    @Inject(method = {"openScreen", "setScreen"}, at = @At("RETURN"), require = 1, allow = 1)
     private void onOpenScreen(CallbackInfo ci) {
         InstanceState.update((MinecraftClient) (Object) this);
     }

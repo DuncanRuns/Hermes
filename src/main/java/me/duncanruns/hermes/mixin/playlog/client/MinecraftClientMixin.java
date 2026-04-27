@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
-    @Inject(method = "openScreen", at = @At("RETURN"))
+    @Inject(method = {"openScreen", "setScreen"}, at = @At("RETURN"), require = 1, allow = 1)
     private void onOpenScreen(CallbackInfo ci) {
         MinecraftClient client = (MinecraftClient) (Object) this;
         IntegratedServer server = client.getServer();

@@ -1,6 +1,7 @@
 package me.duncanruns.hermes.mixin.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLogHelper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,8 +16,13 @@ import java.util.Optional;
 public abstract class CommandManagerMixin {
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;execute(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)I", shift = At.Shift.AFTER))
     private void onSuccessfulCommand(ServerCommandSource commandSource, String command, CallbackInfoReturnable<Integer> cir) {
+        //? if <=1.16.5 {
+        MinecraftServer server = commandSource.getMinecraftServer();
+        //?} else {
+        /*MinecraftServer server = commandSource.getServer();
+        *///?}
         Optional.ofNullable(commandSource.getEntity())
                 .filter(e -> e instanceof ServerPlayerEntity)
-                .ifPresent(entity -> PlayLogHelper.getPlayLog(commandSource.getMinecraftServer()).ifPresent(p -> p.onCommand((ServerPlayerEntity) entity, command)));
+                .ifPresent(entity -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onCommand((ServerPlayerEntity) entity, command)));
     }
 }
