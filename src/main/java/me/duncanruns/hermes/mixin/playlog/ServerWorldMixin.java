@@ -20,9 +20,13 @@ public abstract class ServerWorldMixin extends World {
     protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties mutableWorldProperties, net.minecraft.util.registry.RegistryKey<World> registryKey, net.minecraft.util.registry.RegistryKey<DimensionType> registryKey2, DimensionType dimensionType, java.util.function.Supplier<Profiler> profiler, boolean bl, boolean bl2, long l) {
         super(mutableWorldProperties, registryKey, registryKey2, dimensionType, profiler, bl, bl2, l);
     }
-    //?} else {
+    //?} else if <=1.18.1 {
     /*protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties properties, net.minecraft.util.registry.RegistryKey<World> registryRef, DimensionType dimensionType, java.util.function.Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
         super(properties, registryRef, dimensionType, profiler, isClient, debugWorld, seed);
+    }
+    *///?} else {
+    /*protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties properties, net.minecraft.util.registry.RegistryKey<World> registryRef, net.minecraft.util.registry.RegistryEntry<DimensionType> registryEntry, java.util.function.Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
+        super(properties, registryRef, registryEntry, profiler, isClient, debugWorld, seed);
     }
     *///?}
 

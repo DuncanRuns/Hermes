@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class HermesMod implements ModInitializer {
@@ -44,7 +45,12 @@ public class HermesMod implements ModInitializer {
         JsonObject data = new JsonObject();
         String screenClass = Optional.ofNullable(currentScreen).map(s -> s.getClass().getName()).orElse(null);
         JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(Text.Serializer::toJsonTree).orElse(null);
-        boolean screenIsPause = Optional.ofNullable(currentScreen).map(Screen::isPauseScreen).orElse(false);
+        //? if <=1.17.1 {
+        Function<Screen, Boolean> screenObjectFunction = Screen::isPauseScreen;
+        //?} else {
+        /*Function<Screen, Boolean> screenObjectFunction = Screen::shouldPause;
+        *///?}
+        boolean screenIsPause = Optional.ofNullable(currentScreen).map(screenObjectFunction).orElse(false);
         data.addProperty("class", screenClass);
         data.add("title", screenTitle);
         data.addProperty("is_pause", screenIsPause);

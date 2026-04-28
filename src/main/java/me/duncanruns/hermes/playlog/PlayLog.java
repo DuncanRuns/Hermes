@@ -65,7 +65,7 @@ public class PlayLog {
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
     //? if >=1.16 <=1.16.1
     private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
-    //? if >=1.16.2
+    //? if >=1.16.2 <=1.18.1
     //private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
@@ -92,7 +92,9 @@ public class PlayLog {
 
     public static final Collection<String> STAT_BLOCK_LIST = new ArrayList<>(Arrays.asList(
             "minecraft.custom:minecraft.play_one_minute",
-            "minecraft.custom:minecraft.sneak_time"
+            "minecraft.custom:minecraft.sneak_time",
+            "minecraft.custom:minecraft.total_world_time",
+            "minecraft.custom:minecraft.play_time"
     ));
     public static final Collection<String> STAT_SUFFIX_BLOCK_LIST = Collections.singletonList(
             "_one_cm"
@@ -126,12 +128,17 @@ public class PlayLog {
         //? if <=1.15.2 {
         /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
         JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        *///?} else {
+        *///?} else if <=1.18.1 {
         JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
                 .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
-        //?}
+        //?} else {
+        /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
+                .encodeStart(net.minecraft.util.dynamic.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE,server.getRegistryManager()), server.getSaveProperties().getGeneratorOptions())
+                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
+                .orElse(null);
+        *///?}
         if (json == null) return null;
         clearSeed(json);
         return json;
