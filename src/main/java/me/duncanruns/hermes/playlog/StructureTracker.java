@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.StructureFeature;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -56,25 +55,28 @@ public class StructureTracker {
         net.minecraft.world.gen.StructureAccessor structureAccessor = world.getStructureAccessor();
 
         //? if <=1.18.1 {
-        StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
-        //?} else {
+        net.minecraft.world.gen.feature.StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
+        //?} else if <=1.18.2 {
         /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.feature.ConfiguredStructureFeature<?, ?>> structReg = world.getRegistryManager().get(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
         structReg.forEach(feature -> {
             String structureName = Objects.requireNonNull(structReg.getId(feature)).toString();
+        *///?} else {
+        /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().get(net.minecraft.util.registry.Registry.STRUCTURE_KEY);
+        structReg.forEach(structureRaw -> {
+            net.minecraft.util.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
+            String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
         *///?}
             //? if <=1.15.2 {
             /*if (!feature.isInsideStructure(world, blockPos)) return;
             *///?} else if <=1.16.1 {
-            net.minecraft.structure.StructureStart<?> structureStart = structureAccessor.method_28388(blockPos, true, feature);
+            if (!structureAccessor.method_28388(blockPos, true, feature).hasChildren()) return;
             //?} else if <= 1.17.1 {
-            /*net.minecraft.structure.StructureStart<?> structureStart = structureAccessor.getStructureAt(blockPos, true, feature);
+            /*if (!structureAccessor.getStructureAt(blockPos, true, feature).hasChildren()) return;
             *///?} else if <= 1.18.1 {
-            /*net.minecraft.structure.StructureStart<?> structureStart = structureAccessor.getStructureContaining(blockPos, feature);
+            /*if (!structureAccessor.getStructureContaining(blockPos, feature).hasChildren()) return;
             *///?} else {
-            /*net.minecraft.structure.StructureStart structureStart = structureAccessor.getStructureContaining(blockPos, feature);
+            /*if (!structureAccessor.getStructureContaining(blockPos, feature).hasChildren()) return;
             *///?}
-            //? if >=1.16
-            if (!structureStart.hasChildren()) return;
             structures.add(structureName);
         });
         return structures;
