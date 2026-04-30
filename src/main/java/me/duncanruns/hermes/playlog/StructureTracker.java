@@ -62,7 +62,7 @@ public class StructureTracker {
         //? if <=1.18.1 {
         net.minecraft.world.gen.feature.StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
         //?} else if <=1.18.2 {
-        /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.feature.ConfiguredStructureFeature<?, ?>> structReg = world.getRegistryManager().get(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
+        /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.feature.ConfiguredStructureFeature<?, ?>> structReg = world.getRegistryManager().get(net.minecraft.util.registry.Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
         structReg.forEach(feature -> {
             String structureName = Objects.requireNonNull(structReg.getId(feature)).toString();
         *///?} else {
