@@ -16,7 +16,7 @@ public class InventoryTracker {
 
     private static JsonElement stackToJson(ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
-        //? if <=1.14.3 {
+        //? if <=1.14.3 || 1.15 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
         *///?} else if <=1.15.2 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));

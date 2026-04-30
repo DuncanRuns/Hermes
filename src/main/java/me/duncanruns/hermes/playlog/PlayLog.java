@@ -125,7 +125,7 @@ public class PlayLog {
     }
 
     private static JsonElement getGeneratorOptions(MinecraftServer server) {
-        //? if <=1.14.3 {
+        //? if <=1.14.3 || 1.15 {
         /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
         JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
         *///?} else if <=1.15.2 {
