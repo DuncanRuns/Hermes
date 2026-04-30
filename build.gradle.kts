@@ -31,7 +31,6 @@ dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
     mappings("net.fabricmc:yarn:${property("deps.yarn")}:v2")
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    modCompileOnly("${property("deps.atum")}")
     modCompileOnly("${property("deps.speedrunigt")}")
 
     modImplementation("${property("deps.hermes-core")}")
