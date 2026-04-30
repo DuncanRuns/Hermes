@@ -2,6 +2,7 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.registry.Registry;
@@ -20,7 +21,12 @@ public class EffectsTracker {
             UUID id = player.getGameProfile().getId();
             Map<String, Integer> oldEffects = effects.computeIfAbsent(id, uuid -> new HashMap<>());
 
-            Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Objects.requireNonNull(Registry.STATUS_EFFECT.getId(e.getEffectType())).toString(), StatusEffectInstance::getAmplifier));
+            //? if <=1.14.3 {
+            /*final Registry<StatusEffect> effectReg = Registry.MOB_EFFECT;
+            *///?} else {
+            final Registry<StatusEffect> effectReg = Registry.STATUS_EFFECT;
+            //?}
+            Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Objects.requireNonNull(effectReg.getId(e.getEffectType())).toString(), StatusEffectInstance::getAmplifier));
             if (oldEffects.equals(newEffects)) return;
             effects.put(id, newEffects);
 

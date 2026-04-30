@@ -2,7 +2,6 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
 
@@ -61,15 +60,20 @@ public class GameInfo {
             return pi;
         }).collect(Collectors.toList());
         gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
-        //? if <=1.14.4 {
-        /*ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackContainerManager();
+        //? if <=1.14.3 {
+        /*net.minecraft.resource.ResourcePackContainerManager<net.minecraft.resource.ResourcePackContainer> dataPackManager = server.getDataPackContainerManager();
+        *///?} else  if <=1.14.4 {
+        /*net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackContainerManager();
         *///?} else if <=1.16.1 {
-        ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
+        net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
          //?} else {
-        /*ResourcePackManager dataPackManager = server.getDataPackManager();
+        /*net.minecraft.resource.ResourcePackManager dataPackManager = server.getDataPackManager();
         *///?}
 
-        //? if <=1.15.2 {
+        //? if <=1.14.3 {
+        /*gameInfo.dataPacks = dataPackManager.getAlphabeticallyOrderedContainers().stream().map(net.minecraft.resource.ResourcePackContainer::getName).sorted().collect(Collectors.toList());
+        gameInfo.enabledDataPacks = dataPackManager.getEnabledContainers().stream().map(net.minecraft.resource.ResourcePackContainer::getName).sorted().collect(Collectors.toList());
+        *///?} else if <=1.15.2 {
         /*gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
         *///?} else {
@@ -87,7 +91,9 @@ public class GameInfo {
     }
 
     private static JsonObject gameRulesToJson(GameRules gameRules) {
-        //? if <=1.15.2 {
+        //? if <=1.14.3 {
+        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+        *///?} else if <=1.15.2 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
          *///?} else if <=1.16.1 {
         return net.minecraft.datafixer.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();

@@ -30,7 +30,12 @@ public class StructureTracker {
             //?} else {
             /*ServerWorld world = player.getWorld();
             *///?}
+
+            //?if <=1.14.3 {
+            /*if (!world.isHeightValidAndBlockLoaded(blockPos)) return;
+            *///?} else {
             if (!world.canSetBlock(blockPos)) return;
+            //?}
 
             UUID id = player.getGameProfile().getId();
 
