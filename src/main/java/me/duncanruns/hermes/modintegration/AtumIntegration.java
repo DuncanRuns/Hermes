@@ -1,47 +1,59 @@
 package me.duncanruns.hermes.modintegration;
 
-import me.voidxwalker.autoreset.Atum;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 public final class AtumIntegration {
     private static final BooleanSupplier atumRunningGetter;
+    private static final boolean atumRunningExists;
 
     static {
-        BooleanSupplier getter;
+        Optional<BooleanSupplier> isRunningSupplier = getIsRunningSupplier();
+        atumRunningExists = isRunningSupplier.isPresent();
+        atumRunningGetter = isRunningSupplier.orElse(null);
+    }
+
+    private static @NotNull Optional<BooleanSupplier> getIsRunningSupplier() {
+        Class<?> atumClass;
         try {
-            Method isRunningMethod = Atum.class.getDeclaredMethod("isRunning");
-            getter = () -> {
+            atumClass = Class.forName("me.voidxwalker.autoreset.Atum");
+        } catch (ClassNotFoundException e) {
+            return Optional.empty();
+        }
+        try {
+            Method isRunningMethod = atumClass.getDeclaredMethod("isRunning");
+            return Optional.of(() -> {
                 try {
                     return (boolean) isRunningMethod.invoke(null);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
-            };
+            });
         } catch (NoSuchMethodException e) {
             try {
-                Field isRunningField = Atum.class.getDeclaredField("isRunning");
-                getter = () -> {
+                Field isRunningField = atumClass.getDeclaredField("isRunning");
+                return Optional.of(() -> {
                     try {
                         return isRunningField.getBoolean(null);
                     } catch (IllegalAccessException ex) {
                         throw new RuntimeException(ex);
                     }
-                };
+                });
             } catch (NoSuchFieldException ex) {
-                throw new RuntimeException("Failed to find isRunning method or field from Atum", ex);
+                return Optional.empty();
             }
         }
-        atumRunningGetter = getter;
     }
 
     private AtumIntegration() {
     }
 
     public static boolean isRunning() {
-        return atumRunningGetter.getAsBoolean();
+        return atumRunningExists && atumRunningGetter.getAsBoolean();
     }
 }
