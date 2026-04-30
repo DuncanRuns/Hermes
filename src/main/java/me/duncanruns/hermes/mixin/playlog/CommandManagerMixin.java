@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Mixin(CommandManager.class)
 public abstract class CommandManagerMixin {
-    //? if <=1.18.2 {
+    //? if <=1.19 {
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;execute(Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)I", shift = At.Shift.AFTER))
     private void onSuccessfulCommand(ServerCommandSource commandSource, String command, CallbackInfoReturnable<Integer> cir) {
         MinecraftServer server = getServerFromSource(commandSource);
@@ -37,7 +37,7 @@ public abstract class CommandManagerMixin {
 
     @Unique
     private static MinecraftServer getServerFromSource(ServerCommandSource commandSource) {
-        //? if <=1.16.5 {
+        //? if <=1.17 {
         return commandSource.getMinecraftServer();
          //?} else {
         /*return commandSource.getServer();

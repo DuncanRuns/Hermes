@@ -45,7 +45,7 @@ public class HermesMod implements ModInitializer {
         JsonObject data = new JsonObject();
         String screenClass = Optional.ofNullable(currentScreen).map(s -> s.getClass().getName()).orElse(null);
         JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(Text.Serializer::toJsonTree).orElse(null);
-        //? if <=1.17.1 {
+        //? if <=1.18 {
         Function<Screen, Boolean> screenObjectFunction = Screen::isPauseScreen;
         //?} else {
         /*Function<Screen, Boolean> screenObjectFunction = Screen::shouldPause;
