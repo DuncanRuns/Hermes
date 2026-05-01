@@ -86,8 +86,17 @@ tasks {
     // Builds the version into a shared folder in `build/libs/${mod version}/`
     register<Copy>("buildAndCollect") {
         group = "build"
-        from(remapJar.map { it.archiveFile }, remapSourcesJar.map { it.archiveFile })
-        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+
+        into(rootProject.layout.buildDirectory.dir("libs/${project.property("mod.version")}"))
+
+        from(remapJar.map { it.archiveFile }) {
+            into(stonecutter.current.version)
+        }
+
+        from(remapSourcesJar.map { it.archiveFile }) {
+            into("sources")
+        }
+
         dependsOn("build")
     }
 }
