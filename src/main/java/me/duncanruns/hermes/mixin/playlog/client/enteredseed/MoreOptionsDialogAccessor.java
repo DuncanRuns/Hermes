@@ -1,4 +1,4 @@
-//? if >=1.16 {
+//? if >=1.16 <=1.19.3 {
 package me.duncanruns.hermes.mixin.playlog.client.enteredseed;
 
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;

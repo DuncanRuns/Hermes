@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.registry.Registry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,10 +21,12 @@ public class EffectsTracker {
             Map<String, Integer> oldEffects = effects.computeIfAbsent(id, uuid -> new HashMap<>());
 
             //? if <=1.14.3 {
-            /*final Registry<StatusEffect> effectReg = Registry.MOB_EFFECT;
-            *///?} else {
-            final Registry<StatusEffect> effectReg = Registry.STATUS_EFFECT;
-            //?}
+            /*final net.minecraft.util.registry.Registry<StatusEffect> effectReg = net.minecraft.util.registry.Registry.MOB_EFFECT;
+            *///?} else if <=1.19.2 {
+            final net.minecraft.util.registry.Registry<StatusEffect> effectReg = net.minecraft.util.registry.Registry.STATUS_EFFECT;
+            //?} else {
+            /*final net.minecraft.registry.Registry<StatusEffect> effectReg = net.minecraft.registry.Registries.STATUS_EFFECT;
+            *///?}
             Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Objects.requireNonNull(effectReg.getId(e.getEffectType())).toString(), StatusEffectInstance::getAmplifier));
             if (oldEffects.equals(newEffects)) return;
             effects.put(id, newEffects);

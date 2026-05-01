@@ -136,9 +136,14 @@ public class PlayLog {
                 .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
-        //?} else {
+        //?} else if <=1.19.2 {
         /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
                 .encodeStart(net.minecraft.util.dynamic.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE,server.getRegistryManager()), server.getSaveProperties().getGeneratorOptions())
+                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
+                .orElse(null);
+        *///?} else {
+        /*net.minecraft.registry.DynamicRegistryManager.Immutable registryManager = server.getRegistryManager();
+        JsonElement json = net.minecraft.world.level.WorldGenSettings.encode(net.minecraft.registry.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE, registryManager), server.getSaveProperties().getGeneratorOptions(), registryManager)
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
         *///?}

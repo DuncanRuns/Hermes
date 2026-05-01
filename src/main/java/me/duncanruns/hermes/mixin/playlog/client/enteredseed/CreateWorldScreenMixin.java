@@ -16,11 +16,15 @@ public abstract class CreateWorldScreenMixin extends Screen {
     //? if <=1.15.2 {
     /*@Shadow
     private String seed;
-    *///?} else {
+    *///?} else if <=1.19.3 {
     @Shadow
     @Final
     public net.minecraft.client.gui.screen.world.MoreOptionsDialog moreOptionsDialog;
-     //?}
+     //?} else {
+    /*@Shadow
+    @Final
+    net.minecraft.client.gui.screen.world.WorldCreator worldCreator;
+    *///?}
 
     protected CreateWorldScreenMixin(Text title) {
         super(title);
@@ -40,14 +44,16 @@ public abstract class CreateWorldScreenMixin extends Screen {
     private String getSeed() {
         //? if <=1.15.2 {
         /*return this.seed;
-        *///?} else if <=1.16.1 {
+         *///?} else if <=1.16.1 {
         return ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedText();
-         //?} else {
+         //?} else if <=1.19.3 {
         /*java.util.OptionalLong seed = ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedOpt();
         if (seed.isPresent()) {
             return Long.toString(seed.getAsLong());
         }
         return "";
+        *///?} else {
+        /*return worldCreator.getSeed();
         *///?}
     }
 }

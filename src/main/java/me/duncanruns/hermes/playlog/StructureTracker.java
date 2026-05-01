@@ -19,12 +19,13 @@ public class StructureTracker {
         server.getPlayerManager().getPlayerList().forEach(player -> {
             if (player.age % 20 != 0) return;
 
-            // The following line to get block pos may look weird, but is how the game does it for advancements (after a few levels of abstraction)
             //? if <=1.14.4 {
             /*BlockPos blockPos = new BlockPos((float) player.x, (float) player.y, (float) player.z);
-            *///?} else {
+            *///?} else if <=1.19.3 {
             BlockPos blockPos = new BlockPos((float) player.getX(), (float) player.getY(), (float) player.getZ());
-            //?}
+            //?} else {
+            /*BlockPos blockPos = BlockPos.ofFloored(player.getX(), player.getY(), player.getZ());
+            *///?}
             //? if <=1.17.1 {
             ServerWorld world = player.getServerWorld();
             //?} else {
@@ -65,10 +66,15 @@ public class StructureTracker {
         /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.feature.ConfiguredStructureFeature<?, ?>> structReg = world.getRegistryManager().get(net.minecraft.util.registry.Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
         structReg.forEach(feature -> {
             String structureName = Objects.requireNonNull(structReg.getId(feature)).toString();
-        *///?} else {
+        *///?} else if <=1.19.2 {
         /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().get(net.minecraft.util.registry.Registry.STRUCTURE_KEY);
         structReg.forEach(structureRaw -> {
             net.minecraft.util.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
+            String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
+        *///?} else {
+        /*net.minecraft.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().get(net.minecraft.registry.RegistryKeys.STRUCTURE);
+        structReg.forEach(structureRaw -> {
+            net.minecraft.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
             String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
         *///?}
             //? if <=1.15.2 {
@@ -77,8 +83,6 @@ public class StructureTracker {
             if (!structureAccessor.method_28388(blockPos, true, feature).hasChildren()) return;
             //?} else if <= 1.17.1 {
             /*if (!structureAccessor.getStructureAt(blockPos, true, feature).hasChildren()) return;
-            *///?} else if <= 1.18.1 {
-            /*if (!structureAccessor.getStructureContaining(blockPos, feature).hasChildren()) return;
             *///?} else {
             /*if (!structureAccessor.getStructureContaining(blockPos, feature).hasChildren()) return;
             *///?}
