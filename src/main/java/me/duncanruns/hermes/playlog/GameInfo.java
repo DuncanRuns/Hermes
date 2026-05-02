@@ -19,6 +19,8 @@ public class GameInfo {
      //?} else {
     /*private static final java.util.Map<net.minecraft.resource.featuretoggle.FeatureSet, JsonObject> FEATURE_SET_TO_GAMERULES = new java.util.HashMap<>();
     *///?}
+    //? if >=1.21.11
+    //private static final java.util.Map<net.minecraft.resource.featuretoggle.FeatureSet, com.mojang.serialization.Codec<net.minecraft.world.rule.GameRules>> FEATURE_SET_TO_CODEC = new java.util.HashMap<>();
     @SerializedName("cheats_allowed")
     private Boolean cheatsAllowed;
     @SerializedName("open_to_lan")
@@ -133,7 +135,8 @@ public class GameInfo {
          //?} else if <=1.21.10 {
         /*return net.minecraft.nbt.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
          *///?} else {
-        /*return net.minecraft.world.rule.GameRules.createCodec(featureSet).encodeStart(com.mojang.serialization.JsonOps.INSTANCE, gameRules).getOrThrow().getAsJsonObject();
+        /*return FEATURE_SET_TO_CODEC.computeIfAbsent(featureSet,f -> net.minecraft.world.rule.GameRules.createCodec(featureSet))
+                .encodeStart(com.mojang.serialization.JsonOps.INSTANCE, gameRules).getOrThrow().getAsJsonObject();
         *///?}
     }
 
