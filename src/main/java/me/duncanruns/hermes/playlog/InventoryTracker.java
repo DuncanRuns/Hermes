@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
@@ -59,7 +60,7 @@ public class InventoryTracker {
             *///?}
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 = offhand
-            List<ItemStack> newItems = HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream()).map(ItemStack::copy).collect(Collectors.toList());
+            List<ItemStack> newItems = getInventoryStream(inventory).map(ItemStack::copy).collect(Collectors.toList());
             List<ItemStack> oldItems = inventories.computeIfAbsent(id, uuid -> getEmptyInventory(newItems.size()));
             if (areItemListsEqual(oldItems, newItems)) {
                 return;
@@ -78,6 +79,14 @@ public class InventoryTracker {
             changes.add(data);
         });
         return changes;
+    }
+
+    private static Stream<ItemStack> getInventoryStream(PlayerInventory inventory) {
+        //? if <=1.21.4 {
+        return HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream());
+        //?} else {
+        /*return HermesMod.concat(inventory.getMainStacks().stream(), PlayerInventory.EQUIPMENT_SLOTS.keySet().intStream().sorted().mapToObj(inventory::getStack));
+        *///?}
     }
 
     private List<ItemStack> getEmptyInventory(int size) {

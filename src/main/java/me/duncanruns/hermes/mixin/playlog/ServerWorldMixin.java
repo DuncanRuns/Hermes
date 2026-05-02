@@ -2,9 +2,7 @@ package me.duncanruns.hermes.mixin.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLogHelper;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,35 +10,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World {
-    //? if <=1.15.2 {
-    /*protected ServerWorldMixin(net.minecraft.world.level.LevelProperties levelProperties, DimensionType dimensionType, java.util.function.BiFunction<World, net.minecraft.world.dimension.Dimension, net.minecraft.world.chunk.ChunkManager> chunkManagerProvider, Profiler profiler, boolean isClient) {
-        super(levelProperties, dimensionType, chunkManagerProvider, profiler, isClient);
+    @SuppressWarnings("all")
+    protected ServerWorldMixin() {
+        //? if <=1.15.2 {
+        /*super(null, null, null, null, false);
+        *///?} else if <=1.16.1 {
+        super(null, null, null, null, null, false, false, 0);
+        //?} else if <=1.18.2 {
+        /*super(null, null, null, null, false, false, 0);
+        *///?} else if <=1.19.3 {
+        /*super(null, null, null, null, false, false, 0, 0);
+        *///?} else if <=1.21.1 {
+        /*super(null, null, null, null, null, false, false, 0, 0);
+        *///?} else {
+        /*super(null, null, null, null, false, false, 0, 0);
+        *///?}
     }
-    *///?} else if <= 1.16.1 {
-    protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties mutableWorldProperties, net.minecraft.util.registry.RegistryKey<World> registryKey, net.minecraft.util.registry.RegistryKey<DimensionType> registryKey2, DimensionType dimensionType, java.util.function.Supplier<Profiler> profiler, boolean bl, boolean bl2, long l) {
-        super(mutableWorldProperties, registryKey, registryKey2, dimensionType, profiler, bl, bl2, l);
-    }
-    //?} else if <=1.18.1 {
-    /*protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties properties, net.minecraft.util.registry.RegistryKey<World> registryRef, DimensionType dimensionType, java.util.function.Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
-        super(properties, registryRef, dimensionType, profiler, isClient, debugWorld, seed);
-    }
-    *///?} else if <= 1.18.2 {
-    /*protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties properties, net.minecraft.util.registry.RegistryKey<World> registryRef, net.minecraft.util.registry.RegistryEntry<DimensionType> registryEntry, java.util.function.Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
-        super(properties, registryRef, registryEntry, profiler, isClient, debugWorld, seed);
-    }
-    *///?} else if <=1.19.2 {
-    /*protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties properties, net.minecraft.util.registry.RegistryKey<World> registryRef, net.minecraft.util.registry.RegistryEntry<DimensionType> dimension, java.util.function.Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, dimension, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
-    }
-    *///?} else if <=1.19.3{
-    /*protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties properties, net.minecraft.registry.RegistryKey<World> registryRef, net.minecraft.registry.entry.RegistryEntry<net.minecraft.world.dimension.DimensionType> dimension, java.util.function.Supplier<net.minecraft.util.profiler.Profiler> profiler, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, dimension, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
-    }
-    *///?} else {
-    /*protected ServerWorldMixin(net.minecraft.world.MutableWorldProperties properties, net.minecraft.registry.RegistryKey<World> registryRef, net.minecraft.registry.DynamicRegistryManager registryManager, net.minecraft.registry.entry.RegistryEntry<net.minecraft.world.dimension.DimensionType> dimensionEntry, java.util.function.Supplier<net.minecraft.util.profiler.Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
-    }
-    *///?}
 
     @Inject(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerChunkManager;save(Z)V"))
     private void onSave(CallbackInfo ci) {

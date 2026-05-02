@@ -36,9 +36,11 @@ public class StructureTracker {
 
             //?if <=1.14.3 {
             /*if (!world.isHeightValidAndBlockLoaded(blockPos)) return;
-            *///?} else {
+            *///?} else if <=1.21.1 {
             if (!world.canSetBlock(blockPos)) return;
-            //?}
+            //?} else {
+            /*if (!world.isValidForSetBlock(blockPos)) return;
+            *///?}
 
             UUID id = player.getGameProfile().getId();
 
@@ -73,8 +75,13 @@ public class StructureTracker {
         structReg.forEach(structureRaw -> {
             net.minecraft.util.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
             String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
-        *///?} else {
+        *///?} else if <=1.21.1 {
         /*net.minecraft.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().get(net.minecraft.registry.RegistryKeys.STRUCTURE);
+        structReg.forEach(structureRaw -> {
+            net.minecraft.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
+            String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
+        *///?} else {
+        /*net.minecraft.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().getOrThrow(net.minecraft.registry.RegistryKeys.STRUCTURE);
         structReg.forEach(structureRaw -> {
             net.minecraft.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
             String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();

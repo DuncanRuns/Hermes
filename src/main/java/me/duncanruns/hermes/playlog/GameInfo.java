@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -14,7 +15,11 @@ import java.util.stream.Collectors;
  * It's possible that later Minecraft versions would mean more information should be added or that previous versions would mean some information should be removed.
  */
 public class GameInfo {
+    //? if <=1.21.1 {
     private static final JsonObject DEFAULT_GAMERULES = gameRulesToJson(new GameRules());
+    //?} else {
+    /*private static final java.util.Map<net.minecraft.resource.featuretoggle.FeatureSet, JsonObject> FEATURE_SET_TO_GAMERULES = new HashMap<>();
+    *///?}
     @SerializedName("cheats_allowed")
     private Boolean cheatsAllowed;
     @SerializedName("open_to_lan")
@@ -54,12 +59,20 @@ public class GameInfo {
         gameInfo.difficulty = levelProperties.getDifficulty().getName();
         gameInfo.players = server.getPlayerManager().getPlayerList().stream().map(p -> {
             PlayerInfo pi = new PlayerInfo();
+            //? if <= 1.21.4 {
             pi.gamemode = p.interactionManager.getGameMode().getName();
+            //?} else {
+            /*pi.gamemode = p.interactionManager.getGameMode().asString();
+            *///?}
             pi.name = p.getGameProfile().getName();
             pi.uuid = p.getGameProfile().getId().toString();
             return pi;
         }).collect(Collectors.toList());
+        //? if <= 1.21.4 {
         gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
+        //?} else {
+        /*gameInfo.defaultGamemode = server.getDefaultGameMode().asString();
+        *///?}
         //? if <=1.14.3 {
         /*net.minecraft.resource.ResourcePackContainerManager<net.minecraft.resource.ResourcePackContainer> dataPackManager = server.getDataPackContainerManager();
         *///?} else  if <=1.14.4 {
@@ -89,7 +102,12 @@ public class GameInfo {
 
     private static JsonObject getChangedGameRules(MinecraftServer server) {
         JsonObject gameRules = gameRulesToJson(server.getGameRules());
-        gameRules.entrySet().removeIf(e -> DEFAULT_GAMERULES.has(e.getKey()) && DEFAULT_GAMERULES.get(e.getKey()).equals(e.getValue()));
+        //? if <=1.21.1 {
+        JsonObject defaultGameRules = DEFAULT_GAMERULES;
+        //?} else {
+        /*JsonObject defaultGameRules = FEATURE_SET_TO_GAMERULES.computeIfAbsent(server.getSaveProperties().getEnabledFeatures(), f -> gameRulesToJson(new GameRules(f)));
+        *///?}
+        gameRules.entrySet().removeIf(e -> defaultGameRules.has(e.getKey()) && defaultGameRules.get(e.getKey()).equals(e.getValue()));
         return gameRules;
     }
 
