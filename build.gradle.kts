@@ -29,7 +29,12 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
-    mappings("net.fabricmc:yarn:${property("deps.yarn")}:v2")
+    // supposedly stonecutter.current.version is a string so idk why this comp actually works
+    if (stonecutter.current.version <= "1.14.2") {
+        mappings("net.fabricmc:yarn:${property("deps.yarn")}")
+    }else {
+        mappings("net.fabricmc:yarn:${property("deps.yarn")}:v2")
+    }
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modCompileOnly("${property("deps.speedrunigt")}")
 

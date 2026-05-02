@@ -20,7 +20,8 @@ public class EffectsTracker {
             UUID id = Util.getPlayerUUID(player);
             Map<String, Integer> oldEffects = effects.computeIfAbsent(id, uuid -> new HashMap<>());
 
-            //? if <=1.14.3 {
+            // the <= is not missing, it is called MOB_EFFECTS in only 1.14.3
+            //? if 1.14.3 {
             /*final net.minecraft.util.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.util.registry.Registry.MOB_EFFECT;
             *///?} else if <=1.19.2 {
             final net.minecraft.util.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.util.registry.Registry.STATUS_EFFECT;

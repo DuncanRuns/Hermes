@@ -38,7 +38,9 @@ public class InventoryTracker {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
         if (a.isEmpty() && b.isEmpty()) return true;
-        //? if <=1.15.2 {
+        //? if <=1.14.1 {
+        /*return ItemStack.areEqualIgnoreTags(a, b);
+        *///?} else if <=1.15.2 {
         /*return ItemStack.areItemsEqual(a, b);
          *///?} else {
         return ItemStack.areEqual(a, b);

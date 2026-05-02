@@ -10,7 +10,6 @@ import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -308,7 +307,13 @@ public class PlayLog {
         rtFile.write('\n');
     }
 
-    public void onScreenChange(Screen currentScreen) {
+    public void onScreenChange(
+            //? if <=1.14 {
+            /*net.minecraft.client.gui.Screen currentScreen
+            *///?} else {
+            net.minecraft.client.gui.screen.Screen currentScreen
+            //?}
+    ) {
         JsonObject data = HermesMod.screenToJsonObject(currentScreen);
         if (Objects.equals(data, lastScreenData)) return;
         lastScreenData = data;
