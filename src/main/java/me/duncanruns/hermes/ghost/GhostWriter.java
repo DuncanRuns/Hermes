@@ -1,6 +1,7 @@
 package me.duncanruns.hermes.ghost;
 
 import me.duncanruns.hermes.HermesMod;
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -78,8 +79,9 @@ public class GhostWriter {
         /*int selectedSlot = inventory.getSelectedSlot();
         *///?}
 
+        Vec3d pos = Util.getEntityPos(player);
+
         buffer.putLong(time); // 1->8
-        Vec3d pos = player.getPos();
         buffer.putDouble(pos.x); // 9->16
         buffer.putDouble(pos.y); // 17->24
         buffer.putDouble(pos.z); // 25->32

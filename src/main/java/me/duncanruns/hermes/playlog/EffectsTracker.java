@@ -2,6 +2,7 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
 
@@ -16,7 +17,7 @@ public class EffectsTracker {
         effects.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
         minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
-            UUID id = player.getGameProfile().getId();
+            UUID id = Util.getPlayerUUID(player);
             Map<String, Integer> oldEffects = effects.computeIfAbsent(id, uuid -> new HashMap<>());
 
             //? if <=1.14.3 {

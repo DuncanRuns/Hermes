@@ -1,7 +1,9 @@
 package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonObject;
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
@@ -21,17 +23,17 @@ public class DimensionTracker {
         oldPositions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
         minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
-            UUID id = player.getGameProfile().getId();
-
-            Vec3d newPos = player.getPos();
+            UUID id = Util.getPlayerUUID(player);
+            Vec3d newPos = Util.getEntityPos(player);
             Vec3d oldPos = oldPositions.put(id, newPos);
 
+            ServerWorld world = Util.getPlayerServerWorld(player);
             //? if <=1.15.2 {
-            /*String newDimension = player.world.dimension.getType().toString();
-            *///?} else if <=1.19.4 {
-            String newDimension = player.world.getRegistryKey().getValue().toString();
+            /*String newDimension = world.dimension.getType().toString();
+            *///?} else if <=1.21.8 {
+            String newDimension = world.getRegistryKey().getValue().toString();
             //?} else {
-            /*String newDimension = player.getWorld().getRegistryKey().getValue().toString();
+            /*String newDimension = world.getRegistryKey().getValue().toString();
             *///?}
 
             String oldDimension = oldDimensions.put(id, newDimension);

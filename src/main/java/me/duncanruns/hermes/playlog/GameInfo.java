@@ -2,10 +2,9 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.GameRules;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,9 +15,9 @@ import java.util.stream.Collectors;
  */
 public class GameInfo {
     //? if <=1.21.1 {
-    private static final JsonObject DEFAULT_GAMERULES = gameRulesToJson(new GameRules());
-    //?} else {
-    /*private static final java.util.Map<net.minecraft.resource.featuretoggle.FeatureSet, JsonObject> FEATURE_SET_TO_GAMERULES = new HashMap<>();
+    private static final JsonObject DEFAULT_GAMERULES = gameRulesToJson(new net.minecraft.world.GameRules());
+     //?} else {
+    /*private static final java.util.Map<net.minecraft.resource.featuretoggle.FeatureSet, JsonObject> FEATURE_SET_TO_GAMERULES = new java.util.HashMap<>();
     *///?}
     @SerializedName("cheats_allowed")
     private Boolean cheatsAllowed;
@@ -50,7 +49,7 @@ public class GameInfo {
         gameInfo.openToLan = server.isRemote();
         //? if <=1.15.2 {
         /*net.minecraft.world.level.LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
-        *///?} else {
+         *///?} else {
         net.minecraft.world.SaveProperties levelProperties = server.getSaveProperties();
         //?}
 
@@ -61,23 +60,23 @@ public class GameInfo {
             PlayerInfo pi = new PlayerInfo();
             //? if <= 1.21.4 {
             pi.gamemode = p.interactionManager.getGameMode().getName();
-            //?} else {
+             //?} else {
             /*pi.gamemode = p.interactionManager.getGameMode().asString();
             *///?}
-            pi.name = p.getGameProfile().getName();
-            pi.uuid = p.getGameProfile().getId().toString();
+            pi.name = Util.getPlayerName(p);
+            pi.uuid = Util.getPlayerUUID(p).toString();
             return pi;
         }).collect(Collectors.toList());
         //? if <= 1.21.4 {
         gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
-        //?} else {
+         //?} else {
         /*gameInfo.defaultGamemode = server.getDefaultGameMode().asString();
         *///?}
         //? if <=1.14.3 {
         /*net.minecraft.resource.ResourcePackContainerManager<net.minecraft.resource.ResourcePackContainer> dataPackManager = server.getDataPackContainerManager();
-        *///?} else  if <=1.14.4 {
+         *///?} else  if <=1.14.4 {
         /*net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackContainerManager();
-        *///?} else if <=1.16.1 {
+         *///?} else if <=1.16.1 {
         net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
          //?} else {
         /*net.minecraft.resource.ResourcePackManager dataPackManager = server.getDataPackManager();
@@ -101,25 +100,40 @@ public class GameInfo {
     }
 
     private static JsonObject getChangedGameRules(MinecraftServer server) {
+        //? if <=1.21.10 {
         JsonObject gameRules = gameRulesToJson(server.getGameRules());
+         //?} else {
+        /*JsonObject gameRules = gameRulesToJson(server.getSaveProperties().getGameRules(), server.getSaveProperties().getEnabledFeatures());
+        *///?}
         //? if <=1.21.1 {
         JsonObject defaultGameRules = DEFAULT_GAMERULES;
-        //?} else {
-        /*JsonObject defaultGameRules = FEATURE_SET_TO_GAMERULES.computeIfAbsent(server.getSaveProperties().getEnabledFeatures(), f -> gameRulesToJson(new GameRules(f)));
+         //?} else if <=1.21.10 {
+        /*JsonObject defaultGameRules = FEATURE_SET_TO_GAMERULES.computeIfAbsent(server.getSaveProperties().getEnabledFeatures(), f -> gameRulesToJson(new net.minecraft.world.GameRules(f)));
+        *///?} else {
+        /*JsonObject defaultGameRules = FEATURE_SET_TO_GAMERULES.computeIfAbsent(server.getSaveProperties().getEnabledFeatures(), f -> gameRulesToJson(new net.minecraft.world.rule.GameRules(f), f));
         *///?}
         gameRules.entrySet().removeIf(e -> defaultGameRules.has(e.getKey()) && defaultGameRules.get(e.getKey()).equals(e.getValue()));
         return gameRules;
     }
 
-    private static JsonObject gameRulesToJson(GameRules gameRules) {
+    private static JsonObject gameRulesToJson(
+            //? if <=1.21.10 {
+            net.minecraft.world.GameRules gameRules
+             //?} else {
+            /*net.minecraft.world.rule.GameRules gameRules,
+            net.minecraft.resource.featuretoggle.FeatureSet featureSet
+            *///?}
+    ) {
         //? if <=1.14.3 || 1.15 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
         *///?} else if <=1.15.2 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
          *///?} else if <=1.16.1 {
         return net.minecraft.datafixer.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
-         //?} else {
+         //?} else if <=1.21.10 {
         /*return net.minecraft.nbt.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+         *///?} else {
+        /*return net.minecraft.world.rule.GameRules.createCodec(featureSet).encodeStart(com.mojang.serialization.JsonOps.INSTANCE, gameRules).getOrThrow().getAsJsonObject();
         *///?}
     }
 

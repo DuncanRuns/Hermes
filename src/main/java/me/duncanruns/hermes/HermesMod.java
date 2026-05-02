@@ -21,10 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -48,7 +45,7 @@ public class HermesMod implements ModInitializer {
         //?} else if <=1.20.4 {
         /*JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(net.minecraft.text.Text.Serialization::toJsonTree).orElse(null);
         *///?} else {
-        /*JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(t -> net.minecraft.text.TextCodecs.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE,t).getOrThrow(com.google.gson.JsonParseException::new)).orElse(null);
+        /*JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(t -> net.minecraft.text.TextCodecs.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, t).getOrThrow(com.google.gson.JsonParseException::new)).orElse(null);
         *///?}
         //? if <=1.18 {
         Function<Screen, Boolean> screenObjectFunction = Screen::isPauseScreen;

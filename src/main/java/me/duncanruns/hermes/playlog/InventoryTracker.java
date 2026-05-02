@@ -3,6 +3,7 @@ package me.duncanruns.hermes.playlog;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -52,7 +53,7 @@ public class InventoryTracker {
         inventories.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
         minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
-            UUID id = player.getGameProfile().getId();
+            UUID id = Util.getPlayerUUID(player);
             //? if <=1.16.5 {
             PlayerInventory inventory = player.inventory;
             //?} else {

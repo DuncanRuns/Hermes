@@ -2,6 +2,7 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -26,13 +27,7 @@ public class StructureTracker {
             //?} else {
             /*BlockPos blockPos = BlockPos.ofFloored(player.getX(), player.getY(), player.getZ());
             *///?}
-            //? if <=1.17.1 {
-            ServerWorld world = player.getServerWorld();
-            //?} else if <=1.19.4 {
-            /*ServerWorld world = player.getWorld();
-            *///?} else {
-            /*ServerWorld world = player.getServerWorld();
-            *///?}
+            ServerWorld world = Util.getPlayerServerWorld(player);
 
             //?if <=1.14.3 {
             /*if (!world.isHeightValidAndBlockLoaded(blockPos)) return;
@@ -42,7 +37,7 @@ public class StructureTracker {
             /*if (!world.isValidForSetBlock(blockPos)) return;
             *///?}
 
-            UUID id = player.getGameProfile().getId();
+            UUID id = Util.getPlayerUUID(player);
 
             Set<String> structures = getStructures(world, blockPos);
 

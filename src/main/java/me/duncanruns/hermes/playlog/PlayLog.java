@@ -8,6 +8,7 @@ import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.rot.Rotator;
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
@@ -164,8 +165,8 @@ public class PlayLog {
     public static JsonObject toPlayerData(PlayerEntity player) {
         if (player == null) return null;
         JsonObject playerJson = new JsonObject();
-        playerJson.addProperty("name", player.getGameProfile().getName());
-        playerJson.addProperty("uuid", player.getGameProfile().getId().toString());
+        playerJson.addProperty("name", Util.getPlayerName(player));
+        playerJson.addProperty("uuid", Util.getPlayerUUID(player).toString());
         return playerJson;
     }
 
@@ -208,7 +209,11 @@ public class PlayLog {
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
+        //? if <= 1.21.5 {
         data.addProperty("mc_version", SharedConstants.getGameVersion().getName());
+        //?} else {
+        /*data.addProperty("mc_version", SharedConstants.getGameVersion().name());
+        *///?}
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
@@ -459,7 +464,7 @@ public class PlayLog {
     public void onRespawn(ServerPlayerEntity player, boolean alive) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(player));
-        data.add("position", toPositionData(player.getPos()));
+        data.add("position", toPositionData(Util.getEntityPos(player)));
         data.addProperty("was_alive", alive);
         write("respawn", data);
     }

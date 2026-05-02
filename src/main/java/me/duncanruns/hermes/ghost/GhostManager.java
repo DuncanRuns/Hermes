@@ -1,5 +1,6 @@
 package me.duncanruns.hermes.ghost;
 
+import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class GhostManager implements AutoCloseable {
     public void onTick(MinecraftServer server) {
         long time = System.currentTimeMillis();
         server.getPlayerManager().getPlayerList().forEach(player ->
-                writers.computeIfAbsent(player.getGameProfile().getId(), uuid -> new GhostWriter(server, uuid)).onTick(time, player)
+                writers.computeIfAbsent(Util.getPlayerUUID(player), uuid -> new GhostWriter(server, uuid)).onTick(time, player)
         );
     }
 
