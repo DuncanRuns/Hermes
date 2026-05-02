@@ -76,10 +76,13 @@ public class GameInfo {
         *///?} else if <=1.15.2 {
         /*gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
-        *///?} else {
+        *///?} else if <=1.20.4 {
         gameInfo.dataPacks = dataPackManager.getNames().stream().sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledNames().stream().sorted().collect(Collectors.toList());
-        //?}
+        //?} else {
+        /*gameInfo.dataPacks = dataPackManager.getIds().stream().sorted().collect(Collectors.toList());
+        gameInfo.enabledDataPacks = dataPackManager.getEnabledIds().stream().sorted().collect(Collectors.toList());
+        *///?}
         gameInfo.nonDefaultGameRules = getChangedGameRules(server);
         return gameInfo;
     }

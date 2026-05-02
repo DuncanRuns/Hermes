@@ -2,7 +2,6 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
 
@@ -21,13 +20,17 @@ public class EffectsTracker {
             Map<String, Integer> oldEffects = effects.computeIfAbsent(id, uuid -> new HashMap<>());
 
             //? if <=1.14.3 {
-            /*final net.minecraft.util.registry.Registry<StatusEffect> effectReg = net.minecraft.util.registry.Registry.MOB_EFFECT;
+            /*final net.minecraft.util.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.util.registry.Registry.MOB_EFFECT;
             *///?} else if <=1.19.2 {
-            final net.minecraft.util.registry.Registry<StatusEffect> effectReg = net.minecraft.util.registry.Registry.STATUS_EFFECT;
-            //?} else {
-            /*final net.minecraft.registry.Registry<StatusEffect> effectReg = net.minecraft.registry.Registries.STATUS_EFFECT;
+            final net.minecraft.util.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.util.registry.Registry.STATUS_EFFECT;
+            //?} else if <=1.20.4 {
+            /*final net.minecraft.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.registry.Registries.STATUS_EFFECT;
             *///?}
+            //? if <=1.20.4 {
             Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Objects.requireNonNull(effectReg.getId(e.getEffectType())).toString(), StatusEffectInstance::getAmplifier));
+            //?} else {
+            /*Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Objects.requireNonNull(e.getEffectType().getIdAsString()), StatusEffectInstance::getAmplifier));
+            *///?}
             if (oldEffects.equals(newEffects)) return;
             effects.put(id, newEffects);
 

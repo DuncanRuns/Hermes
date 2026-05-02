@@ -28,8 +28,10 @@ public class StructureTracker {
             *///?}
             //? if <=1.17.1 {
             ServerWorld world = player.getServerWorld();
-            //?} else {
+            //?} else if <=1.19.4 {
             /*ServerWorld world = player.getWorld();
+            *///?} else {
+            /*ServerWorld world = player.getServerWorld();
             *///?}
 
             //?if <=1.14.3 {
@@ -83,8 +85,10 @@ public class StructureTracker {
             if (!structureAccessor.method_28388(blockPos, true, feature).hasChildren()) return;
             //?} else if <= 1.17.1 {
             /*if (!structureAccessor.getStructureAt(blockPos, true, feature).hasChildren()) return;
-            *///?} else {
+            *///?} else if <=1.20.4 {
             /*if (!structureAccessor.getStructureContaining(blockPos, feature).hasChildren()) return;
+            *///?} else {
+            /*if (!structureAccessor.getStructureContaining(blockPos, e -> e.matchesKey(feature)).hasChildren()) return;
             *///?}
             structures.add(structureName);
         });

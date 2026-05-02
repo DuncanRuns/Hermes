@@ -9,7 +9,6 @@ import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.rot.Rotator;
 import net.minecraft.SharedConstants;
-import net.minecraft.advancement.Advancement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -311,13 +310,27 @@ public class PlayLog {
         write("screen", data);
     }
 
-    public void onAdvancement(Advancement advancement, String criterionName, boolean done, ServerPlayerEntity owner) {
+    public void onAdvancement(
+            //? if <=1.20.1{
+            net.minecraft.advancement.Advancement advancement,
+            //?} else {
+            /*net.minecraft.advancement.AdvancementEntry advancement,
+            *///?}
+            String criterionName, boolean done, ServerPlayerEntity owner) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(owner));
+        //? if <= 1.20.1 {
         data.addProperty("id", advancement.getId().toString());
+        //?} else {
+        /*data.addProperty("id", advancement.id().toString());
+        *///?}
         data.addProperty("criterion_name", criterionName);
         data.addProperty("completed", done);
+        //? if <=1.20.1 {
         data.add("display", Optional.ofNullable(advancement.getDisplay()).map(a -> {
+         //?} else {
+        /*data.add("display", advancement.value().display().map(a -> {
+        *///?}
             JsonObject display = new JsonObject();
             display.addProperty("hidden", a.isHidden());
             display.addProperty("announce_to_chat", a.shouldAnnounceToChat());

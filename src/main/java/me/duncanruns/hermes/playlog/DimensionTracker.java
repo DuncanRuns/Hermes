@@ -28,9 +28,11 @@ public class DimensionTracker {
 
             //? if <=1.15.2 {
             /*String newDimension = player.world.dimension.getType().toString();
-            *///?} else {
+            *///?} else if <=1.19.4 {
             String newDimension = player.world.getRegistryKey().getValue().toString();
-            //?}
+            //?} else {
+            /*String newDimension = player.getWorld().getRegistryKey().getValue().toString();
+            *///?}
 
             String oldDimension = oldDimensions.put(id, newDimension);
             if (Objects.equals(oldDimension, newDimension)) return;
