@@ -10,13 +10,18 @@ import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.SharedConstants;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stat;
-import net.minecraft.stat.StatHandler;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.StatsCounter;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.WorldGenSettings;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -62,10 +67,6 @@ public class PlayLog {
     });
     private static final Collection<PlayLog> PLAY_LOGS = new ConcurrentLinkedQueue<>();
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
-    //? if >=1.16 <=1.16.1
-    private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
-    //? if >=1.16.2 <=1.18.1
-    //private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
     private final Path requiredParent;
@@ -112,11 +113,7 @@ public class PlayLog {
     }
 
     private static long getTime(MinecraftServer server) {
-        //? if >=1.16 {
-        return server.getSaveProperties().getMainWorldProperties().getTime();
-        //?} else {
-        /*return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
-         *///?}
+        return server.getWorldData().overworldData().getGameTime();
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
@@ -124,28 +121,10 @@ public class PlayLog {
     }
 
     private static JsonElement getGeneratorOptions(MinecraftServer server) {
-        //? if <=1.14.3 || 1.15 {
-        /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
-        JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        *///?} else if <=1.15.2 {
-        /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
-        JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        *///?} else if <=1.18.1 {
-        JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
-                .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
+        RegistryAccess.Frozen registryManager = server.registryAccess();
+        JsonElement json = WorldGenSettings.CODEC.encodeStart(RegistryOps.create(com.mojang.serialization.JsonOps.INSTANCE, registryManager), server.getWorldGenSettings())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
-        //?} else if <=1.19.2 {
-        /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
-                .encodeStart(net.minecraft.util.dynamic.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE,server.getRegistryManager()), server.getSaveProperties().getGeneratorOptions())
-                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
-                .orElse(null);
-        *///?} else {
-        /*net.minecraft.registry.DynamicRegistryManager.Immutable registryManager = server.getRegistryManager();
-        JsonElement json = net.minecraft.world.level.WorldGenSettings.encode(net.minecraft.registry.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE, registryManager), server.getSaveProperties().getGeneratorOptions(), registryManager)
-                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
-                .orElse(null);
-        *///?}
         if (json == null) return null;
         clearSeed(json);
         return json;
@@ -161,7 +140,7 @@ public class PlayLog {
         }
     }
 
-    public static JsonObject toPlayerData(PlayerEntity player) {
+    public static JsonObject toPlayerData(Player player) {
         if (player == null) return null;
         JsonObject playerJson = new JsonObject();
         playerJson.addProperty("name", Util.getPlayerName(player));
@@ -169,7 +148,7 @@ public class PlayLog {
         return playerJson;
     }
 
-    public static @NotNull JsonObject toPositionData(Vec3d pos) {
+    public static @NotNull JsonObject toPositionData(Vec3 pos) {
         JsonObject posJson = new JsonObject();
         posJson.addProperty("x", pos.x);
         posJson.addProperty("y", pos.y);
@@ -179,8 +158,8 @@ public class PlayLog {
 
     public static @NotNull JsonObject toPositionData(ChunkPos pos) {
         JsonObject posJson = new JsonObject();
-        posJson.addProperty("x", pos.x);
-        posJson.addProperty("z", pos.z);
+        posJson.addProperty("x", pos.x());
+        posJson.addProperty("z", pos.z());
         return posJson;
     }
 
@@ -208,11 +187,7 @@ public class PlayLog {
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
-        //? if <= 1.21.5 {
-        data.addProperty("mc_version", SharedConstants.getGameVersion().getName());
-        //?} else {
-        /*data.addProperty("mc_version", SharedConstants.getGameVersion().name());
-        *///?}
+        data.addProperty("mc_version", SharedConstants.getCurrentVersion().name());
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
@@ -221,7 +196,7 @@ public class PlayLog {
         INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
     }
 
-    public void onStat(StatHandler statHandler, PlayerEntity player, Stat<?> stat, int value) {
+    public void onStat(StatsCounter statsCounter, Player player, Stat<?> stat, int value) {
         String name = stat.getName();
         if (PlayLog.STAT_BLOCK_LIST.contains(name)) {
             return;
@@ -229,7 +204,7 @@ public class PlayLog {
             PlayLog.STAT_BLOCK_LIST.add(name); // Faster to check the next time around
             return;
         }
-        int diff = value - statHandler.getStat(stat);
+        int diff = value - statsCounter.getValue(stat);
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(player));
         data.addProperty("stat", name);
@@ -307,43 +282,23 @@ public class PlayLog {
         rtFile.write('\n');
     }
 
-    public void onScreenChange(
-            //? if <=1.14 {
-            /*net.minecraft.client.gui.Screen currentScreen
-            *///?} else {
-            net.minecraft.client.gui.screen.Screen currentScreen
-            //?}
-    ) {
+    public void onScreenChange(Screen currentScreen) {
         JsonObject data = HermesMod.screenToJsonObject(currentScreen);
         if (Objects.equals(data, lastScreenData)) return;
         lastScreenData = data;
         write("screen", data);
     }
 
-    public void onAdvancement(
-            //? if <=1.20.1{
-            net.minecraft.advancement.Advancement advancement,
-            //?} else {
-            /*net.minecraft.advancement.AdvancementEntry advancement,
-            *///?}
-            String criterionName, boolean done, ServerPlayerEntity owner) {
+    public void onAdvancement(AdvancementHolder advancement, String criterionName, boolean done, ServerPlayer owner) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(owner));
-        //? if <= 1.20.1 {
-        data.addProperty("id", advancement.getId().toString());
-        //?} else {
-        /*data.addProperty("id", advancement.id().toString());
-        *///?}
+        data.addProperty("id", advancement.id().toString());
         data.addProperty("criterion_name", criterionName);
         data.addProperty("completed", done);
-        //? if <=1.20.1 {
-        data.add("display", Optional.ofNullable(advancement.getDisplay()).map(a -> {
-         //?} else {
-        /*data.add("display", advancement.value().display().map(a -> {
-        *///?}
+        data.add("display", advancement.value().display().map(a -> {
             JsonObject display = new JsonObject();
             display.addProperty("hidden", a.isHidden());
-            display.addProperty("announce_to_chat", a.shouldAnnounceToChat());
+            display.addProperty("announce_to_chat", a.shouldAnnounceChat());
             if (HermesCore.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
             return display;
         }).orElse(null));
@@ -368,7 +323,7 @@ public class PlayLog {
         }
     }
 
-    public void onCommand(ServerPlayerEntity player, String command) {
+    public void onCommand(ServerPlayer player, String command) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(player));
         data.addProperty("command", command);
@@ -466,7 +421,7 @@ public class PlayLog {
         }
     }
 
-    public void onRespawn(ServerPlayerEntity player, boolean alive) {
+    public void onRespawn(ServerPlayer player, boolean alive) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(player));
         data.add("position", toPositionData(Util.getEntityPos(player)));

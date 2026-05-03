@@ -14,17 +14,17 @@ public abstract class MinecraftServerMixin {
     @Unique
     private final GhostManager ghostManager = new GhostManager();
 
-    @Inject(method = "tick", at = @At("RETURN"))
+    @Inject(method = "tickServer", at = @At("RETURN"))
     private void onTick(CallbackInfo ci) {
         ghostManager.onTick((MinecraftServer) (Object) this);
     }
 
-    @Inject(method = "save(ZZZ)Z", at = @At("RETURN"))
+    @Inject(method = "saveEverything", at = @At("RETURN"))
     private void onSave(CallbackInfoReturnable<Boolean> cir) {
         ghostManager.onSave();
     }
 
-    @Inject(method = "shutdown", at = @At("RETURN"))
+    @Inject(method = "stopServer", at = @At("RETURN"))
     private void onClose(CallbackInfo ci) {
         ghostManager.close();
     }

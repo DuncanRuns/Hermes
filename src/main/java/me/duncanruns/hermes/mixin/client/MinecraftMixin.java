@@ -1,16 +1,16 @@
-package me.duncanruns.hermes.mixin.server;
+package me.duncanruns.hermes.mixin.client;
 
 import me.duncanruns.hermes.HermesMod;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin {
-    @Inject(method = "stopServer", at = @At("RETURN"))
-    private void onShutdown(CallbackInfo ci) {
+@Mixin(Minecraft.class)
+public abstract class MinecraftMixin {
+    @Inject(method = "close", at = @At("HEAD"))
+    private void onClose(CallbackInfo ci) {
         HermesMod.close();
     }
 }

@@ -9,7 +9,7 @@ import me.duncanruns.hermes.playlog.PlayLogHelper;
 import me.duncanruns.hermes.worldlog.WorldLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ public final class HermesModAPI {
      * The registered updater will be called every time the state is updated, which is every tick and screen change, so
      * be careful with performance.
      */
-    public static void registerClientStateUpdater(BiConsumer<JsonObject, MinecraftClient> updater) {
+    public static void registerClientStateUpdater(BiConsumer<JsonObject, Minecraft> updater) {
         InstanceState.registerClientStateUpdater(updater);
     }
 

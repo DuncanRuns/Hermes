@@ -1,24 +1,16 @@
 {
   "required": true,
   "package": "me.duncanruns.hermes.mixin",
-  //? if >=1.20.6 {
-  /*"compatibilityLevel": "JAVA_21",
-  *///?} else if >=1.18 {
-  /*"compatibilityLevel": "JAVA_17",
-  *///?} else if >=1.17 {
-  /*"compatibilityLevel": "JAVA_16",
-  *///?} else {
-  "compatibilityLevel": "JAVA_8",
-  //?}
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
     "ghost.MinecraftServerMixin",
     "playlog.MinecraftServerMixin",
-    "playlog.PlayerAdvancementTrackerMixin",
-    "playlog.PlayerManagerMixin",
-    "playlog.CommandManagerMixin",
-    "playlog.ServerStatHandlerMixin",
-    "playlog.ServerWorldMixin",
-    "worldpath.MinecraftServerMixin"
+    "worldpath.MinecraftServerMixin",
+    "playlog.CommandsMixin",
+    "playlog.PlayerAdvancementsMixin",
+    "playlog.PlayerListMixin",
+    "playlog.ServerLevelMixin",
+    "playlog.ServerStatsCounterMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -27,13 +19,11 @@
     "requireAnnotations": true
   },
   "client": [
-    "client.MinecraftClientMixin",
-    "instancestate.client.MinecraftClientMixin",
-    "playlog.client.MinecraftClientMixin",
+    "client.MinecraftMixin",
+    "instancestate.client.MinecraftMixin",
+    "playlog.client.MinecraftMixin",
     "playlog.client.enteredseed.CreateWorldScreenMixin",
-    //? if >=1.16 <=1.19.3
-    "playlog.client.enteredseed.MoreOptionsDialogAccessor",
-    "worldlog.client.MinecraftClientMixin"
+    "worldlog.client.MinecraftMixin"
   ],
   "server": [
     "instancestate.server.MinecraftServerMixin",

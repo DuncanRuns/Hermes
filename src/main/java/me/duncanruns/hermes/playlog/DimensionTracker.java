@@ -3,8 +3,8 @@ package me.duncanruns.hermes.playlog;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
@@ -12,29 +12,23 @@ import java.util.*;
 // sometimes gets spammed when exiting the end. Doing a tracker like this resolves all of those issues and is easier.
 public class DimensionTracker {
     Map<UUID, String> oldDimensions = new HashMap<>();
-    Map<UUID, Vec3d> oldPositions = new HashMap<>();
+    Map<UUID, Vec3> oldPositions = new HashMap<>();
 
     /**
      * @return A list of json objects representing the changes.
      */
     public Iterable<JsonObject> tick(MinecraftServer minecraftServer) {
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        oldDimensions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
-        oldPositions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
+        oldDimensions.keySet().removeIf(uuid -> minecraftServer.getPlayerList().getPlayer(uuid) == null);
+        oldPositions.keySet().removeIf(uuid -> minecraftServer.getPlayerList().getPlayer(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
-        minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
+        minecraftServer.getPlayerList().getPlayers().forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
-            Vec3d newPos = Util.getEntityPos(player);
-            Vec3d oldPos = oldPositions.put(id, newPos);
+            Vec3 newPos = Util.getEntityPos(player);
+            Vec3 oldPos = oldPositions.put(id, newPos);
 
-            ServerWorld world = Util.getPlayerServerWorld(player);
-            //? if <=1.15.2 {
-            /*String newDimension = world.dimension.getType().toString();
-            *///?} else if <=1.21.8 {
-            String newDimension = world.getRegistryKey().getValue().toString();
-            //?} else {
-            /*String newDimension = world.getRegistryKey().getValue().toString();
-            *///?}
+            ServerLevel world = Util.getPlayerServerWorld(player);
+            String newDimension = world.dimension().identifier().toString();
 
             String oldDimension = oldDimensions.put(id, newDimension);
             if (Objects.equals(oldDimension, newDimension)) return;

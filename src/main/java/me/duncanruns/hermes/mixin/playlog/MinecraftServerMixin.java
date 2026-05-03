@@ -25,25 +25,25 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
         enteredSeed = EnteredSeedHolder.enteredSeed.get();
     }
 
-    @Inject(method = "createWorlds", at = @At("RETURN"))
+    @Inject(method = "createLevels", at = @At("RETURN"))
     private void onFinishCreateWorlds(CallbackInfo ci) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         this.playLog = new PlayLog(server);
     }
 
-    @Inject(method = "tick", at = @At("RETURN"))
+    @Inject(method = "tickServer", at = @At("RETURN"))
     private void onTick(CallbackInfo ci) {
         assert playLog != null;
         playLog.onTick((MinecraftServer) (Object) this);
     }
 
-    @Inject(method = "shutdown", at = @At("HEAD"))
+    @Inject(method = "stopServer", at = @At("HEAD"))
     private void onServerShuttingDown(CallbackInfo ci) {
         if (playLog == null) return;
         playLog.onServerShuttingDown();
     }
 
-    @Inject(method = "shutdown", at = @At("RETURN"))
+    @Inject(method = "stopServer", at = @At("RETURN"))
     private void onServerShutdown(CallbackInfo ci) {
         if (playLog == null) return;
         playLog.onServerFinishShutdown();

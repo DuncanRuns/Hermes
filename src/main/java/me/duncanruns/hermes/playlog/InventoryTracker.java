@@ -2,11 +2,12 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,13 +19,7 @@ public class InventoryTracker {
 
     private static JsonElement stackToJson(ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
-        //? if <=1.14.3 || 1.15 {
-        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
-        *///?} else if <=1.15.2 {
-        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
-         *///?} else {
-        return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
-        //?}
+        return ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -38,13 +33,7 @@ public class InventoryTracker {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
         if (a.isEmpty() && b.isEmpty()) return true;
-        //? if <=1.14.1 {
-        /*return ItemStack.areEqualIgnoreTags(a, b);
-        *///?} else if <=1.15.2 {
-        /*return ItemStack.areItemsEqual(a, b);
-         *///?} else {
-        return ItemStack.areEqual(a, b);
-        //?}
+        return ItemStack.matches(a, b);
     }
 
     /**
@@ -52,19 +41,15 @@ public class InventoryTracker {
      */
     public List<JsonObject> tick(MinecraftServer minecraftServer) {
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        inventories.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
+        inventories.keySet().removeIf(uuid -> minecraftServer.getPlayerList().getPlayer(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
-        minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
+        minecraftServer.getPlayerList().getPlayers().forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
-            //? if <=1.16.5 {
-            PlayerInventory inventory = player.inventory;
-            //?} else {
-            /*PlayerInventory inventory = player.getInventory();
-            *///?}
+            Inventory inventory = player.getInventory();
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 = offhand
             List<ItemStack> newItems = getInventoryStream(inventory).map(ItemStack::copy).collect(Collectors.toList());
-            List<ItemStack> oldItems = inventories.computeIfAbsent(id, uuid -> getEmptyInventory(newItems.size()));
+            List<ItemStack> oldItems = inventories.computeIfAbsent(id, _ -> getEmptyInventory(newItems.size()));
             if (areItemListsEqual(oldItems, newItems)) {
                 return;
             }
@@ -84,15 +69,11 @@ public class InventoryTracker {
         return changes;
     }
 
-    private static Stream<ItemStack> getInventoryStream(PlayerInventory inventory) {
-        //? if <=1.21.4 {
-        return HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream());
-        //?} else {
-        /*return HermesMod.concat(inventory.getMainStacks().stream(), PlayerInventory.EQUIPMENT_SLOTS.keySet().intStream().sorted().mapToObj(inventory::getStack));
-        *///?}
+    private static Stream<ItemStack> getInventoryStream(Inventory inventory) {
+        return HermesMod.concat(inventory.getNonEquipmentItems().stream(), Inventory.EQUIPMENT_SLOT_MAPPING.keySet().intStream().sorted().mapToObj(inventory::getItem));
     }
 
     private List<ItemStack> getEmptyInventory(int size) {
-        return IntStream.range(0, size).mapToObj(i -> ItemStack.EMPTY).collect(Collectors.toList());
+        return IntStream.range(0, size).mapToObj(_ -> ItemStack.EMPTY).collect(Collectors.toList());
     }
 }

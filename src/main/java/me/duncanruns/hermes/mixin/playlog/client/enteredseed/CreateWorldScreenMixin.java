@@ -3,35 +3,26 @@ package me.duncanruns.hermes.mixin.playlog.client.enteredseed;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-//? if <=1.14 {
-/*@Mixin(net.minecraft.client.gui.menu.NewLevelScreen.class)
-public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.Screen {
-*///?} else {
-@Mixin(net.minecraft.client.gui.screen.world.CreateWorldScreen.class)
-public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.screen.Screen {
-//?}
-    //? if <=1.15.2 {
-    /*@Shadow
-    private String seed;
-    *///?} else if <=1.19.3 {
+@Mixin(CreateWorldScreen.class)
+public abstract class CreateWorldScreenMixin extends Screen {
     @Shadow
-    @org.spongepowered.asm.mixin.Final
-    public net.minecraft.client.gui.screen.world.MoreOptionsDialog moreOptionsDialog;
-     //?} else {
-    /*@Shadow
-    @org.spongepowered.asm.mixin.Final
-    net.minecraft.client.gui.screen.world.WorldCreator worldCreator;
-    *///?}
+    @Final
+    private WorldCreationUiState uiState;
 
+    @SuppressWarnings("all")
     protected CreateWorldScreenMixin() {
         super(null);
     }
 
-    @WrapMethod(method = "createLevel")
+    @WrapMethod(method = "onCreate")
     private void wrapCreateLevel(Operation<Void> original) {
         EnteredSeedHolder.enteredSeed.set(getSeed());
         try {
@@ -43,18 +34,6 @@ public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.sc
 
     @Unique
     private String getSeed() {
-        //? if <=1.15.2 {
-        /*return this.seed;
-         *///?} else if <=1.16.1 {
-        return ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedText();
-         //?} else if <=1.19.3 {
-        /*java.util.OptionalLong seed = ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedOpt();
-        if (seed.isPresent()) {
-            return Long.toString(seed.getAsLong());
-        }
-        return "";
-        *///?} else {
-        /*return worldCreator.getSeed();
-        *///?}
+        return uiState.getSeed();
     }
 }

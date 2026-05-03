@@ -2,10 +2,9 @@ package me.duncanruns.hermes.ghost;
 
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 
 import java.io.RandomAccessFile;
 import java.nio.Buffer;
@@ -36,29 +35,19 @@ public class GhostWriter {
         ((Buffer) buffer).position(0);
     }
 
-    private static byte getFlags(ServerPlayerEntity player) {
-        //? if <= 1.15.2 {
-        /*boolean isHandSwinging = player.isHandSwinging;
-         *///?} else {
-        boolean isHandSwinging = player.handSwinging;
-        //?}
-        //? if <=1.21.1 {
-        boolean fallFlyingBool = player.isFallFlying();
-        //?} else {
-        /*boolean fallFlyingBool = player.isGliding();
-        *///?}
-        byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
+    private static byte getFlags(ServerPlayer player) {
+        byte swinging = (byte) (player.swinging ? (0x01) : 0);
         byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
-        byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);
+        byte sneaking = (byte) (player.isShiftKeyDown() ? (0x04) : 0);
         byte sprinting = (byte) (player.isSprinting() ? (0x08) : 0);
         byte isAttacked = (byte) (player.hurtTime > 0 ? (0x10) : 0);
         byte isAlive = (byte) (player.isAlive() ? (0x20) : 0);
-        byte fallFlying = (byte) (fallFlyingBool ? (0x40) : 0); // 1.9+
+        byte fallFlying = (byte) (player.isFallFlying() ? (0x40) : 0); // 1.9+
         byte swimming = (byte) (player.isSwimming() ? (0x80) : 0); // 1.13+
         return (byte) (swinging | usingItem | sneaking | sprinting | isAttacked | isAlive | fallFlying | swimming);
     }
 
-    public void onTick(long time, ServerPlayerEntity player) {
+    public void onTick(long time, ServerPlayer player) {
         if (full || closing) return;
         if (buffer.position() + PACKET_SIZE > buffer.array().length) {
             HermesMod.LOGGER.warn("Ghost buffer is full for {}! Won't be able to track more positions until next save.", path);
@@ -66,26 +55,15 @@ public class GhostWriter {
             return;
         }
 
-        //? if <=1.16.5 {
-        float pitch = player.pitch;
-        PlayerInventory inventory = player.inventory;
-        //?} else {
-        /*float pitch = player.getPitch();
-        PlayerInventory inventory = player.getInventory();
-        *///?}
-        //? if <=1.21.4 {
-        int selectedSlot = inventory.selectedSlot;
-        //?} else {
-        /*int selectedSlot = inventory.getSelectedSlot();
-        *///?}
-
-        Vec3d pos = Util.getEntityPos(player);
+        float pitch = player.getXRot();
+        int selectedSlot = player.getInventory().getSelectedSlot();
+        Vec3 pos = Util.getEntityPos(player);
 
         buffer.putLong(time); // 1->8
         buffer.putDouble(pos.x); // 9->16
         buffer.putDouble(pos.y); // 17->24
         buffer.putDouble(pos.z); // 25->32
-        buffer.putFloat(player.headYaw); // 33->36
+        buffer.putFloat(player.yHeadRot); // 33->36
         buffer.putFloat(pitch); // 37->40
         buffer.putFloat(player.getHealth()); // 41->44
         buffer.put((byte) (selectedSlot % 9)); // 45

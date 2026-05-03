@@ -9,7 +9,7 @@ import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.instancestate.updaters.WorldStateUpdater;
 import me.duncanruns.hermes.instancestate.updaters.client.ScreenStateUpdater;
 import me.duncanruns.hermes.instancestate.updaters.client.ClientWorldStateUpdater;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.FileNotFoundException;
@@ -27,13 +27,13 @@ public final class InstanceState {
     private static String lastOutput = "{}";
     private static RandomAccessFile file;
 
-    private static final Collection<BiConsumer<JsonObject, MinecraftClient>> CLIENT_STATE_UPDATERS = new CopyOnWriteArrayList<>();
+    private static final Collection<BiConsumer<JsonObject, Minecraft>> CLIENT_STATE_UPDATERS = new CopyOnWriteArrayList<>();
     private static final Collection<BiConsumer<JsonObject, MinecraftServer>> GENERAL_STATE_UPDATERS = new CopyOnWriteArrayList<>();
 
     private InstanceState() {
     }
 
-    public static void update(MinecraftClient client) {
+    public static void update(Minecraft client) {
         assert file != null;
         JsonObject json = new JsonObject();
         CLIENT_STATE_UPDATERS.forEach(u -> u.accept(json, client));
@@ -73,7 +73,7 @@ public final class InstanceState {
      * The registered updater will be called every time the state is updated, which is every tick and screen change, so
      * be careful with performance.
      */
-    public static void registerClientStateUpdater(BiConsumer<JsonObject, MinecraftClient> updater) {
+    public static void registerClientStateUpdater(BiConsumer<JsonObject, Minecraft> updater) {
         CLIENT_STATE_UPDATERS.add(updater);
     }
 

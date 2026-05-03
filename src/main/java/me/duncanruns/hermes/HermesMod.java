@@ -2,6 +2,7 @@ package me.duncanruns.hermes;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import me.duncanruns.hermes.core.Alive;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.core.InstanceInfo;
@@ -13,6 +14,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +23,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -36,33 +42,11 @@ public class HermesMod implements ModInitializer {
     }
 
     @Environment(EnvType.CLIENT)
-    public static @NotNull JsonObject screenToJsonObject(
-            //? if <=1.14 {
-            /*net.minecraft.client.gui.Screen currentScreen
-            *///?} else {
-            net.minecraft.client.gui.screen.Screen currentScreen
-            //?}
-    ) {
+    public static @NotNull JsonObject screenToJsonObject(Screen currentScreen) {
         JsonObject data = new JsonObject();
         String screenClass = Optional.ofNullable(currentScreen).map(s -> s.getClass().getName()).orElse(null);
-        //? if <=1.14 {
-        /*JsonElement screenTitle = Optional.ofNullable(currentScreen).map(net.minecraft.client.gui.Screen::getTitle).map(net.minecraft.network.chat.Component.Serializer::toJson).orElse(null);
-        *///?} else if <=1.14.2 {
-        /*JsonElement screenTitle = Optional.ofNullable(currentScreen).map(net.minecraft.client.gui.screen.Screen::getTitle).map(net.minecraft.network.chat.Component.Serializer::toJson).orElse(null);
-        *///?} else if <=1.20.2 {
-        JsonElement screenTitle = Optional.ofNullable(currentScreen).map(net.minecraft.client.gui.screen.Screen::getTitle).map(net.minecraft.text.Text.Serializer::toJsonTree).orElse(null);
-        //?} else if <=1.20.4 {
-        /*JsonElement screenTitle = Optional.ofNullable(currentScreen).map(net.minecraft.client.gui.screen.Screen::getTitle).map(net.minecraft.text.Text.Serialization::toJsonTree).orElse(null);
-        *///?} else {
-        /*JsonElement screenTitle = Optional.ofNullable(currentScreen).map(net.minecraft.client.gui.screen.Screen::getTitle).map(t -> net.minecraft.text.TextCodecs.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, t).getOrThrow(com.google.gson.JsonParseException::new)).orElse(null);
-        *///?}
-        //? if <=1.14 {
-        /*Function<net.minecraft.client.gui.Screen, Boolean> screenObjectFunction = net.minecraft.client.gui.Screen::isPauseScreen;
-        *///?} else if <=1.18 {
-        Function<net.minecraft.client.gui.screen.Screen, Boolean> screenObjectFunction = net.minecraft.client.gui.screen.Screen::isPauseScreen;
-        //?} else {
-        /*Function<net.minecraft.client.gui.screen.Screen, Boolean> screenObjectFunction = net.minecraft.client.gui.screen.Screen::shouldPause;
-        *///?}
+        JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(t -> ComponentSerialization.CODEC.encodeStart(JsonOps.INSTANCE, t).getOrThrow(com.google.gson.JsonParseException::new)).orElse(null);
+        Function<Screen, Boolean> screenObjectFunction = Screen::isPauseScreen;
         boolean screenIsPause = Optional.ofNullable(currentScreen).map(screenObjectFunction).orElse(false);
         data.addProperty("class", screenClass);
         data.add("title", screenTitle);

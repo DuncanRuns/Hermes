@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom")
+    id("dev.kikugie.loom-back-compat")
     id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
@@ -7,10 +7,8 @@ version = "${property("mod.version")}+MC${stonecutter.current.version}"
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
-    stonecutter.eval(stonecutter.current.version, ">=1.20.6") -> JavaVersion.VERSION_21
-    stonecutter.eval(stonecutter.current.version, ">=1.18") -> JavaVersion.VERSION_17
-    stonecutter.eval(stonecutter.current.version, ">=1.17") -> JavaVersion.VERSION_16
-    else -> JavaVersion.VERSION_1_8
+    stonecutter.eval(stonecutter.current.version, ">=26.1") -> JavaVersion.VERSION_25
+    else -> JavaVersion.VERSION_25
 }
 
 repositories {
@@ -29,11 +27,6 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
-    if (stonecutter.current.parsed <= "1.14.2") {
-        mappings("net.fabricmc:yarn:${property("deps.yarn")}")
-    }else {
-        mappings("net.fabricmc:yarn:${property("deps.yarn")}:v2")
-    }
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modCompileOnly("${property("deps.speedrunigt")}")
 
@@ -93,11 +86,11 @@ tasks {
 
         into(rootProject.layout.buildDirectory.dir("libs/${project.property("mod.version")}"))
 
-        from(remapJar.map { it.archiveFile }) {
+        from(loomx.modJar.map { it.archiveFile }) {
             into(stonecutter.current.version)
         }
 
-        from(remapSourcesJar.map { it.archiveFile }) {
+        from(loomx.modSourcesJar.map { it.archiveFile }) {
             into("sources")
         }
 

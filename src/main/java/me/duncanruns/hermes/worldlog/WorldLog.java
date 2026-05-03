@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.server.IntegratedServer;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -45,8 +45,8 @@ public final class WorldLog {
         }
     }
 
-    public static void update(MinecraftClient client) {
-        IntegratedServer server = client.getServer();
+    public static void update(Minecraft client) {
+        IntegratedServer server = client.getSingleplayerServer();
         Path world = Optional.ofNullable(server).map(s -> HermesMod.getSavePath(server).normalize()).orElse(null);
 
         Path previousWorld = lastWorld;
