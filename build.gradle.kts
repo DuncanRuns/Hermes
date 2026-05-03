@@ -1,5 +1,5 @@
 plugins {
-    id("dev.kikugie.loom-back-compat")
+    id("net.fabricmc.fabric-loom")
     id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
@@ -27,10 +27,10 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
-    modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    modCompileOnly("${property("deps.speedrunigt")}")
+    implementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+    compileOnly("${property("deps.speedrunigt")}")
 
-    modImplementation("${property("deps.hermes-core")}")
+    implementation("${property("deps.hermes-core")}")
     include("${property("deps.hermes-core")}")
 }
 
@@ -86,11 +86,13 @@ tasks {
 
         into(rootProject.layout.buildDirectory.dir("libs/${project.property("mod.version")}"))
 
-        from(loomx.modJar.map { it.archiveFile }) {
+        val modJar = project.tasks.named<Jar>("jar")
+        from(modJar.map { it.archiveFile }) {
             into(stonecutter.current.version)
         }
 
-        from(loomx.modSourcesJar.map { it.archiveFile }) {
+        val modSourcesJar = project.tasks.named<Jar>("sourcesJar")
+        from(modSourcesJar.map { it.archiveFile }) {
             into("sources")
         }
 
