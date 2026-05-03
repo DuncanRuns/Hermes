@@ -14,6 +14,6 @@ import java.util.function.BiConsumer;
 public class WorldStateUpdater implements BiConsumer<JsonObject, MinecraftServer> {
     @Override
     public void accept(JsonObject json, MinecraftServer server) {
-        json.add("world", Optional.ofNullable(server).map(s -> HermesCore.pathToJsonObject(HermesMod.getSavePath(server).normalize().toAbsolutePath())).orElse(null));
+        json.add("world", Optional.ofNullable(server).map(s -> HermesCore.pathToJsonObject(HermesMod.getSavePath(s).normalize().toAbsolutePath())).orElse(null));
     }
 }
