@@ -24,7 +24,7 @@ public final class Util {
     public static String getPlayerName(PlayerEntity player) {
         //? if <=1.21.8 {
         return player.getGameProfile().getName();
-         //?} else {
+        //?} else {
         /*return player.getGameProfile().name();
         *///?}
     }
