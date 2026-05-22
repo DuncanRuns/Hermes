@@ -14,10 +14,10 @@ public interface MoreOptionsDialogAccessor {
     @Accessor("seedText")
     String getSeedText();
     //?} else if <= 1.16.4 {
-    /*@Accessor(value = "seedText", remap = false)
+    /*@Accessor(value = "seedText")
     OptionalLong getSeedOpt();
     *///?} else {
-    /*@Accessor(value = "seed", remap = false)
+    /*@Accessor(value = "seed")
     OptionalLong getSeedOpt();
     *///?}
 }
