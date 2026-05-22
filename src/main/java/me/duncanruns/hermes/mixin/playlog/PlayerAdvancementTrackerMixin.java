@@ -51,12 +51,7 @@ public abstract class PlayerAdvancementTrackerMixin {
     //?} else {
     /*@Inject(method = "grantCriterion", at = @At("RETURN"))
     private void onAdvancement(net.minecraft.advancement.AdvancementEntry advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
-        //? if <=1.15.2 {
-        /^MinecraftServer server = this.server;
-         ^///?} else {
-        MinecraftServer server = playerManager.getServer();
-        //?}
-        PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner));
+        PlayLogHelper.getPlayLog(playerManager.getServer()).ifPresent(p -> p.onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner));
     }
     *///?}
 }
