@@ -73,9 +73,16 @@ if the world properly saved.
 > intention). Then on server shutdown (world exit), an unciphered copy is made. A warning.txt file is also placed in the
 > restricted folder to make it extra obvious.
 
-- `initialize` - Runs when the play log is initialized (creating or joining a world), contains game version, Hermes
+- `initialize` - Runs when the play log is initialized (creating or joining a world). Contains game version, Hermes
   version, generator options, entered seed (if creating), the world time (total ticks ran in world, should be 0 for new
-  world), and if atum is installed, a field noting if atum is running.
+  world), and atum's running state (only present when atum is installed).
+    - The format of the generator options is not consistent between versions of the game, and will be similar to the
+      format found in a world's level.dat. Many versions contain the seed in its generator options, which is
+      specifically excluded from this log.
+    - The entered seed field will always be a JSON string, however, as a result of ensuring mod compatibility and
+      minimal implementation, versions 1.16.2-1.19.3 will have the resulting seed rather than the original text entered
+      in the box. It is guaranteed that if the seed box is left empty, the resulting entered seed field will also be
+      empty.
 - `stat` - Every stat update, the player it's for, the new value, and the difference from the last one. Excludes
   stats that naturally update every tick or extremely spammy ones (e.g. walking/sprinting/flying)
 - `screen` - Every screen change, the class (will look like class_xxxxx bc of intermediary), the title (
@@ -89,6 +96,9 @@ if the world properly saved.
 - `inside_structures` - A list of names of structures that a player is currently inside. Only logs when the list of
   structures changes to prevent redundant logs, although relogging may result in duplicate logs. The check runs every 20
   ticks, similar to advancements.
+    - The names are similar or identical to those used in the `/locate` or `/locate structure` commands. This means in
+      1.18.2+, village is split into its 5 different biome variants, as well as ruined portals and some other
+      structures.
 - `game_info` - The "Game Info" whenever a change happens to it. If a field is not present, that means it hasn't changed
   from the last `game_info` event. Game Info includes:
     - Non-default Game Rules
