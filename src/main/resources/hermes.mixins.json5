@@ -4,10 +4,10 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ghost.MinecraftServerMixin",
+    "playlog.CommandManagerMixin",
     "playlog.MinecraftServerMixin",
     "playlog.PlayerAdvancementsMixin",
     "playlog.PlayerManagerMixin",
-    "playlog.CommandManagerMixin",
     "playlog.ServerPlayerStatsMixin",
     "playlog.ServerWorldMixin",
     "worldpath.MinecraftServerMixin"

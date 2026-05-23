@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
-    mappings (ploceus.featherMappings(property("feather_build").toString()))
+    mappings(ploceus.featherMappings(property("feather_build").toString()))
 
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
