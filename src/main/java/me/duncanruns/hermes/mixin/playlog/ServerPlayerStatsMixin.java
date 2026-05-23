@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerStats.class)
-public abstract class ServerStatHandlerMixin extends PlayerStats {
+public abstract class ServerPlayerStatsMixin extends PlayerStats {
     @Inject(method = "set", at = @At("HEAD"))
     private void onSetStat(PlayerEntity player, Stat<?> stat, int value, CallbackInfo ci) {
         if (!(player instanceof ServerPlayerEntity)) return;

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public abstract class MinecraftClientMixin {
+public abstract class MinecraftMixin {
 
     @Inject(method = {"openScreen"}, at = @At("RETURN"))
     private void onOpenScreen(CallbackInfo ci) {

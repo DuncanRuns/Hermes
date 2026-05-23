@@ -5,10 +5,10 @@
   "mixins": [
     "ghost.MinecraftServerMixin",
     "playlog.MinecraftServerMixin",
-    "playlog.PlayerAdvancementTrackerMixin",
+    "playlog.PlayerAdvancementsMixin",
     "playlog.PlayerManagerMixin",
     "playlog.CommandManagerMixin",
-    "playlog.ServerStatHandlerMixin",
+    "playlog.ServerPlayerStatsMixin",
     "playlog.ServerWorldMixin",
     "worldpath.MinecraftServerMixin"
   ],
@@ -19,11 +19,11 @@
     "requireAnnotations": true
   },
   "client": [
-    "client.MinecraftClientMixin",
-    "instancestate.client.MinecraftClientMixin",
-    "playlog.client.MinecraftClientMixin",
+    "client.MinecraftMixin",
+    "instancestate.client.MinecraftMixin",
+    "playlog.client.MinecraftMixin",
     "playlog.client.enteredseed.CreateWorldScreenMixin",
-    "worldlog.client.MinecraftClientMixin"
+    "worldlog.client.MinecraftMixin"
   ],
   "server": [
     "instancestate.server.MinecraftServerMixin",
