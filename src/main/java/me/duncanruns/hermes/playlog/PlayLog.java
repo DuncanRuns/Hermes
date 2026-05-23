@@ -4,19 +4,26 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.SharedConstants;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.advancement.Advancement;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.living.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.entity.living.player.ServerPlayerEntity;
+import net.minecraft.stat.PlayerStats;
 import net.minecraft.stat.Stat;
-import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -108,7 +115,7 @@ public class PlayLog {
     }
 
     private static long getTime(MinecraftServer server) {
-        return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
+        return server.getWorld(DimensionType.OVERWORLD).getTime();
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
@@ -116,8 +123,8 @@ public class PlayLog {
     }
 
     private static JsonElement getGeneratorOptions(MinecraftServer server) {
-        net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
-        JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
+        NbtCompound generatorOptions = server.getWorld(DimensionType.OVERWORLD).getData().getGeneratorOptions();
+        JsonElement json = Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, generatorOptions);
         if (json == null) return null;
         clearSeed(json);
         return json;
@@ -180,7 +187,7 @@ public class PlayLog {
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
-        data.addProperty("mc_version", SharedConstants.getGameVersion().getName());
+        data.addProperty("mc_version", SharedConstants.m_0171173().getName());
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
@@ -189,7 +196,7 @@ public class PlayLog {
         INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
     }
 
-    public void onStat(StatHandler statHandler, PlayerEntity player, Stat<?> stat, int value) {
+    public void onStat(PlayerStats statHandler, PlayerEntity player, Stat<?> stat, int value) {
         String name = stat.getName();
         if (PlayLog.STAT_BLOCK_LIST.contains(name)) {
             return;
@@ -197,7 +204,7 @@ public class PlayLog {
             PlayLog.STAT_BLOCK_LIST.add(name); // Faster to check the next time around
             return;
         }
-        int diff = value - statHandler.getStat(stat);
+        int diff = value - statHandler.get(stat);
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(player));
         data.addProperty("stat", name);
@@ -275,28 +282,24 @@ public class PlayLog {
         rtFile.write('\n');
     }
 
-    public void onScreenChange(
-            net.minecraft.client.gui.screen.Screen currentScreen
-    ) {
+    public void onScreenChange(Screen currentScreen) {
         JsonObject data = HermesMod.screenToJsonObject(currentScreen);
         if (Objects.equals(data, lastScreenData)) return;
         lastScreenData = data;
         write("screen", data);
     }
 
-    public void onAdvancement(
-            net.minecraft.advancement.Advancement advancement,
-            String criterionName, boolean done, ServerPlayerEntity owner) {
+    public void onAdvancement(Advancement advancement, String criterionName, boolean done, ServerPlayerEntity owner) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(owner));
         data.addProperty("id", advancement.getId().toString());
         data.addProperty("criterion_name", criterionName);
         data.addProperty("completed", done);
-        data.add("display", Optional.ofNullable(advancement.getDisplay()).map(a -> {
+        data.add("display", Optional.ofNullable(advancement.getInfo()).map(a -> {
             JsonObject display = new JsonObject();
             display.addProperty("hidden", a.isHidden());
-            display.addProperty("announce_to_chat", a.shouldAnnounceToChat());
-            if (HermesCore.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
+            display.addProperty("announce_to_chat", a.showInChat());
+            if (HermesCore.IS_CLIENT) display.addProperty("show_toast", a.showInToast());
             return display;
         }).orElse(null));
         write("advancement", data);

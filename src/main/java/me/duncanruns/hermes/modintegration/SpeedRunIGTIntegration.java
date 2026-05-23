@@ -2,7 +2,7 @@ package me.duncanruns.hermes.modintegration;
 
 import com.redlimerl.speedrunigt.option.SpeedRunOption;
 import com.redlimerl.speedrunigt.timer.InGameTimer;
-import net.minecraft.util.Identifier;
+import net.minecraft.resource.Identifier;
 
 import java.lang.reflect.Field;
 import java.util.Map;

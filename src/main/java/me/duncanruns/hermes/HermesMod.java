@@ -13,14 +13,19 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -36,13 +41,11 @@ public class HermesMod implements ModInitializer {
     }
 
     @Environment(EnvType.CLIENT)
-    public static @NotNull JsonObject screenToJsonObject(
-            net.minecraft.client.gui.screen.Screen currentScreen
-    ) {
+    public static @NotNull JsonObject screenToJsonObject(Screen currentScreen) {
         JsonObject data = new JsonObject();
         String screenClass = Optional.ofNullable(currentScreen).map(s -> s.getClass().getName()).orElse(null);
-        JsonElement screenTitle = Optional.ofNullable(currentScreen).map(net.minecraft.client.gui.screen.Screen::getTitle).map(net.minecraft.text.Text.Serializer::toJsonTree).orElse(null);
-        Function<net.minecraft.client.gui.screen.Screen, Boolean> screenObjectFunction = net.minecraft.client.gui.screen.Screen::isPauseScreen;
+        JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(Text.Serializer::toJsonTree).orElse(null);
+        Function<Screen, Boolean> screenObjectFunction = Screen::isPauseScreen;
         boolean screenIsPause = Optional.ofNullable(currentScreen).map(screenObjectFunction).orElse(false);
         data.addProperty("class", screenClass);
         data.add("title", screenTitle);

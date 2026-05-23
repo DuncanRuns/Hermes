@@ -2,10 +2,14 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.living.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.*;
@@ -18,7 +22,7 @@ public class InventoryTracker {
 
     private static JsonElement stackToJson(ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
-        return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
+        return Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, itemStack.writeNbt(new NbtCompound()));
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -32,7 +36,7 @@ public class InventoryTracker {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
         if (a.isEmpty() && b.isEmpty()) return true;
-        return ItemStack.areItemsEqual(a, b);
+        return ItemStack.matchesItemIgnoreDamage(a, b);
     }
 
     /**
@@ -40,9 +44,9 @@ public class InventoryTracker {
      */
     public List<JsonObject> tick(MinecraftServer minecraftServer) {
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        inventories.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
+        inventories.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
-        minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
+        minecraftServer.getPlayerManager().getAll().forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
             PlayerInventory inventory = player.inventory;
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
@@ -69,7 +73,7 @@ public class InventoryTracker {
     }
 
     private static Stream<ItemStack> getInventoryStream(PlayerInventory inventory) {
-        return HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream());
+        return HermesMod.concat(inventory.items.stream(), inventory.armor.stream(), inventory.offhand.stream());
     }
 
     private List<ItemStack> getEmptyInventory(int size) {

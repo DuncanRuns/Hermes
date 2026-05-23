@@ -2,8 +2,16 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 import me.duncanruns.hermes.util.Util;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resource.pack.repository.PackRepository;
+import net.minecraft.resource.pack.repository.UnopenedPack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.WorldData;
+import net.minecraft.world.dimension.DimensionType;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +22,7 @@ import java.util.stream.Collectors;
  * It's possible that later Minecraft versions would mean more information should be added or that previous versions would mean some information should be removed.
  */
 public class GameInfo {
-    private static final JsonObject DEFAULT_GAMERULES = gameRulesToJson(new net.minecraft.world.GameRules());
+    private static final JsonObject DEFAULT_GAMERULES = gameRulesToJson(new GameRules());
     @SerializedName("cheats_allowed")
     private Boolean cheatsAllowed;
     @SerializedName("open_to_lan")
@@ -41,25 +49,25 @@ public class GameInfo {
 
     public static GameInfo fromServer(MinecraftServer server) {
         GameInfo gameInfo = new GameInfo();
-        gameInfo.cheatsAllowed = server.getPlayerManager().areCheatsAllowed();
-        gameInfo.openToLan = server.isRemote();
-        net.minecraft.world.level.LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
+        gameInfo.cheatsAllowed = server.getPlayerManager().allowCommands();
+        gameInfo.openToLan = server.isPublished();
+        WorldData levelProperties = server.getWorld(DimensionType.OVERWORLD).getData();
 
         gameInfo.hardcore = levelProperties.isHardcore();
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
-        gameInfo.difficulty = levelProperties.getDifficulty().getName();
-        gameInfo.players = server.getPlayerManager().getPlayerList().stream().map(p -> {
+        gameInfo.difficulty = levelProperties.getDifficulty().getKey();
+        gameInfo.players = server.getPlayerManager().getAll().stream().map(p -> {
             PlayerInfo pi = new PlayerInfo();
-            pi.gamemode = p.interactionManager.getGameMode().getName();
+            pi.gamemode = p.interactionManager.getGameMode().getKey();
             pi.name = Util.getPlayerName(p);
             pi.uuid = Util.getPlayerUUID(p).toString();
             return pi;
         }).collect(Collectors.toList());
-        gameInfo.defaultGamemode = server.getDefaultGameMode().getName();
-        net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackContainerManager();
+        gameInfo.defaultGamemode = server.getDefaultGameMode().getKey();
+        PackRepository<UnopenedPack> dataPackManager = server.getDataPackManager();
 
-        gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
-        gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
+        gameInfo.dataPacks = dataPackManager.getAvailable().stream().map(UnopenedPack::getId).sorted().collect(Collectors.toList());
+        gameInfo.enabledDataPacks = dataPackManager.getSelected().stream().map(UnopenedPack::getId).sorted().collect(Collectors.toList());
         gameInfo.nonDefaultGameRules = getChangedGameRules(server);
         return gameInfo;
     }
@@ -72,9 +80,9 @@ public class GameInfo {
     }
 
     private static JsonObject gameRulesToJson(
-            net.minecraft.world.GameRules gameRules
+            GameRules gameRules
     ) {
-        return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+        return Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
     }
 
     public static final class PlayerInfo {

@@ -3,8 +3,10 @@ package me.duncanruns.hermes.playlog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.living.effect.StatusEffect;
+import net.minecraft.entity.living.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.registry.Registry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,14 +16,14 @@ public class EffectsTracker {
     private final Map<UUID, Map<String, Integer>> effects = new HashMap<>();
 
     public List<JsonObject> tick(MinecraftServer minecraftServer) {
-        effects.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
+        effects.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
-        minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
+        minecraftServer.getPlayerManager().getAll().forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
             Map<String, Integer> oldEffects = effects.computeIfAbsent(id, uuid -> new HashMap<>());
 
-            final net.minecraft.util.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.util.registry.Registry.STATUS_EFFECT;
-            Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Objects.requireNonNull(effectReg.getId(e.getEffectType())).toString(), StatusEffectInstance::getAmplifier));
+            final Registry<StatusEffect> effectReg = Registry.STATUS_EFFECT;
+            Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Integer.valueOf(effectReg.getId(e.getEffect())).toString(), StatusEffectInstance::getAmplifier));
             if (oldEffects.equals(newEffects)) return;
             effects.put(id, newEffects);
 

@@ -12,7 +12,7 @@ public class GhostManager implements AutoCloseable {
 
     public void onTick(MinecraftServer server) {
         long time = System.currentTimeMillis();
-        server.getPlayerManager().getPlayerList().forEach(player ->
+        server.getPlayerManager().getAll().forEach(player ->
                 writers.computeIfAbsent(Util.getPlayerUUID(player), uuid -> new GhostWriter(server, uuid)).onTick(time, player)
         );
     }

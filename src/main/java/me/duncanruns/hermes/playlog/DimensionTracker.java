@@ -19,10 +19,10 @@ public class DimensionTracker {
      */
     public Iterable<JsonObject> tick(MinecraftServer minecraftServer) {
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        oldDimensions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
-        oldPositions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().getPlayer(uuid) == null);
+        oldDimensions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
+        oldPositions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
-        minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
+        minecraftServer.getPlayerManager().getAll().forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
             Vec3d newPos = Util.getEntityPos(player);
             Vec3d oldPos = oldPositions.put(id, newPos);

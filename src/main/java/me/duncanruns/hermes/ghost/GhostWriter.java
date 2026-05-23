@@ -2,9 +2,9 @@ package me.duncanruns.hermes.ghost;
 
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.living.player.PlayerInventory;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 import java.io.RandomAccessFile;
@@ -37,13 +37,13 @@ public class GhostWriter {
     }
 
     private static byte getFlags(ServerPlayerEntity player) {
-        boolean isHandSwinging = player.isHandSwinging;
+        boolean isHandSwinging = player.armSwinging;
         boolean fallFlyingBool = player.isFallFlying();
         byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
         byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
         byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);
         byte sprinting = (byte) (player.isSprinting() ? (0x08) : 0);
-        byte isAttacked = (byte) (player.hurtTime > 0 ? (0x10) : 0);
+        byte isAttacked = (byte) (player.damagedTimer > 0 ? (0x10) : 0);
         byte isAlive = (byte) (player.isAlive() ? (0x20) : 0);
         byte fallFlying = (byte) (fallFlyingBool ? (0x40) : 0); // 1.9+
         byte swimming = (byte) (player.isSwimming() ? (0x80) : 0); // 1.13+

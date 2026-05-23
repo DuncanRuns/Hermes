@@ -1,5 +1,6 @@
 plugins {
     id("fabric-loom")
+    id("ploceus")
     id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
@@ -29,16 +30,18 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
-    if (stonecutter.current.parsed <= "1.14.2") {
-        mappings("net.fabricmc:yarn:${property("deps.yarn")}")
-    }else {
-        mappings("net.fabricmc:yarn:${property("deps.yarn")}:v2")
-    }
-    modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    modCompileOnly("${property("deps.speedrunigt")}")
+    mappings (ploceus.featherMappings(property("feather_build").toString()))
 
+
+    modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+
+    modCompileOnly("${property("deps.speedrunigt")}")
     modImplementation("${property("deps.hermes-core")}")
     include("${property("deps.hermes-core")}")
+}
+
+ploceus {
+//    setIntermediaryGeneration(2)
 }
 
 loom {

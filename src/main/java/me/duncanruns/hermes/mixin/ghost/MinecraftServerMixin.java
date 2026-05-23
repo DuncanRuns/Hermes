@@ -19,7 +19,7 @@ public abstract class MinecraftServerMixin {
         ghostManager.onTick((MinecraftServer) (Object) this);
     }
 
-    @Inject(method = "save(ZZZ)Z", at = @At("RETURN"))
+    @Inject(method = "saveWorlds(ZZZ)Z", at = @At("RETURN"))
     private void onSave(CallbackInfoReturnable<Boolean> cir) {
         ghostManager.onSave();
     }

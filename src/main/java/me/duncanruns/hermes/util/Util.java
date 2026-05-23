@@ -1,9 +1,9 @@
 package me.duncanruns.hermes.util;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.entity.living.player.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
@@ -29,7 +29,7 @@ public final class Util {
         return player.server;
     }
 
-    public static Vec3d getEntityPos(Entity entity){
-        return entity.getPos();
+    public static Vec3d getEntityPos(Entity entity) {
+        return entity.m_1784731();
     }
 }

@@ -2,7 +2,7 @@ package me.duncanruns.hermes.playlog;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Optional;
@@ -22,8 +22,8 @@ public final class PlayLogHelper {
 
     @Environment(EnvType.CLIENT)
     public static Optional<PlayLog> getCurrentPlayLog() {
-        return Optional.ofNullable(MinecraftClient.getInstance())
-                .map(MinecraftClient::getServer)
+        return Optional.ofNullable(Minecraft.getInstance())
+                .map(Minecraft::getServer)
                 .flatMap(PlayLogHelper::getPlayLog);
     }
 }

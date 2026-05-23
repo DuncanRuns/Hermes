@@ -6,6 +6,7 @@ import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.structure.StructureFeature;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -16,14 +17,14 @@ public class StructureTracker {
     public Collection<JsonObject> tick(MinecraftServer server) {
         List<JsonObject> out = new ArrayList<>();
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        structureMap.keySet().removeIf(uuid -> server.getPlayerManager().getPlayer(uuid) == null);
-        server.getPlayerManager().getPlayerList().forEach(player -> {
-            if (player.age % 20 != 0) return;
+        structureMap.keySet().removeIf(uuid -> server.getPlayerManager().get(uuid) == null);
+        server.getPlayerManager().getAll().forEach(player -> {
+            if (player.ticks % 20 != 0) return;
 
             BlockPos blockPos = new BlockPos((float) player.x, (float) player.y, (float) player.z);
             ServerWorld world = Util.getPlayerServerWorld(player);
 
-            if (!world.canSetBlock(blockPos)) return;
+            if (!world.isLoaded(blockPos)) return;
 
             UUID id = Util.getPlayerUUID(player);
 
@@ -45,8 +46,8 @@ public class StructureTracker {
     private static @NotNull Set<String> getStructures(ServerWorld world, BlockPos blockPos) {
         Set<String> structures = new HashSet<>();
 
-        net.minecraft.world.gen.feature.StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
-            if (!feature.isInsideStructure(world, blockPos)) return;
+        StructureFeature.DEFAULT_SPAWN_ENTRIES.forEach((structureName, feature) -> {
+            if (!feature.isValid(world, blockPos)) return;
             structures.add(structureName);
         });
         return structures;

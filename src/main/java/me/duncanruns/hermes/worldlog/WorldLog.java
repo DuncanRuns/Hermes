@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.integrated.IntegratedServer;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public final class WorldLog {
         }
     }
 
-    public static void update(MinecraftClient client) {
+    public static void update(Minecraft client) {
         IntegratedServer server = client.getServer();
         Path world = Optional.ofNullable(server).map(s -> HermesMod.getSavePath(server).normalize()).orElse(null);
 
