@@ -25,14 +25,14 @@ public abstract class PlayerAdvancementTrackerMixin {
     @Shadow
     private ServerPlayerEntity owner;
     //? if <=1.15.2 {
-    /*@Shadow
-    @Final
-    private MinecraftServer server;
-    *///?} else if <=1.20.1 {
     @Shadow
     @Final
+    private MinecraftServer server;
+    //?} else if <=1.20.1 {
+    /*@Shadow
+    @Final
     private net.minecraft.server.PlayerManager field_25325;
-    //?} else {
+    *///?} else {
     /*@Shadow
     @Final
     private net.minecraft.server.PlayerManager playerManager;
@@ -42,10 +42,10 @@ public abstract class PlayerAdvancementTrackerMixin {
     @Inject(method = "grantCriterion", at = @At("RETURN"))
     private void onAdvancement(net.minecraft.advancement.Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
         //? if <=1.15.2 {
-        /*MinecraftServer server = this.server;
-         *///?} else {
-        MinecraftServer server = field_25325.getServer();
-        //?}
+        MinecraftServer server = this.server;
+         //?} else {
+        /*MinecraftServer server = field_25325.getServer();
+        *///?}
         PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner));
     }
     //?} else {

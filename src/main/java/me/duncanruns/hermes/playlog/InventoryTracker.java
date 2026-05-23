@@ -21,10 +21,10 @@ public class InventoryTracker {
         //? if <=1.14.3 || 1.15 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
         *///?} else if <=1.15.2 {
-        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
-         *///?} else {
-        return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
-        //?}
+        return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
+         //?} else {
+        /*return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
+        *///?}
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -41,10 +41,10 @@ public class InventoryTracker {
         //? if <=1.14.1 {
         /*return ItemStack.areEqualIgnoreTags(a, b);
         *///?} else if <=1.15.2 {
-        /*return ItemStack.areItemsEqual(a, b);
-         *///?} else {
-        return ItemStack.areEqual(a, b);
-        //?}
+        return ItemStack.areItemsEqual(a, b);
+         //?} else {
+        /*return ItemStack.areEqual(a, b);
+        *///?}
     }
 
     /**

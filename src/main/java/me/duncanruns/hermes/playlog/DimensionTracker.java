@@ -29,10 +29,10 @@ public class DimensionTracker {
 
             ServerWorld world = Util.getPlayerServerWorld(player);
             //? if <=1.15.2 {
-            /*String newDimension = world.dimension.getType().toString();
-            *///?} else if <=1.21.8 {
-            String newDimension = world.getRegistryKey().getValue().toString();
-            //?} else {
+            String newDimension = world.dimension.getType().toString();
+            //?} else if <=1.21.8 {
+            /*String newDimension = world.getRegistryKey().getValue().toString();
+            *///?} else {
             /*String newDimension = world.getRegistryKey().getValue().toString();
             *///?}
 

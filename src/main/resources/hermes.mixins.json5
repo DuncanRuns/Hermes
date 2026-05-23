@@ -32,7 +32,7 @@
     "playlog.client.MinecraftClientMixin",
     "playlog.client.enteredseed.CreateWorldScreenMixin",
     //? if >=1.16 <=1.19.3
-    "playlog.client.enteredseed.MoreOptionsDialogAccessor",
+    //"playlog.client.enteredseed.MoreOptionsDialogAccessor",
     "worldlog.client.MinecraftClientMixin"
   ],
   "server": [

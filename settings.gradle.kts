@@ -59,7 +59,7 @@ stonecutter {
             "1.21.10",
             "1.21.11",
         )
-        vcsVersion = "1.16.1"
+        vcsVersion = "1.14.4"
     }
 }
 

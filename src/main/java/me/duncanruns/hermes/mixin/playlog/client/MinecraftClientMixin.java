@@ -21,10 +21,10 @@ public abstract class MinecraftClientMixin {
         //? if <=1.14 {
         /*server.execute(runnable);
         *///?} else if <=1.14.4 {
-        /*server.method_20493(runnable);
-         *///?} else {
-        server.submit(runnable);
-        //?}
+        server.method_20493(runnable);
+         //?} else {
+        /*server.submit(runnable);
+        *///?}
 
     }
 }

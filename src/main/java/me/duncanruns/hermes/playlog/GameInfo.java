@@ -50,10 +50,10 @@ public class GameInfo {
         gameInfo.cheatsAllowed = server.getPlayerManager().areCheatsAllowed();
         gameInfo.openToLan = server.isRemote();
         //? if <=1.15.2 {
-        /*net.minecraft.world.level.LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
-         *///?} else {
-        net.minecraft.world.SaveProperties levelProperties = server.getSaveProperties();
-        //?}
+        net.minecraft.world.level.LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
+         //?} else {
+        /*net.minecraft.world.SaveProperties levelProperties = server.getSaveProperties();
+        *///?}
 
         gameInfo.hardcore = levelProperties.isHardcore();
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
@@ -81,10 +81,10 @@ public class GameInfo {
         //? if <=1.14.3 {
         /*net.minecraft.resource.ResourcePackContainerManager<net.minecraft.resource.ResourcePackContainer> dataPackManager = server.getDataPackContainerManager();
          *///?} else  if <=1.14.4 {
-        /*net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackContainerManager();
-         *///?} else if <=1.16.1 {
-        net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
-         //?} else {
+        net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackContainerManager();
+         //?} else if <=1.16.1 {
+        /*net.minecraft.resource.ResourcePackManager<net.minecraft.resource.ResourcePackProfile> dataPackManager = server.getDataPackManager();
+         *///?} else {
         /*net.minecraft.resource.ResourcePackManager dataPackManager = server.getDataPackManager();
         *///?}
 
@@ -92,12 +92,12 @@ public class GameInfo {
         /*gameInfo.dataPacks = dataPackManager.getAlphabeticallyOrderedContainers().stream().map(net.minecraft.resource.ResourcePackContainer::getName).sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledContainers().stream().map(net.minecraft.resource.ResourcePackContainer::getName).sorted().collect(Collectors.toList());
         *///?} else if <=1.15.2 {
-        /*gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
+        gameInfo.dataPacks = dataPackManager.getProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledProfiles().stream().map(net.minecraft.resource.ResourcePackProfile::getName).sorted().collect(Collectors.toList());
-        *///?} else if <=1.20.4 {
-        gameInfo.dataPacks = dataPackManager.getNames().stream().sorted().collect(Collectors.toList());
+        //?} else if <=1.20.4 {
+        /*gameInfo.dataPacks = dataPackManager.getNames().stream().sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledNames().stream().sorted().collect(Collectors.toList());
-        //?} else {
+        *///?} else {
         /*gameInfo.dataPacks = dataPackManager.getIds().stream().sorted().collect(Collectors.toList());
         gameInfo.enabledDataPacks = dataPackManager.getEnabledIds().stream().sorted().collect(Collectors.toList());
         *///?}
@@ -135,10 +135,10 @@ public class GameInfo {
         *///?} else if <=1.14.3 || 1.15 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
         *///?} else if <=1.15.2 {
-        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
-         *///?} else if <=1.16.1 {
-        return net.minecraft.datafixer.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
-         //?} else if <=1.21.10 {
+        return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+         //?} else if <=1.16.1 {
+        /*return net.minecraft.datafixer.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+         *///?} else if <=1.21.10 {
         /*return net.minecraft.nbt.NbtOps.INSTANCE.convertTo(com.mojang.serialization.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
          *///?} else {
         /*return FEATURE_SET_TO_CODEC.computeIfAbsent(featureSet,f -> net.minecraft.world.rule.GameRules.createCodec(featureSet))

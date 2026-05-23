@@ -63,7 +63,7 @@ public class PlayLog {
     private static final Collection<PlayLog> PLAY_LOGS = new ConcurrentLinkedQueue<>();
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
     //? if >=1.16 <=1.16.1
-    private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
+    //private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
     //? if >=1.16.2 <=1.18.1
     //private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());
 
@@ -113,10 +113,10 @@ public class PlayLog {
 
     private static long getTime(MinecraftServer server) {
         //? if >=1.16 {
-        return server.getSaveProperties().getMainWorldProperties().getTime();
-        //?} else {
-        /*return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
-         *///?}
+        /*return server.getSaveProperties().getMainWorldProperties().getTime();
+        *///?} else {
+        return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
+         //?}
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
@@ -128,14 +128,14 @@ public class PlayLog {
         /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
         JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
         *///?} else if <=1.15.2 {
-        /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
+        net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
         JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        *///?} else if <=1.18.1 {
-        JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
+        //?} else if <=1.18.1 {
+        /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
                 .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
-        //?} else if <=1.19.2 {
+        *///?} else if <=1.19.2 {
         /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
                 .encodeStart(net.minecraft.util.dynamic.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE,server.getRegistryManager()), server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))

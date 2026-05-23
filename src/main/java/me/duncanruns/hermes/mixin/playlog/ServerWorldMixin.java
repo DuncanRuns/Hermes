@@ -13,10 +13,10 @@ public abstract class ServerWorldMixin extends World {
     @SuppressWarnings("all")
     protected ServerWorldMixin() {
         //? if <=1.15.2 {
-        /*super(null, null, null, null, false);
-        *///?} else if <=1.16.1 {
-        super(null, null, null, null, null, false, false, 0);
-        //?} else if <=1.18.2 {
+        super(null, null, null, null, false);
+        //?} else if <=1.16.1 {
+        /*super(null, null, null, null, null, false, false, 0);
+        *///?} else if <=1.18.2 {
         /*super(null, null, null, null, false, false, 0);
         *///?} else if <=1.19.3 {
         /*super(null, null, null, null, false, false, 0, 0);
@@ -30,10 +30,10 @@ public abstract class ServerWorldMixin extends World {
     @Inject(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerChunkManager;save(Z)V"))
     private void onSave(CallbackInfo ci) {
         //? if <=1.15.2 {
-        /*String worldName = this.dimension.getType().toString();
-         *///?} else {
-        String worldName = this.getRegistryKey().getValue().toString();
-        //?}
+        String worldName = this.dimension.getType().toString();
+         //?} else {
+        /*String worldName = this.getRegistryKey().getValue().toString();
+        *///?}
         PlayLogHelper.getPlayLog(((ServerWorld) (Object) this).getServer()).ifPresent(p -> p.onWorldSave(worldName));
     }
 }

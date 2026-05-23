@@ -22,10 +22,10 @@ public abstract class MinecraftServerMixin implements WorldPathHolder {
     @Unique
     private static Path getSavePath(MinecraftServer server) {
         //? if <= 1.15.2 {
-        /*return server.getLevelStorage().resolveFile(server.getLevelName(), ".").toPath();
-         *///?} else {
-        return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
-        //?}
+        return server.getLevelStorage().resolveFile(server.getLevelName(), ".").toPath();
+         //?} else {
+        /*return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
+        *///?}
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))

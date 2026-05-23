@@ -15,13 +15,13 @@ public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.Sc
 public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.screen.Screen {
 //?}
     //? if <=1.15.2 {
-    /*@Shadow
-    private String seed;
-    *///?} else if <=1.19.3 {
     @Shadow
+    private String seed;
+    //?} else if <=1.19.3 {
+    /*@Shadow
     @org.spongepowered.asm.mixin.Final
     public net.minecraft.client.gui.screen.world.MoreOptionsDialog moreOptionsDialog;
-     //?} else {
+     *///?} else {
     /*@Shadow
     @org.spongepowered.asm.mixin.Final
     net.minecraft.client.gui.screen.world.WorldCreator worldCreator;
@@ -44,10 +44,10 @@ public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.sc
     @Unique
     private String getSeed() {
         //? if <=1.15.2 {
-        /*return this.seed;
-         *///?} else if <=1.16.1 {
-        return ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedText();
-         //?} else if <=1.19.3 {
+        return this.seed;
+         //?} else if <=1.16.1 {
+        /*return ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedText();
+         *///?} else if <=1.19.3 {
         /*java.util.OptionalLong seed = ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedOpt();
         if (seed.isPresent()) {
             return Long.toString(seed.getAsLong());

@@ -38,10 +38,10 @@ public class GhostWriter {
 
     private static byte getFlags(ServerPlayerEntity player) {
         //? if <= 1.15.2 {
-        /*boolean isHandSwinging = player.isHandSwinging;
-         *///?} else {
-        boolean isHandSwinging = player.handSwinging;
-        //?}
+        boolean isHandSwinging = player.isHandSwinging;
+         //?} else {
+        /*boolean isHandSwinging = player.handSwinging;
+        *///?}
         //? if <=1.21.1 {
         boolean fallFlyingBool = player.isFallFlying();
         //?} else {

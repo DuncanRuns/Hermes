@@ -1,5 +1,5 @@
 //? if >=1.16 <=1.19.3 {
-package me.duncanruns.hermes.mixin.playlog.client.enteredseed;
+/*package me.duncanruns.hermes.mixin.playlog.client.enteredseed;
 
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
 import org.spongepowered.asm.mixin.Dynamic;
@@ -14,11 +14,11 @@ public interface MoreOptionsDialogAccessor {
     @Accessor("seedText")
     String getSeedText();
     //?} else if <= 1.16.4 {
-    /*@Accessor(value = "seedText")
+    /^@Accessor(value = "seedText")
     OptionalLong getSeedOpt();
-    *///?} else {
-    /*@Accessor(value = "seed")
+    ^///?} else {
+    /^@Accessor(value = "seed")
     OptionalLong getSeedOpt();
-    *///?}
+    ^///?}
 }
-//?}
+*///?}
