@@ -28,13 +28,7 @@ public class DimensionTracker {
             Vec3d oldPos = oldPositions.put(id, newPos);
 
             ServerWorld world = Util.getPlayerServerWorld(player);
-            //? if <=1.15.2 {
             String newDimension = world.dimension.getType().toString();
-            //?} else if <=1.21.8 {
-            /*String newDimension = world.getRegistryKey().getValue().toString();
-            *///?} else {
-            /*String newDimension = world.getRegistryKey().getValue().toString();
-            *///?}
 
             String oldDimension = oldDimensions.put(id, newDimension);
             if (Objects.equals(oldDimension, newDimension)) return;

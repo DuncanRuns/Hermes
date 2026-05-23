@@ -18,13 +18,7 @@ public class InventoryTracker {
 
     private static JsonElement stackToJson(ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
-        //? if <=1.14.3 || 1.15 {
-        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
-        *///?} else if <=1.15.2 {
         return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
-         //?} else {
-        /*return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
-        *///?}
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -38,13 +32,7 @@ public class InventoryTracker {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
         if (a.isEmpty() && b.isEmpty()) return true;
-        //? if <=1.14.1 {
-        /*return ItemStack.areEqualIgnoreTags(a, b);
-        *///?} else if <=1.15.2 {
         return ItemStack.areItemsEqual(a, b);
-         //?} else {
-        /*return ItemStack.areEqual(a, b);
-        *///?}
     }
 
     /**
@@ -56,11 +44,7 @@ public class InventoryTracker {
         List<JsonObject> changes = new ArrayList<>();
         minecraftServer.getPlayerManager().getPlayerList().forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
-            //? if <=1.16.5 {
             PlayerInventory inventory = player.inventory;
-            //?} else {
-            /*PlayerInventory inventory = player.getInventory();
-            *///?}
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 = offhand
             List<ItemStack> newItems = getInventoryStream(inventory).map(ItemStack::copy).collect(Collectors.toList());
@@ -85,11 +69,7 @@ public class InventoryTracker {
     }
 
     private static Stream<ItemStack> getInventoryStream(PlayerInventory inventory) {
-        //? if <=1.21.4 {
         return HermesMod.concat(inventory.main.stream(), inventory.armor.stream(), inventory.offHand.stream());
-        //?} else {
-        /*return HermesMod.concat(inventory.getMainStacks().stream(), PlayerInventory.EQUIPMENT_SLOTS.keySet().intStream().sorted().mapToObj(inventory::getStack));
-        *///?}
     }
 
     private List<ItemStack> getEmptyInventory(int size) {

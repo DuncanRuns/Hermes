@@ -11,20 +11,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
-    @Inject(method = {"openScreen", "setScreen"}, at = @At("RETURN"), require = 1, allow = 1)
+    @Inject(method = {"openScreen"}, at = @At("RETURN"))
     private void onOpenScreen(CallbackInfo ci) {
         MinecraftClient client = (MinecraftClient) (Object) this;
         IntegratedServer server = client.getServer();
         if (server == null) return;
         assert client.currentScreen != null;
         Runnable runnable = () -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onScreenChange(client.currentScreen));
-        //? if <=1.14 {
-        /*server.execute(runnable);
-        *///?} else if <=1.14.4 {
         server.method_20493(runnable);
-         //?} else {
-        /*server.submit(runnable);
-        *///?}
-
     }
 }

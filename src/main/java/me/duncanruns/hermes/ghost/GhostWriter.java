@@ -37,16 +37,8 @@ public class GhostWriter {
     }
 
     private static byte getFlags(ServerPlayerEntity player) {
-        //? if <= 1.15.2 {
         boolean isHandSwinging = player.isHandSwinging;
-         //?} else {
-        /*boolean isHandSwinging = player.handSwinging;
-        *///?}
-        //? if <=1.21.1 {
         boolean fallFlyingBool = player.isFallFlying();
-        //?} else {
-        /*boolean fallFlyingBool = player.isGliding();
-        *///?}
         byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
         byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
         byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);
@@ -66,18 +58,9 @@ public class GhostWriter {
             return;
         }
 
-        //? if <=1.16.5 {
         float pitch = player.pitch;
         PlayerInventory inventory = player.inventory;
-        //?} else {
-        /*float pitch = player.getPitch();
-        PlayerInventory inventory = player.getInventory();
-        *///?}
-        //? if <=1.21.4 {
         int selectedSlot = inventory.selectedSlot;
-        //?} else {
-        /*int selectedSlot = inventory.getSelectedSlot();
-        *///?}
 
         Vec3d pos = Util.getEntityPos(player);
 

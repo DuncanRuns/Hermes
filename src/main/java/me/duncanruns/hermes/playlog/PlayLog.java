@@ -62,10 +62,6 @@ public class PlayLog {
     });
     private static final Collection<PlayLog> PLAY_LOGS = new ConcurrentLinkedQueue<>();
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
-    //? if >=1.16 <=1.16.1
-    //private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
-    //? if >=1.16.2 <=1.18.1
-    //private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
     private final Path requiredParent;
@@ -112,11 +108,7 @@ public class PlayLog {
     }
 
     private static long getTime(MinecraftServer server) {
-        //? if >=1.16 {
-        /*return server.getSaveProperties().getMainWorldProperties().getTime();
-        *///?} else {
         return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
-         //?}
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
@@ -124,28 +116,8 @@ public class PlayLog {
     }
 
     private static JsonElement getGeneratorOptions(MinecraftServer server) {
-        //? if <=1.14.3 || 1.15 {
-        /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
-        JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        *///?} else if <=1.15.2 {
         net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
         JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        //?} else if <=1.18.1 {
-        /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
-                .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
-                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
-                .orElse(null);
-        *///?} else if <=1.19.2 {
-        /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
-                .encodeStart(net.minecraft.util.dynamic.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE,server.getRegistryManager()), server.getSaveProperties().getGeneratorOptions())
-                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
-                .orElse(null);
-        *///?} else {
-        /*net.minecraft.registry.DynamicRegistryManager.Immutable registryManager = server.getRegistryManager();
-        JsonElement json = net.minecraft.world.level.WorldGenSettings.encode(net.minecraft.registry.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE, registryManager), server.getSaveProperties().getGeneratorOptions(), registryManager)
-                .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
-                .orElse(null);
-        *///?}
         if (json == null) return null;
         clearSeed(json);
         return json;
@@ -208,11 +180,7 @@ public class PlayLog {
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
-        //? if <= 1.21.5 {
         data.addProperty("mc_version", SharedConstants.getGameVersion().getName());
-        //?} else {
-        /*data.addProperty("mc_version", SharedConstants.getGameVersion().name());
-        *///?}
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
@@ -308,11 +276,7 @@ public class PlayLog {
     }
 
     public void onScreenChange(
-            //? if <=1.14 {
-            /*net.minecraft.client.gui.Screen currentScreen
-            *///?} else {
             net.minecraft.client.gui.screen.Screen currentScreen
-            //?}
     ) {
         JsonObject data = HermesMod.screenToJsonObject(currentScreen);
         if (Objects.equals(data, lastScreenData)) return;
@@ -321,26 +285,14 @@ public class PlayLog {
     }
 
     public void onAdvancement(
-            //? if <=1.20.1{
             net.minecraft.advancement.Advancement advancement,
-            //?} else {
-            /*net.minecraft.advancement.AdvancementEntry advancement,
-            *///?}
             String criterionName, boolean done, ServerPlayerEntity owner) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(owner));
-        //? if <= 1.20.1 {
         data.addProperty("id", advancement.getId().toString());
-        //?} else {
-        /*data.addProperty("id", advancement.id().toString());
-        *///?}
         data.addProperty("criterion_name", criterionName);
         data.addProperty("completed", done);
-        //? if <=1.20.1 {
         data.add("display", Optional.ofNullable(advancement.getDisplay()).map(a -> {
-         //?} else {
-        /*data.add("display", advancement.value().display().map(a -> {
-        *///?}
             JsonObject display = new JsonObject();
             display.addProperty("hidden", a.isHidden());
             display.addProperty("announce_to_chat", a.shouldAnnounceToChat());
