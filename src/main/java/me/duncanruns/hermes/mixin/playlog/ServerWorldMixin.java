@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerWorldMixin extends World {
     @SuppressWarnings("all")
     protected ServerWorldMixin() {
-        super(null, null, null, null, false);
+        super(null, null, null, null, null, false);
     }
 
-    @Inject(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/chunk/ServerChunkCache;m_3054615(Z)V"))
+    @Inject(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/chunk/ServerChunkCache;save(Z)Z"))
     private void onSave(CallbackInfo ci) {
         String worldName = this.dimension.getType().toString();
         PlayLogHelper.getPlayLog(((ServerWorld) (Object) this).getServer()).ifPresent(p -> p.onWorldSave(worldName));

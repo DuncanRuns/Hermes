@@ -30,6 +30,6 @@ public final class Util {
     }
 
     public static Vec3d getEntityPos(Entity entity) {
-        return entity.m_1784731();
+        return entity.getSourcePos();
     }
 }

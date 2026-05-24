@@ -18,6 +18,6 @@ public abstract class MinecraftMixin {
         if (server == null) return;
         assert client.screen != null;
         Runnable runnable = () -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onScreenChange(client.screen));
-        server.submit(runnable);
+        server.execute(runnable);
     }
 }

@@ -46,7 +46,7 @@ public class StructureTracker {
     private static @NotNull Set<String> getStructures(ServerWorld world, BlockPos blockPos) {
         Set<String> structures = new HashSet<>();
 
-        StructureFeature.DEFAULT_SPAWN_ENTRIES.forEach((structureName, feature) -> {
+        StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
             if (!feature.isValid(world, blockPos)) return;
             structures.add(structureName);
         });

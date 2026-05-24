@@ -1,6 +1,5 @@
 package me.duncanruns.hermes;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.core.Alive;
 import me.duncanruns.hermes.core.HermesCore;
@@ -15,7 +14,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +29,8 @@ import java.util.stream.Stream;
 
 public class HermesMod implements ModInitializer {
     public static final String MOD_ID = "hermes";
-    public static String VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new IllegalStateException("Failed to find hermes version via fabric loader")).getMetadata().getVersion().getFriendlyString();
+    public static final String VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new IllegalStateException("Failed to find hermes version via fabric loader")).getMetadata().getVersion().getFriendlyString();
+    public static final String GAME_VERSION = FabricLoader.getInstance().getModContainer("minecraft").orElseThrow(() -> new IllegalStateException("Failed to find minecraft version via fabric loader")).getMetadata().getVersion().getFriendlyString();
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     private static final List<Runnable> CLOSE_RUNNABLES = new ArrayList<>();
 
@@ -44,11 +43,9 @@ public class HermesMod implements ModInitializer {
     public static @NotNull JsonObject screenToJsonObject(Screen currentScreen) {
         JsonObject data = new JsonObject();
         String screenClass = Optional.ofNullable(currentScreen).map(s -> s.getClass().getName()).orElse(null);
-        JsonElement screenTitle = Optional.ofNullable(currentScreen).map(Screen::getTitle).map(Text.Serializer::toJsonTree).orElse(null);
-        Function<Screen, Boolean> screenObjectFunction = Screen::isPauseScreen;
-        boolean screenIsPause = Optional.ofNullable(currentScreen).map(screenObjectFunction).orElse(false);
+        Function<Screen, Boolean> screenPauseGetter = Screen::shouldPauseGame;
+        boolean screenIsPause = Optional.ofNullable(currentScreen).map(screenPauseGetter).orElse(false);
         data.addProperty("class", screenClass);
-        data.add("title", screenTitle);
         data.addProperty("is_pause", screenIsPause);
         return data;
     }

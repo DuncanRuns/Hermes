@@ -14,10 +14,6 @@ public abstract class CreateWorldScreenMixin extends Screen {
     @Shadow
     private String seed;
 
-    protected CreateWorldScreenMixin() {
-        super(null);
-    }
-
     @WrapMethod(method = "m_2915360")
     private void wrapCreateLevel(Operation<Void> original) {
         EnteredSeedHolder.enteredSeed.set(getSeed());

@@ -187,7 +187,7 @@ public class PlayLog {
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
-        data.addProperty("mc_version", SharedConstants.m_0171173().getName());
+        data.addProperty("mc_version", HermesMod.GAME_VERSION);
         data.add("generator_options", getGeneratorOptions(server));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
