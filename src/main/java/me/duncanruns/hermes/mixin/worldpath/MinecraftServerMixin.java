@@ -2,39 +2,36 @@ package me.duncanruns.hermes.mixin.worldpath;
 
 import me.duncanruns.hermes.worldpath.WorldPathHolder;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.server.integrated.IntegratedServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.file.Path;
 
 /**
- * server.getSavePath, at least in 1.16+, has side effects with computing the resolved path to a map.
- * So to avoid thread safety issues, we yoink the value in the constructor.
- * We apply the mixin to each child class as the world save name is set later in of each child's constructors, which means at the
- * end of the super class's constructor, the world save name is null.
+ * In pre 1.14, dedicated servers do not have the world save name initialized until after the init method
+ * (NOT constructor), which is unlike 1.14+ where we can get the path at the end of constructor.
+ * However, unlike in 1.14+, the world storage's getFile method is thread-safe as it is stateless, so as long as a
+ * different thread doesn't try to get the save path before the world save name is initialized, then there should be no
+ * problems. Since it's only dedicated servers that delay the setting of world save names (in 1.13), and there are no
+ * other threads accessing the save path in that scenario, this should never be an issue.
  */
-@Mixin({DedicatedServer.class, IntegratedServer.class})
+@Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin implements WorldPathHolder {
     @Unique
-    private Path worldPath;
+    private Path worldPath = null;
 
     @Unique
     private static Path getSavePath(MinecraftServer server) {
-        return server.getWorldStorageSource().getFile(server.getWorldSaveName(), ".").toPath();
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(CallbackInfo ci) {
-        worldPath = getSavePath((MinecraftServer) (Object) this);
+        String worldSaveName = server.getWorldSaveName();
+        if (worldSaveName == null) {
+            throw new IllegalStateException("Attempted to get save path before server finished initializing!");
+        }
+        return server.getWorldStorageSource().getFile(worldSaveName, ".").toPath();
     }
 
     @Override
     public Path hermes$getWorldPath() {
+        if (worldPath == null) worldPath = getSavePath((MinecraftServer) ((Object) this));
         return worldPath;
     }
 }
