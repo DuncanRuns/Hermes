@@ -31,6 +31,9 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
     mappings(ploceus.featherMappings(property("feather_build").toString()))
+    if (hasProperty("sparrow_build")) ploceus.sparrow(property("sparrow_build").toString())
+    if (hasProperty("raven_build")) ploceus.raven(property("raven_build").toString())
+    if (hasProperty("nests_build")) ploceus.nests(property("nests_build").toString())
 
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
