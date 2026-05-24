@@ -12,7 +12,7 @@ import java.util.function.BooleanSupplier;
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Inject(method = "tick", at = @At("RETURN"))
-    private void onTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
+    private void onTick(CallbackInfo ci) {
         InstanceState.update((MinecraftServer) (Object) this);
     }
 }
