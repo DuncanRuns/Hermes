@@ -25,7 +25,8 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
         enteredSeed = EnteredSeedHolder.enteredSeed.get();
     }
 
-    @Inject(method = "initWorlds", at = @At("RETURN"))
+    // In 1.14+, we do it at the end of initWorlds, but that doesn't exist pre 1.13.1, so we inject at this very similar point.
+    @Inject(method = "prepareWorlds", at = @At("HEAD"))
     private void onFinishCreateWorlds(CallbackInfo ci) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         this.playLog = new PlayLog(server);

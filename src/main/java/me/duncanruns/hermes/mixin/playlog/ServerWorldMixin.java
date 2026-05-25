@@ -12,7 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerWorldMixin extends World {
     @SuppressWarnings("all")
     protected ServerWorldMixin() {
+        //? if <=1.13 {
+        /*super(null, null, null, null, false);
+        *///?} else {
         super(null, null, null, null, null, false);
+        //?}
     }
 
     @Inject(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/chunk/ServerChunkCache;save(Z)Z"))

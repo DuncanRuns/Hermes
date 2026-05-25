@@ -6,8 +6,6 @@ import me.duncanruns.hermes.util.Util;
 import net.minecraft.entity.living.effect.StatusEffect;
 import net.minecraft.entity.living.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.registry.Registry;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +20,11 @@ public class EffectsTracker {
             UUID id = Util.getPlayerUUID(player);
             Map<String, Integer> oldEffects = effects.computeIfAbsent(id, uuid -> new HashMap<>());
 
-            final Registry<StatusEffect> effectReg = Registry.STATUS_EFFECT;
+            //? if <=1.13 {
+            /*net.minecraft.util.registry.IdRegistry<net.minecraft.resource.Identifier, StatusEffect> effectReg = StatusEffect.REGISTRY;
+            *///?} else {
+            final net.minecraft.util.registry.Registry<StatusEffect> effectReg = net.minecraft.util.registry.Registry.STATUS_EFFECT;
+            //?}
             Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Integer.valueOf(effectReg.getId(e.getEffect())).toString(), StatusEffectInstance::getAmplifier));
             if (oldEffects.equals(newEffects)) return;
             effects.put(id, newEffects);
