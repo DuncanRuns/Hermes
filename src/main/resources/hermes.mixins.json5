@@ -12,12 +12,14 @@
   //?}
   "mixins": [
     "ghost.MinecraftServerMixin",
+    "playlog.CommandManagerMixin",
     "playlog.MinecraftServerMixin",
     "playlog.PlayerAdvancementTrackerMixin",
     "playlog.PlayerManagerMixin",
-    "playlog.CommandManagerMixin",
     "playlog.ServerStatHandlerMixin",
     "playlog.ServerWorldMixin",
+    //? if <=1.15.2
+    //"playlog.creation.LevelSettingsMixin",
     "worldpath.MinecraftServerMixin"
   ],
   "injectors": {
