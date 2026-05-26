@@ -81,10 +81,9 @@ if the world properly saved.
           format found in a world's level.dat. Many versions contain the seed in its generator options, which is
           specifically excluded from this log.
     - `level_settings` (pre 1.16 only)
-        - An object containing most fields from the server's `LevelSettings` object, which similar fields to generator
-          options as well as some others. Some fields, such as `level_type_options` and `bonus_chest`, are only
-          initialized in the `LevelSettings` object when creating the world, so will only be present in the first
-          `initialize` event.
+        - An object containing most fields from the server's `LevelSettings` object, which has similar fields to
+          generatoroptions as well as some others. Some fields, such as `level_type_options` and `bonus_chest`, are only
+          initialized in the `LevelSettings` object under certain conditions, typically world creation.
     - `entered_seed` (if the server initialized from a world creation)
         - Will always be a JSON string, however, as a result of ensuring mod compatibility and minimal implementation,
           versions 1.16.2-1.19.3 will have the resulting seed rather than the original text entered in the box. It is
