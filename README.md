@@ -73,20 +73,29 @@ if the world properly saved.
 > intention). Then on server shutdown (world exit), an unciphered copy is made. A warning.txt file is also placed in the
 > restricted folder to make it extra obvious.
 
-- `initialize` - Runs when the play log is initialized (creating or joining a world). Contains game version, Hermes
-  version, generator options, entered seed (if creating), the world time (total ticks ran in world, should be 0 for new
-  world), and atum's running state (only present when atum is installed).
-    - The format of the generator options is not consistent between versions of the game, and will be similar to the
-      format found in a world's level.dat. Many versions contain the seed in its generator options, which is
-      specifically excluded from this log.
-    - The entered seed field will always be a JSON string, however, as a result of ensuring mod compatibility and
-      minimal implementation, versions 1.16.2-1.19.3 will have the resulting seed rather than the original text entered
-      in the box. It is guaranteed that if the seed box is left empty, the resulting entered seed field will also be
-      empty.
+- `initialize` - Runs when the play log is initialized (creating or joining a world). Contains:
+    - `hermes_version`
+    - `mc_version`
+    - `generator_options` (1.16+ only)
+        - The format of the generator options is not consistent between versions of the game, and will be similar to the
+          format found in a world's level.dat. Many versions contain the seed in its generator options, which is
+          specifically excluded from this log.
+    - `level_settings` (pre 1.16 only)
+        - An object containing most fields from the server's `LevelSettings` object, which similar fields to generator
+          options as well as some others. Some fields, such as `level_type_options` and `bonus_chest`, are only
+          initialized in the `LevelSettings` object when creating the world, so will only be present in the first
+          `initialize` event.
+    - `entered_seed` (if the server initialized from a world creation)
+        - Will always be a JSON string, however, as a result of ensuring mod compatibility and minimal implementation,
+          versions 1.16.2-1.19.3 will have the resulting seed rather than the original text entered in the box. It is
+          guaranteed that if the seed box is left empty, the resulting entered seed field will also be empty.
+    - `world_time`
+        - Total ticks ran in world, should be 0 for new world.
+    - `atum_running` (if atum is also installed)
 - `stat` - Every stat update, the player it's for, the new value, and the difference from the last one. Excludes
   stats that naturally update every tick or extremely spammy ones (e.g. walking/sprinting/flying)
-- `screen` - Every screen change, the class (will look like class_xxxxx bc of intermediary), the title (
-  untranslated key, or sometimes the text in case of a renamed container), if the screen is supposed to pause the game.
+- `screen` - Every screen change, the class (will look like class_xxxxx because of intermediary), the title (1.14+)
+  (untranslated key, or sometimes the text in case of a renamed container), if the screen is supposed to pause the game.
 - `advancement` - Every advancement update, the criteria earned, the player it's for, and if it is completed. It
   also contains the "display" data for the advancement (hidden, announce to chat, show toast).
 - `dimension` - Every change to a player's dimension as well as their initial dimension when they join.
