@@ -102,12 +102,12 @@ public class PlayLog {
             "minecraft.custom:minecraft.time_since_"
     );
 
-    public PlayLog(MinecraftServer server) {
+    public PlayLog(MinecraftServer server, Object levelSettings) {
         Path worldFolder = HermesMod.getSavePath(server).normalize();
         this.savePath = worldFolder.resolve("hermes").resolve("play.log");
         this.rtPath = worldFolder.resolve("hermes").resolve("restricted").resolve("play.log.enc");
         this.requiredParent = worldFolder;
-        onInitialize(server);
+        onInitialize(server, levelSettings);
         PLAY_LOGS.add(this);
     }
 
@@ -123,14 +123,25 @@ public class PlayLog {
         INITIALIZATION_CONSUMERS.add(consumer);
     }
 
+    // We try to use mojang's names here, in mojmap it's LevelSettings, and the individual properties are also based on how mojang names them either in final translated names or otherwise mojmap
+    //? if <=1.15.2 {
+    /*private static JsonElement getLevelSettings(Object levelSettingsObj, boolean creatingWorld) {
+        net.minecraft.world.level.LevelInfo levelInfo = (net.minecraft.world.level.LevelInfo) levelSettingsObj;
+        JsonObject out = new JsonObject();
+        out.addProperty("gamemode", levelInfo.getGameMode().getName());
+        out.addProperty("hardcore", levelInfo.isHardcore());
+        out.addProperty("structures", levelInfo.hasStructures());
+        out.addProperty("level_type", levelInfo.getGeneratorType().getName());
+        if (creatingWorld) {
+            out.addProperty("bonus_chest", levelInfo.hasBonusChest());
+            out.addProperty("allow_commands", levelInfo.allowCommands());
+            out.add("level_type_options", levelInfo.getGeneratorOptions());
+        }
+        return out;
+    }
+    *///?} else {
     private static JsonElement getGeneratorOptions(MinecraftServer server) {
-        //? if <=1.14.3 || 1.15 {
-        /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
-        JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        *///?} else if <=1.15.2 {
-        /*net.minecraft.nbt.CompoundTag generatorOptions = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties().getGeneratorOptions();
-        JsonElement json = com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, generatorOptions);
-        *///?} else if <=1.18.1 {
+        //? if <=1.18.1 {
         JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
                 .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
@@ -150,6 +161,7 @@ public class PlayLog {
         clearSeed(json);
         return json;
     }
+    //?}
 
     private static void clearSeed(JsonElement jsonElement) {
         if (jsonElement.isJsonObject()) {
@@ -205,7 +217,8 @@ public class PlayLog {
         HermesMod.registerClose(PlayLog::closeAll);
     }
 
-    private void onInitialize(MinecraftServer server) {
+    @SuppressWarnings("unused")
+    private void onInitialize(MinecraftServer server, Object levelSettings) {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
         //? if <= 1.21.5 {
@@ -213,8 +226,13 @@ public class PlayLog {
         //?} else {
         /*data.addProperty("mc_version", SharedConstants.getGameVersion().name());
         *///?}
+        Optional<String> enteredSeedOpt = Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed());
+        //? if <=1.15.2 {
+        /*data.add("level_settings", getLevelSettings(levelSettings, enteredSeedOpt.isPresent()));
+        *///?} else {
         data.add("generator_options", getGeneratorOptions(server));
-        Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
+         //?}
+        enteredSeedOpt.ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
         if (ModIntegration.INTEGRATE_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
         write("initialize", data);

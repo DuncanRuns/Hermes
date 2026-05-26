@@ -26,10 +26,15 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
     }
 
     @Inject(method = "createWorlds", at = @At("RETURN"))
-    private void onFinishCreateWorlds(CallbackInfo ci) {
-        MinecraftServer server = (MinecraftServer) (Object) this;
-        this.playLog = new PlayLog(server);
+    //? if <=1.15.2 {
+    /*private void onFinishCreateWorlds(CallbackInfo ci, @com.llamalad7.mixinextras.sugar.Local(argsOnly = true) net.minecraft.world.level.LevelInfo levelInfo) {
+        this.playLog = new PlayLog((MinecraftServer) (Object) this, levelInfo);
     }
+    *///?} else {
+    private void onFinishCreateWorlds(CallbackInfo ci) {
+        this.playLog = new PlayLog((MinecraftServer) (Object) this, null);
+    }
+    //?}
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void onTick(CallbackInfo ci) {
