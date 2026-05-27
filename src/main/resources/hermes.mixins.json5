@@ -4,13 +4,13 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "ghost.MinecraftServerMixin",
-    "playlog.MinecraftServerMixin",
-    "worldpath.MinecraftServerMixin",
     "playlog.CommandsMixin",
+    "playlog.MinecraftServerMixin",
     "playlog.PlayerAdvancementsMixin",
     "playlog.PlayerListMixin",
     "playlog.ServerLevelMixin",
-    "playlog.ServerStatsCounterMixin"
+    "playlog.ServerStatsCounterMixin",
+    "worldpath.MinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -27,6 +27,8 @@
   ],
   "server": [
     "instancestate.server.MinecraftServerMixin",
+    "playlog.server.enteredseed.DedicatedServerPropertiesMixin",
+    "playlog.server.enteredseed.MainMixin",
     "server.MinecraftServerMixin"
   ],
   "plugin": "me.duncanruns.hermes.HermesMixinPlugin"
