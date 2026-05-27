@@ -1,24 +1,17 @@
 package me.duncanruns.hermes.playlog;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.JsonOps;
+import com.google.gson.*;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.SharedConstants;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.living.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.PlayerStats;
 import net.minecraft.stat.Stat;
 import net.minecraft.util.math.ChunkPos;
@@ -96,10 +89,14 @@ public class PlayLog {
             "minecraft.custom:minecraft.play_one_minute",
             "minecraft.custom:minecraft.sneak_time",
             "minecraft.custom:minecraft.total_world_time",
-            "minecraft.custom:minecraft.play_time"
+            "minecraft.custom:minecraft.play_time",
+            "stat.playOneMinute",
+            "stat.timeSinceDeath"
     ));
-    public static final Collection<String> STAT_SUFFIX_BLOCK_LIST = Collections.singletonList(
-            "_one_cm"
+    public static final Collection<String> STAT_SUFFIX_BLOCK_LIST = Arrays.asList(
+            "_one_cm",
+            "OneCm",
+            "Time"
     );
     public static final Collection<String> STAT_PREFIX_BLOCK_LIST = Collections.singletonList(
             "minecraft.custom:minecraft.time_since_"
@@ -115,19 +112,19 @@ public class PlayLog {
     }
 
     private static long getTime(MinecraftServer server) {
-        return server.getWorld(DimensionType.OVERWORLD).getTime();
+        return getOverworld(server).getTime();
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
         INITIALIZATION_CONSUMERS.add(consumer);
     }
 
-    private static JsonElement getGeneratorOptions(MinecraftServer server) {
-        NbtCompound generatorOptions = server.getWorld(DimensionType.OVERWORLD).getData().getGeneratorOptions();
-        JsonElement json = Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, generatorOptions);
-        if (json == null) return null;
-        clearSeed(json);
-        return json;
+    private static ServerWorld getOverworld(MinecraftServer server) {
+        //? if <=1.12.2 {
+        /*return server.getWorld(DimensionType.OVERWORLD.getId());
+        *///?} else {
+        return server.getWorld(DimensionType.OVERWORLD);
+         //?}
     }
 
     private static void clearSeed(JsonElement jsonElement) {
@@ -188,7 +185,7 @@ public class PlayLog {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
         data.addProperty("mc_version", HermesMod.GAME_VERSION);
-        data.add("generator_options", getGeneratorOptions(server));
+        // TODO: level_settings
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
         if (ModIntegration.INTEGRATE_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
@@ -196,8 +193,12 @@ public class PlayLog {
         INITIALIZATION_CONSUMERS.forEach(c -> c.accept(server));
     }
 
-    public void onStat(PlayerStats statHandler, PlayerEntity player, Stat<?> stat, int value) {
+    public void onStat(PlayerStats statHandler, PlayerEntity player, Stat /*?if >1.12.2 {*/<?>/*?}*/ stat, int value) {
+        //? if <= 1.12.2 {
+        /*String name = stat.key;
+        *///?} else {
         String name = stat.getName();
+         //?}
         if (PlayLog.STAT_BLOCK_LIST.contains(name)) {
             return;
         } else if (PlayLog.STAT_SUFFIX_BLOCK_LIST.stream().anyMatch(name::endsWith) || PlayLog.STAT_PREFIX_BLOCK_LIST.stream().anyMatch(name::startsWith)) {

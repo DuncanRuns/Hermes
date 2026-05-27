@@ -2,14 +2,11 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.JsonOps;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.entity.living.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.*;
@@ -22,7 +19,11 @@ public class InventoryTracker {
 
     private static JsonElement stackToJson(ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
-        return Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, itemStack.writeNbt(new NbtCompound()));
+        //? if <=1.12.2 {
+        /*return me.duncanruns.hermes.util.NbtToJson.convert(itemStack.writeNbt(new NbtCompound()));
+        *///?} else {
+        return com.mojang.datafixers.Dynamic.convert(net.minecraft.nbt.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.writeNbt(new NbtCompound()));
+         //?}
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {

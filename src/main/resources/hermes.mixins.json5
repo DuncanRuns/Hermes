@@ -4,9 +4,14 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ghost.MinecraftServerMixin",
+    //? if <=1.12.2
+    //"playlog.CommandRegistryMixin",
+    //? if >=1.13
     "playlog.CommandManagerMixin",
     "playlog.MinecraftServerMixin",
     "playlog.PlayerAdvancementsMixin",
+    //? if <=1.12.2
+    //"playlog.PlayerManagerAccessor",
     "playlog.PlayerManagerMixin",
     "playlog.ServerPlayerStatsMixin",
     "playlog.ServerWorldMixin",

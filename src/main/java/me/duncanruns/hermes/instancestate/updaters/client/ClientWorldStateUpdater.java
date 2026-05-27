@@ -6,6 +6,8 @@ import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.integrated.IntegratedServer;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -23,6 +25,6 @@ public class ClientWorldStateUpdater implements BiConsumer<JsonObject, Minecraft
         MinecraftServer server = ClientToServerHelper.getServer(client);
         Optional.ofNullable(server).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
         json.add("last_world_joined", HermesCore.pathToJsonObject(lastWorldJoined.get()));
-        json.addProperty("open_to_lan", Optional.ofNullable(server).map(MinecraftServer::isPublished).orElse(null));
+        json.addProperty("open_to_lan", Optional.ofNullable(server).map(s -> (!HermesCore.IS_CLIENT) || ((IntegratedServer) s).isPublished()).orElse(null));
     }
 }

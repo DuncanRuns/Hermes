@@ -30,6 +30,10 @@ public final class Util {
     }
 
     public static Vec3d getEntityPos(Entity entity) {
+        //? if <=1.12.2 {
+        /*return new Vec3d(entity.x, entity.y, entity.z);
+        *///?} else {
         return entity.getSourcePos();
+        //?}
     }
 }

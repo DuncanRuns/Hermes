@@ -22,6 +22,7 @@ public abstract class ServerWorldMixin extends World {
     @Inject(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/chunk/ServerChunkCache;save(Z)Z"))
     private void onSave(CallbackInfo ci) {
         String worldName = this.dimension.getType().toString();
+        //noinspection RedundantCast
         PlayLogHelper.getPlayLog(((ServerWorld) (Object) this).getServer()).ifPresent(p -> p.onWorldSave(worldName));
     }
 }

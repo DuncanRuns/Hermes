@@ -1,3 +1,4 @@
+//? if >= 1.13 {
 package me.duncanruns.hermes.mixin.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLogHelper;
@@ -32,3 +33,4 @@ public abstract class CommandManagerMixin {
         return commandSource.getServer();
     }
 }
+//?}

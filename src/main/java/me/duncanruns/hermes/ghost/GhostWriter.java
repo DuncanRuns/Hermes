@@ -46,7 +46,11 @@ public class GhostWriter {
         byte isAttacked = (byte) (player.damagedTimer > 0 ? (0x10) : 0);
         byte isAlive = (byte) (player.isAlive() ? (0x20) : 0);
         byte fallFlying = (byte) (fallFlyingBool ? (0x40) : 0); // 1.9+
-        byte swimming = (byte) (player.isSwimming() ? (0x80) : 0); // 1.13+
+        //? if <=1.12.2 {
+        /*byte swimming = 0;
+        *///?} else {
+        byte swimming = (byte) (player.isSwimming() ? (0x80) : 0);
+        //?}
         return (byte) (swinging | usingItem | sneaking | sprinting | isAttacked | isAlive | fallFlying | swimming);
     }
 

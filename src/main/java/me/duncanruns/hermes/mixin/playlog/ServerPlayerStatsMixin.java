@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayerStats.class)
 public abstract class ServerPlayerStatsMixin extends PlayerStats {
     @Inject(method = "set", at = @At("HEAD"))
-    private void onSetStat(PlayerEntity player, Stat<?> stat, int value, CallbackInfo ci) {
+    private void onSetStat(PlayerEntity player, Stat /*?if >1.12.2 {*/<?>/*?}*/ stat, int value, CallbackInfo ci) {
         if (!(player instanceof ServerPlayerEntity)) return;
         PlayLogHelper.getPlayLog(Util.getPlayerServer((ServerPlayerEntity) player)).ifPresent(p -> p.onStat(this, player, stat, value));
     }

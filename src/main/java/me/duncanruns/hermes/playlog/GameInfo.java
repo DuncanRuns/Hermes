@@ -2,13 +2,11 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.JsonOps;
+import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.resource.pack.repository.PackRepository;
-import net.minecraft.resource.pack.repository.UnopenedPack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.WorldData;
 import net.minecraft.world.dimension.DimensionType;
@@ -49,9 +47,14 @@ public class GameInfo {
 
     public static GameInfo fromServer(MinecraftServer server) {
         GameInfo gameInfo = new GameInfo();
+        //? if <=1.12.2 {
+        /*gameInfo.cheatsAllowed = ((me.duncanruns.hermes.mixin.playlog.PlayerManagerAccessor) server.getPlayerManager()).getAllowCommands();
+        WorldData levelProperties = server.getWorld(DimensionType.OVERWORLD.getId()).getData();
+        *///?} else {
         gameInfo.cheatsAllowed = server.getPlayerManager().allowCommands();
-        gameInfo.openToLan = server.isPublished();
         WorldData levelProperties = server.getWorld(DimensionType.OVERWORLD).getData();
+        //?}
+        gameInfo.openToLan = (!HermesCore.IS_CLIENT) || ((IntegratedServer) server).isPublished();
 
         gameInfo.hardcore = levelProperties.isHardcore();
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
@@ -64,25 +67,32 @@ public class GameInfo {
             return pi;
         }).collect(Collectors.toList());
         gameInfo.defaultGamemode = server.getDefaultGameMode().getKey();
-        PackRepository<UnopenedPack> dataPackManager = server.getDataPackManager();
-
-        gameInfo.dataPacks = dataPackManager.getAvailable().stream().map(UnopenedPack::getId).sorted().collect(Collectors.toList());
-        gameInfo.enabledDataPacks = dataPackManager.getSelected().stream().map(UnopenedPack::getId).sorted().collect(Collectors.toList());
+        //? if >1.12.2 {
+        net.minecraft.resource.pack.repository.PackRepository<net.minecraft.resource.pack.repository.UnopenedPack> dataPackManager = server.getDataPackManager();
+        gameInfo.dataPacks = dataPackManager.getAvailable().stream().map(net.minecraft.resource.pack.repository.UnopenedPack::getId).sorted().collect(Collectors.toList());
+        gameInfo.enabledDataPacks = dataPackManager.getSelected().stream().map(net.minecraft.resource.pack.repository.UnopenedPack::getId).sorted().collect(Collectors.toList());
+        //?}
         gameInfo.nonDefaultGameRules = getChangedGameRules(server);
         return gameInfo;
     }
 
     private static JsonObject getChangedGameRules(MinecraftServer server) {
+        //? if <=1.12.2 {
+        /*JsonObject gameRules = gameRulesToJson(server.getCommandSourceWorld().getGameRules());
+        *///?} else {
         JsonObject gameRules = gameRulesToJson(server.getGameRules());
+        //?}
         JsonObject defaultGameRules = DEFAULT_GAMERULES;
         gameRules.entrySet().removeIf(e -> defaultGameRules.has(e.getKey()) && defaultGameRules.get(e.getKey()).equals(e.getValue()));
         return gameRules;
     }
 
-    private static JsonObject gameRulesToJson(
-            GameRules gameRules
-    ) {
-        return Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+    private static JsonObject gameRulesToJson(GameRules gameRules) {
+        //? if <=1.12.2 {
+        /*return me.duncanruns.hermes.util.NbtToJson.convertCompound(gameRules.toNbt());
+        *///?} else {
+        return com.mojang.datafixers.Dynamic.convert(net.minecraft.nbt.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, gameRules.toNbt()).getAsJsonObject();
+        //?}
     }
 
     public static final class PlayerInfo {
