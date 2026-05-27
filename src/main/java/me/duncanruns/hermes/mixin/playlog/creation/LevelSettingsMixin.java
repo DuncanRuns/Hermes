@@ -25,7 +25,8 @@ public abstract class LevelSettingsMixin implements PlayLogCreationSettings.Hold
         creationSettings.bonusChest = true;
     }
 
-    @Inject(method = "enableCommands", at = @At("HEAD"))
+    // require = 0 because enableCommands is not present on dedicated servers, and making another mixin would be way too dank
+    @Inject(method = "enableCommands", at = @At("HEAD"), require = 0)
     private void onEnableCommands(CallbackInfoReturnable<LevelInfo> cir) {
         creationSettings.allowCommands = true;
     }
