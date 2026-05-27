@@ -39,6 +39,11 @@
   ],
   "server": [
     "instancestate.server.MinecraftServerMixin",
+    //? if <=1.15.2
+    //"playlog.server.enteredseed.MinecraftServerMixin",
+    //? if >=1.16
+    "playlog.server.enteredseed.MainMixin",
+    "playlog.server.enteredseed.ServerPropertiesHandlerMixin",
     "server.MinecraftServerMixin"
   ],
   "plugin": "me.duncanruns.hermes.HermesMixinPlugin"
