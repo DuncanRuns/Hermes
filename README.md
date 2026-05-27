@@ -82,12 +82,12 @@ if the world properly saved.
           specifically excluded from this log.
     - `level_settings` (pre 1.16 only)
         - An object containing most fields from the server's `LevelSettings` object, which has similar fields to
-          generatoroptions as well as some others. Some fields, such as `level_type_options` and `bonus_chest`, are only
-          initialized in the `LevelSettings` object under certain conditions, typically world creation.
-    - `entered_seed` (if the server initialized from a world creation)
-        - Will always be a JSON string, however, as a result of ensuring mod compatibility and minimal implementation,
-          versions 1.16.2-1.19.3 will have the resulting seed rather than the original text entered in the box. It is
-          guaranteed that if the seed box is left empty, the resulting entered seed field will also be empty.
+          generator_options as well as some others. Some fields, such as `level_type_options` and `bonus_chest`, are
+          only initialized in the `LevelSettings` object under certain conditions, typically world creation.
+    - `entered_seed` (if the dedicated/integrated server initialized from a world creation)
+        - Will always be a string, however, as a result of ensuring mod compatibility and minimal implementation,
+          clients on versions 1.16.2-1.19.3 will have the resulting seed rather than the original text entered in the
+          box. It is guaranteed that if the seed box is left empty, the resulting entered seed field will also be empty.
     - `world_time`
         - Total ticks ran in world, should be 0 for new world.
     - `atum_running` (if atum is also installed)
