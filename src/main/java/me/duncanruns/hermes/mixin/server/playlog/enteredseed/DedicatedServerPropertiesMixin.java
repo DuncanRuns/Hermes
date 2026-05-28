@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.playlog.server.enteredseed;
+package me.duncanruns.hermes.mixin.server.playlog.enteredseed;
 
 import me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder;
 import net.minecraft.server.dedicated.DedicatedServerProperties;
@@ -16,7 +16,7 @@ public abstract class DedicatedServerPropertiesMixin extends Settings<DedicatedS
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-        private void onServerProperties(CallbackInfo ci) {
-            ServerSeedHolder.enteredPropertiesSeed = get("level-seed", "");
-        }
+    private void onServerProperties(CallbackInfo ci) {
+        ServerSeedHolder.enteredPropertiesSeed = get("level-seed", "");
+    }
 }

@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.worldlog.client;
+package me.duncanruns.hermes.mixin.client.worldlog;
 
 import me.duncanruns.hermes.worldlog.WorldLog;
 import net.minecraft.client.Minecraft;
