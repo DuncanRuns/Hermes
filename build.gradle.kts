@@ -8,6 +8,13 @@ plugins {
 version = "${property("mod.version")}+MC${stonecutter.current.version}"
 base.archivesName = property("mod.id") as String
 
+val minecraftJava = when {
+    stonecutter.eval(stonecutter.current.version, ">=1.20.6") -> 21
+    stonecutter.eval(stonecutter.current.version, ">=1.18") -> 17
+    stonecutter.eval(stonecutter.current.version, ">=1.17") -> 16
+    else -> 8
+}
+
 repositories {
     /**
      * Restricts dependency search of the given [groups] to the [maven URL][url],
@@ -26,7 +33,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
     if (stonecutter.current.parsed <= "1.14.2") {
         mappings("net.fabricmc:yarn:${property("deps.yarn")}")
-    }else {
+    } else {
         mappings("net.fabricmc:yarn:${property("deps.yarn")}:v2")
     }
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
@@ -51,47 +58,62 @@ loom {
     }
 }
 
+// We need java 21 (>=17) to make fletching table do mixin stuff, so we java 21 all the stuff
 java {
     withSourcesJar()
 
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
+    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
-tasks.withType<JavaCompile>().configureEach {
-    options.release.set(
-        when {
-            stonecutter.eval(stonecutter.current.version, ">=1.20.6") -> 21
-            stonecutter.eval(stonecutter.current.version, ">=1.18") -> 17
-            stonecutter.eval(stonecutter.current.version, ">=1.17") -> 16
-            else -> 8
-        }
-    )
+kotlin {
+    jvmToolchain(21)
+}
+
+// Combining this compileJava and TARGET_JVM_VERSION_ATTRIBUTE seems to let us compile the mod for the correct java
+// but avoid fletching table panicking about java <17
+tasks.named<JavaCompile>("compileJava") {
+    options.release.set(minecraftJava)
+}
+
+configurations.configureEach {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
 }
 
 fletchingTable {
-    j52j.register("main") {
-        extension("json", "hermes.mixins.json5")
+    mixins.create("main") {
+        mixin("default", "hermes.mixins.json") {
+            env("SERVER", "me.duncanruns.hermes.mixin.server")
+            env("CLIENT", "me.duncanruns.hermes.mixin.client")
+        }
+    }
+    mixins.all {
+        automatic = true
     }
 }
 
 tasks {
     processResources {
-        val props = mapOf(
+        val fmjProps = mapOf(
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
             "version" to version.toString(),
             "minecraft" to project.property("mod.mc_dep")
         )
-
-        inputs.properties(props)
-
+        inputs.properties(fmjProps)
         filesMatching("fabric.mod.json") {
-            expand(props)
-            filter { line ->
-                line.replace(".mixins.json5", ".mixins.json")
-            }
+            expand(fmjProps)
+        }
+
+        val mixinProps = mapOf(
+            "java" to minecraftJava
+        )
+        inputs.properties(mixinProps)
+        filesMatching("hermes.mixins.json") {
+            expand(mixinProps)
         }
     }
 
