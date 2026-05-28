@@ -1,5 +1,5 @@
 //? if >=1.16 {
-package me.duncanruns.hermes.mixin.playlog.server.enteredseed;
+package me.duncanruns.hermes.mixin.server.playlog.enteredseed;
 
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder;
