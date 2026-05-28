@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.playlog.client.enteredseed;
+package me.duncanruns.hermes.mixin.client.playlog.enteredseed;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

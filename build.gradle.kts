@@ -1,5 +1,7 @@
 plugins {
     id("net.fabricmc.fabric-loom")
+    kotlin("jvm") version "2.2.10"
+    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
     id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
@@ -56,8 +58,14 @@ java {
 }
 
 fletchingTable {
-    j52j.register("main") {
-        extension("json", "hermes.mixins.json5")
+    mixins.create("main") {
+        mixin("default", "hermes.mixins.json") {
+            env("SERVER", "me.duncanruns.hermes.mixin.server")
+            env("CLIENT", "me.duncanruns.hermes.mixin.client")
+        }
+    }
+    mixins.all {
+        automatic = true
     }
 }
 
