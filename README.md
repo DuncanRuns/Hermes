@@ -226,7 +226,7 @@ For working on Hermes, a few notes on how the codebase is structured:
 - `me.duncanruns.hermes.mixin` - General mixins that apply on both client and server
 - `me.duncanruns.hermes.mixin.[client/server]` - General mixins that apply on only client or server
 - `me.duncanruns.hermes.mixin.[feature]` - Mixins specific to a feature that apply on both client and server
-- `me.duncanruns.hermes.mixin.[feature].[client/server]` - Mixins specific to a feature that apply on only client or
+- `me.duncanruns.hermes.mixin.[client/server].[feature]` - Mixins specific to a feature that apply on only client or
   server
 
 ## Ideology
