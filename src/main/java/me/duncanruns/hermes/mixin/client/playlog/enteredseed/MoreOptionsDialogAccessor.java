@@ -1,5 +1,5 @@
 //? if >=1.16 <=1.19.3 {
-package me.duncanruns.hermes.mixin.playlog.client.enteredseed;
+package me.duncanruns.hermes.mixin.client.playlog.enteredseed;
 
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
 import org.spongepowered.asm.mixin.Dynamic;

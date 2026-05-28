@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.instancestate.client;
+package me.duncanruns.hermes.mixin.client.instancestate;
 
 import me.duncanruns.hermes.instancestate.InstanceState;
 import net.minecraft.client.MinecraftClient;
