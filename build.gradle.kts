@@ -1,17 +1,12 @@
 plugins {
     id("fabric-loom")
+    kotlin("jvm") version "2.2.10"
+    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
     id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
 version = "${property("mod.version")}+MC${stonecutter.current.version}"
 base.archivesName = property("mod.id") as String
-
-val requiredJava = when {
-    stonecutter.eval(stonecutter.current.version, ">=1.20.6") -> JavaVersion.VERSION_21
-    stonecutter.eval(stonecutter.current.version, ">=1.18") -> JavaVersion.VERSION_17
-    stonecutter.eval(stonecutter.current.version, ">=1.17") -> JavaVersion.VERSION_16
-    else -> JavaVersion.VERSION_1_8
-}
 
 repositories {
     /**
@@ -58,8 +53,21 @@ loom {
 
 java {
     withSourcesJar()
-    targetCompatibility = requiredJava
-    sourceCompatibility = requiredJava
+
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(
+        when {
+            stonecutter.eval(stonecutter.current.version, ">=1.20.6") -> 21
+            stonecutter.eval(stonecutter.current.version, ">=1.18") -> 17
+            stonecutter.eval(stonecutter.current.version, ">=1.17") -> 16
+            else -> 8
+        }
+    )
 }
 
 fletchingTable {
