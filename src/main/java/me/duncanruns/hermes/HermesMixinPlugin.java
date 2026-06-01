@@ -10,9 +10,11 @@ import java.util.Set;
 public class HermesMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.startsWith("me.duncanruns.hermes.mixin.playlog")) {
+        if (!mixinClassName.startsWith("me.duncanruns.hermes.mixin.")) return true;
+        String featureName = mixinClassName.split("\\.")[5];
+        if ("playlog".equals(featureName)) {
             return !HermesDisabledFeatures.isPlayLogDisabled();
-        } else if (mixinClassName.startsWith("me.duncanruns.hermes.mixin.ghost")) {
+        } else if ("ghost".equals(featureName)) {
             return !HermesDisabledFeatures.isGhostDisabled();
         }
         return true;
