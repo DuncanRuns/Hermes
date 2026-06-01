@@ -48,7 +48,7 @@ public class GameInfo {
     public static GameInfo fromServer(MinecraftServer server) {
         GameInfo gameInfo = new GameInfo();
         //? if <=1.12.2 {
-        /*gameInfo.cheatsAllowed = ((me.duncanruns.hermes.mixin.playlog.PlayerManagerAccessor) server.getPlayerManager()).getAllowCommands();
+        /*gameInfo.cheatsAllowed = ((me.duncanruns.hermes.mixin.common.playlog.PlayerManagerAccessor) server.getPlayerManager()).getAllowCommands();
         WorldData levelProperties = server.getWorld(DimensionType.OVERWORLD.getId()).getData();
         *///?} else {
         gameInfo.cheatsAllowed = server.getPlayerManager().allowCommands();

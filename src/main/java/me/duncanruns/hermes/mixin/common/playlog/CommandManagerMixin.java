@@ -1,5 +1,5 @@
 //? if >= 1.13 {
-package me.duncanruns.hermes.mixin.playlog;
+package me.duncanruns.hermes.mixin.common.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLogHelper;
 import net.minecraft.server.MinecraftServer;
