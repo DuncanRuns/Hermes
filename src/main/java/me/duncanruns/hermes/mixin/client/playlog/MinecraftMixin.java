@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.playlog.client;
+package me.duncanruns.hermes.mixin.client.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLogHelper;
 import net.minecraft.client.Minecraft;

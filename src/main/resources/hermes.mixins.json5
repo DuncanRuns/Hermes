@@ -25,14 +25,14 @@
   },
   "client": [
     "client.MinecraftMixin",
-    "instancestate.client.MinecraftMixin",
-    "playlog.client.MinecraftMixin",
-    "playlog.client.enteredseed.CreateWorldScreenMixin",
-    "worldlog.client.MinecraftMixin"
+    "client.instancestate.MinecraftMixin",
+    "client.playlog.MinecraftMixin",
+    "client.playlog.enteredseed.CreateWorldScreenMixin",
+    "client.worldlog.MinecraftMixin"
   ],
   "server": [
-    "instancestate.server.MinecraftServerMixin",
-    "server.MinecraftServerMixin"
+    "server.MinecraftServerMixin",
+    "server.instancestate.MinecraftServerMixin"
   ],
   "plugin": "me.duncanruns.hermes.HermesMixinPlugin"
 }

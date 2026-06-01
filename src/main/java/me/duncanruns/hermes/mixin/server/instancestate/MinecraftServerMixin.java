@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.instancestate.server;
+package me.duncanruns.hermes.mixin.server.instancestate;
 
 import me.duncanruns.hermes.instancestate.InstanceState;
 import net.minecraft.server.MinecraftServer;
