@@ -1,13 +1,15 @@
 plugins {
     id("fabric-loom")
     id("ploceus")
+    kotlin("jvm") version "2.2.10"
+    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
     id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
 version = "${property("mod.version")}+MC${stonecutter.current.version}"
 base.archivesName = property("mod.id") as String
 
-val requiredJava = JavaVersion.VERSION_1_8
+val minecraftJava = 8
 
 repositories {
     /**
@@ -57,15 +59,40 @@ loom {
     }
 }
 
+// We need java 21 (>=17) to make fletching table do mixin stuff, so we java 21 all the stuff
 java {
     withSourcesJar()
-    targetCompatibility = requiredJava
-    sourceCompatibility = requiredJava
+
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+// Combining this compileJava and TARGET_JVM_VERSION_ATTRIBUTE seems to let us compile the mod for the correct java
+// but avoid fletching table panicking about java <17
+tasks.named<JavaCompile>("compileJava") {
+    options.release.set(minecraftJava)
+}
+
+configurations.configureEach {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
 }
 
 fletchingTable {
-    j52j.register("main") {
-        extension("json", "hermes.mixins.json5")
+    mixins.create("main") {
+        mixin("default", "hermes.mixins.json") {
+            env("SERVER", "me.duncanruns.hermes.mixin.server")
+            env("CLIENT", "me.duncanruns.hermes.mixin.client")
+        }
+    }
+    mixins.all {
+        automatic = true
     }
 }
 
@@ -82,9 +109,6 @@ tasks {
 
         filesMatching("fabric.mod.json") {
             expand(props)
-            filter { line ->
-                line.replace(".mixins.json5", ".mixins.json")
-            }
         }
     }
 

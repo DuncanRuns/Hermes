@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "me.duncanruns.hermes.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "plugin": "me.duncanruns.hermes.HermesMixinPlugin"
+}
