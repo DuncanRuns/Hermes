@@ -1,5 +1,5 @@
 //? if <=1.15.2 {
-/*package me.duncanruns.hermes.mixin.playlog.creation;
+/*package me.duncanruns.hermes.mixin.common.playlog.creation;
 
 import com.google.gson.JsonElement;
 import me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings;

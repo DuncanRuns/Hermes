@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.playlog;
+package me.duncanruns.hermes.mixin.common.playlog;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import me.duncanruns.hermes.playlog.PlayLog;
