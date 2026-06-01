@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.ghost;
+package me.duncanruns.hermes.mixin.common.ghost;
 
 import me.duncanruns.hermes.ghost.GhostManager;
 import net.minecraft.server.MinecraftServer;

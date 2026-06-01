@@ -1,4 +1,4 @@
-package me.duncanruns.hermes.mixin.worldpath;
+package me.duncanruns.hermes.mixin.common.worldpath;
 
 import me.duncanruns.hermes.worldpath.WorldPathHolder;
 import net.minecraft.server.MinecraftServer;
