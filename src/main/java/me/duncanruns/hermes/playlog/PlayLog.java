@@ -9,6 +9,7 @@ import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
 import me.duncanruns.hermes.playlog.creation.LevelSettingsHolder;
 import me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings;
+import me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.advancement.Advancement;
@@ -208,7 +209,11 @@ public class PlayLog {
         data.addProperty("hermes_version", HermesMod.VERSION);
         data.addProperty("mc_version", HermesMod.GAME_VERSION);
         data.add("level_settings", getLevelSettings(LevelSettingsHolder.take()));
-        Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
+        if (HermesCore.IS_CLIENT) {
+            Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
+        } else if (ServerSeedHolder.serverCreatingNewWorld) {
+            data.addProperty("entered_seed", ServerSeedHolder.enteredPropertiesSeed);
+        }
         data.addProperty("world_time", getTime(server));
         if (ModIntegration.INTEGRATE_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
         write("initialize", data);
