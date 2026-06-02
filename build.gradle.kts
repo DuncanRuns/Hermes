@@ -60,6 +60,7 @@ java {
 fletchingTable {
     mixins.create("main") {
         mixin("default", "hermes.mixins.json") {
+            env("MAIN", "me.duncanruns.hermes.mixin.common")
             env("SERVER", "me.duncanruns.hermes.mixin.server")
             env("CLIENT", "me.duncanruns.hermes.mixin.client")
         }
