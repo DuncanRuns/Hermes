@@ -1,9 +1,14 @@
 package me.duncanruns.hermes.playlog;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
+import me.duncanruns.hermes.playlog.creation.LevelSettingsHolder;
+import me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.advancement.Advancement;
@@ -16,6 +21,7 @@ import net.minecraft.stat.PlayerStats;
 import net.minecraft.stat.Stat;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.WorldSettings;
 import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.NotNull;
 
@@ -119,6 +125,22 @@ public class PlayLog {
         INITIALIZATION_CONSUMERS.add(consumer);
     }
 
+    private static JsonElement getLevelSettings(Object levelSettingsObj) {
+        Objects.requireNonNull(levelSettingsObj);
+        WorldSettings levelSettings = (WorldSettings) levelSettingsObj;
+        JsonObject out = new JsonObject();
+        out.addProperty("gamemode", levelSettings.getGameMode().name());
+        out.addProperty("hardcore", levelSettings.isHardcore());
+        out.addProperty("structures", levelSettings.allowStructures());
+        //? if <=1.12.2 {
+        /*out.addProperty("level_type", levelSettings.getGeneratorType().getKey());
+        *///?} else {
+        out.addProperty("level_type", levelSettings.getGeneratorType().getName());
+         //?}
+        PlayLogCreationSettings.addSettings(levelSettingsObj, out);
+        return out;
+    }
+
     private static ServerWorld getOverworld(MinecraftServer server) {
         //? if <=1.12.2 {
         /*return server.getWorld(DimensionType.OVERWORLD.getId());
@@ -185,7 +207,7 @@ public class PlayLog {
         JsonObject data = new JsonObject();
         data.addProperty("hermes_version", HermesMod.VERSION);
         data.addProperty("mc_version", HermesMod.GAME_VERSION);
-        // TODO: level_settings
+        data.add("level_settings", getLevelSettings(LevelSettingsHolder.take()));
         Optional.ofNullable(((PlayLogServer) server).hermes$takeEnteredSeed()).ifPresent(s -> data.addProperty("entered_seed", s));
         data.addProperty("world_time", getTime(server));
         if (ModIntegration.INTEGRATE_ATUM) data.addProperty("atum_running", ModIntegration.atum$isRunning());
