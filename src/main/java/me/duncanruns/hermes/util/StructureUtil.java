@@ -1,16 +1,17 @@
 //? if <=1.12.2 {
 /*package me.duncanruns.hermes.util;
 
-import net.minecraft.server.command.LocateCommand;
-
-import java.util.List;
+import java.util.*;
 
 public final class StructureUtil {
-    // lol
-    private static final List<String> STRUCTURE_NAMES = new LocateCommand().getSuggestions(null, null, new String[]{""}, null);
+    private static final Set<String> STRUCTURE_NAMES = new HashSet<>();
 
-    public static List<String> getStructureNames() {
-        return STRUCTURE_NAMES;
+    public static synchronized Collection<String> getStructureNames() {
+        return new HashSet<>(STRUCTURE_NAMES);
+    }
+
+    public static synchronized void addStructureName(String structureName) {
+        STRUCTURE_NAMES.add(structureName);
     }
 }
 *///?}
