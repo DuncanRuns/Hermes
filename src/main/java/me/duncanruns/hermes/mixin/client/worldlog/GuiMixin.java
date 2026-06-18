@@ -1,5 +1,5 @@
 //? if >=26.2 {
-/*package me.duncanruns.hermes.mixin.client.worldlog;
+package me.duncanruns.hermes.mixin.client.worldlog;
 
 import me.duncanruns.hermes.worldlog.WorldLog;
 import net.minecraft.client.Minecraft;
@@ -22,4 +22,4 @@ public abstract class GuiMixin {
         WorldLog.update(this.minecraft);
     }
 }
-*///?}
+//?}

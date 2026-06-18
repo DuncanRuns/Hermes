@@ -1,5 +1,5 @@
 //? if >=26.2 {
-/*package me.duncanruns.hermes.mixin.client.playlog;
+package me.duncanruns.hermes.mixin.client.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLog;
 import net.minecraft.client.Minecraft;
@@ -22,4 +22,4 @@ public abstract class GuiMixin {
         PlayLog.Client.onSetScreen(this.minecraft);
     }
 }
-*///?}
+//?}

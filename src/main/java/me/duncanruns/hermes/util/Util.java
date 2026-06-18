@@ -38,10 +38,10 @@ public final class Util {
     public static class Client{
         public static Screen getScreen(Minecraft client) {
             //? if <=26.1.2 {
-            return client.screen;
-            //?} else {
-            /*return client.gui.screen();
-            *///?}
+            /*return client.screen;
+            *///?} else {
+            return client.gui.screen();
+            //?}
         }
     }
 }

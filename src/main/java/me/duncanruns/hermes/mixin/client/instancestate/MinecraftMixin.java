@@ -15,9 +15,9 @@ public abstract class MinecraftMixin {
     }
 
     //? if <= 26.1.2 {
-    @Inject(method = {"setScreen"}, at = @At("RETURN"))
+    /*@Inject(method = {"setScreen"}, at = @At("RETURN"))
     private void onOpenScreen(CallbackInfo ci) {
         InstanceState.update((Minecraft) (Object) this);
     }
-    //?}
+    *///?}
 }

@@ -15,13 +15,14 @@ plugins {
 
 stonecutter {
     create(rootProject) {
-        versions(
+        val supportedVersions = arrayOf(
             "26.1",
             "26.1.1",
             "26.1.2",
             "26.2",
         )
-        vcsVersion = "26.1.2"
+        versions(*supportedVersions)
+        vcsVersion = supportedVersions.last()
     }
 }
 

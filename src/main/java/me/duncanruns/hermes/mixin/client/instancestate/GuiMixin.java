@@ -1,5 +1,5 @@
 //? if >=26.2 {
-/*package me.duncanruns.hermes.mixin.client.instancestate;
+package me.duncanruns.hermes.mixin.client.instancestate;
 
 import me.duncanruns.hermes.instancestate.InstanceState;
 import net.minecraft.client.Minecraft;
@@ -22,4 +22,4 @@ public abstract class GuiMixin {
         InstanceState.update(this.minecraft);
     }
 }
-*///?}
+//?}

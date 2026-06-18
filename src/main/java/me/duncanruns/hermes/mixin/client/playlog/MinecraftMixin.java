@@ -1,5 +1,5 @@
 //? if <=26.1.2 {
-package me.duncanruns.hermes.mixin.client.playlog;
+/*package me.duncanruns.hermes.mixin.client.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLog;
 import net.minecraft.client.Minecraft;
@@ -16,4 +16,4 @@ public abstract class MinecraftMixin {
         PlayLog.Client.onSetScreen(client);
     }
 }
-//?}
+*///?}
