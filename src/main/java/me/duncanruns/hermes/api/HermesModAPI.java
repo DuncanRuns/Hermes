@@ -1,7 +1,7 @@
 package me.duncanruns.hermes.api;
 
 import com.google.gson.JsonObject;
-import me.duncanruns.hermes.HermesDisabledFeatures;
+import me.duncanruns.hermes.HermesDisableableFeature;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.instancestate.InstanceState;
 import me.duncanruns.hermes.playlog.PlayLog;
@@ -84,13 +84,13 @@ public final class HermesModAPI {
      * Returns whether the play log feature is disabled.
      */
     public static boolean isPlayLogDisabled() {
-        return HermesDisabledFeatures.isPlayLogDisabled();
+        return HermesDisableableFeature.PLAY_LOG.isDisabled();
     }
 
     /**
      * Returns whether the ghost feature is disabled.
      */
     public static boolean isGhostDisabled() {
-        return HermesDisabledFeatures.isGhostDisabled();
+        return HermesDisableableFeature.GHOST.isDisabled();
     }
 }
