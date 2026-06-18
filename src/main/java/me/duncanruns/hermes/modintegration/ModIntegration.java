@@ -1,6 +1,6 @@
 package me.duncanruns.hermes.modintegration;
 
-import me.duncanruns.hermes.HermesDisabledFeatures;
+import me.duncanruns.hermes.HermesDisableableFeature;
 import me.duncanruns.hermes.HermesMod;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.Map;
 
 public final class ModIntegration {
-    public static final boolean INTEGRATE_SPEEDRUNIGT = !HermesDisabledFeatures.isSpeedRunIGTIntegrationDisabled() && FabricLoader.getInstance().isModLoaded("speedrunigt");
-    public static final boolean INTEGRATE_ATUM = !HermesDisabledFeatures.isAtumIntegrationDisabled() && FabricLoader.getInstance().isModLoaded("atum");
+    public static final boolean INTEGRATE_SPEEDRUNIGT = !HermesDisableableFeature.SPEEDRUNIGT_INTEGRATION.isDisabled() && FabricLoader.getInstance().isModLoaded("speedrunigt");
+    public static final boolean INTEGRATE_ATUM = !HermesDisableableFeature.ATUM_INTEGRATION.isDisabled() && FabricLoader.getInstance().isModLoaded("atum");
 
     private ModIntegration() {
     }

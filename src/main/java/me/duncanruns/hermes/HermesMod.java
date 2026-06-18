@@ -115,7 +115,7 @@ public class HermesMod implements ModInitializer {
         if (HermesCore.IS_CLIENT) {
             InstanceInfo.setWorldLogPath(WorldLog.init());
         }
-        HermesDisabledFeatures.getDisabledFeatures().forEach(InstanceInfo::addDisabledFeature);
+        HermesDisableableFeature.getDisabledFeatures().forEach(InstanceInfo::addDisabledFeature);
         InstanceInfo.init();
     }
 }
