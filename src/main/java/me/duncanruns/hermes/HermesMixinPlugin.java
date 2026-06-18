@@ -13,9 +13,9 @@ public class HermesMixinPlugin implements IMixinConfigPlugin {
         if (!mixinClassName.startsWith("me.duncanruns.hermes.mixin.")) return true;
         String featureName = mixinClassName.split("\\.")[5];
         if ("playlog".equals(featureName)) {
-            return !HermesDisabledFeatures.isPlayLogDisabled();
+            return !HermesDisableableFeature.PLAY_LOG.isDisabled();
         } else if ("ghost".equals(featureName)) {
-            return !HermesDisabledFeatures.isGhostDisabled();
+            return !HermesDisableableFeature.GHOST.isDisabled();
         }
         return true;
     }
