@@ -12,7 +12,9 @@ import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
@@ -444,5 +446,16 @@ public class PlayLog {
     public void onPlayerDataSave() {
         write("players_saved", new JsonObject());
         if (serverShuttingDown) shutdownPlayersSaved = true;
+    }
+
+    public static final class Client {
+        public static void onSetScreen(Minecraft client) {
+            IntegratedServer server = client.getSingleplayerServer();
+            if (server == null) return;
+            Screen screen = Util.Client.getScreen(client);
+            assert screen != null;
+            Runnable runnable = () -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onScreenChange(screen));
+            server.submit(runnable);
+        }
     }
 }

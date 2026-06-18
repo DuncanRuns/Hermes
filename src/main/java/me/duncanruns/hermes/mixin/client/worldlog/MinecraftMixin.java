@@ -1,3 +1,4 @@
+//? if <=26.1.2 {
 package me.duncanruns.hermes.mixin.client.worldlog;
 
 import me.duncanruns.hermes.worldlog.WorldLog;
@@ -19,3 +20,4 @@ public abstract class MinecraftMixin {
         WorldLog.update((Minecraft) (Object) this);
     }
 }
+//?}

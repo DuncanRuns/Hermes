@@ -1,5 +1,7 @@
 package me.duncanruns.hermes.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.MinecraftServer;
@@ -31,5 +33,15 @@ public final class Util {
 
     public static Vec3 getEntityPos(Entity entity){
         return entity.position();
+    }
+
+    public static class Client{
+        public static Screen getScreen(Minecraft client) {
+            //? if <=26.1.2 {
+            return client.screen;
+            //?} else {
+            /*return client.gui.screen();
+            *///?}
+        }
     }
 }
