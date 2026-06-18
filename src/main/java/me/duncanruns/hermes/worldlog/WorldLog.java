@@ -39,6 +39,14 @@ public final class WorldLog {
             file.seek(0);
             file.setLength(0);
             Files.write(HermesCore.LOCAL_HERMES_FOLDER.resolve("latest_world_log.txt"), fileName.getBytes(StandardCharsets.UTF_8));
+            HermesMod.registerClose(() -> {
+                try {
+                    file.close();
+                    EXECUTOR.shutdown();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             return worldLogPath;
         } catch (IOException e) {
             throw new RuntimeException(e);
