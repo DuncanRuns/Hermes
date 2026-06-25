@@ -50,7 +50,7 @@ public class StructureTracker {
         Set<String> structures = new HashSet<>();
 
         //? if <=1.12.2 {
-        /*me.duncanruns.hermes.util.StructureUtil.getStructureNames().forEach(structureName -> {
+        /*StructureHelper.getStructureNames().forEach(structureName -> {
             if (!world.getChunkSource().isInsideStructure(world, structureName, blockPos)) return;
             structures.add(structureName);
         });

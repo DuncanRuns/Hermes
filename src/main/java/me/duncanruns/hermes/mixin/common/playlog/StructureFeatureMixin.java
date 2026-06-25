@@ -1,7 +1,7 @@
 //? if <=1.12.2 {
 /*package me.duncanruns.hermes.mixin.common.playlog;
 
-import me.duncanruns.hermes.util.StructureUtil;
+import me.duncanruns.hermes.playlog.StructureHelper;
 import net.minecraft.world.gen.structure.StructureFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +18,7 @@ public abstract class StructureFeatureMixin {
     private void onCreateStructure(CallbackInfo ci) {
         String name = getName();
         if (name == null || name.isEmpty()) return;
-        StructureUtil.addStructureName(name);
+        StructureHelper.addStructureName(name);
     }
 }
 *///?}
