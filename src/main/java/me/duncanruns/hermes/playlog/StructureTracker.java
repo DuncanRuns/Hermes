@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StructureTracker {
     private final Map<UUID, Set<String>> structureMap = new HashMap<>();
@@ -47,19 +48,22 @@ public class StructureTracker {
     }
 
     private static @NotNull Set<String> getStructures(ServerWorld world, BlockPos blockPos) {
-        Set<String> structures = new HashSet<>();
-
         //? if <=1.12.2 {
-        /*StructureHelper.getStructureNames().forEach(structureName -> {
-            if (!world.getChunkSource().isInsideStructure(world, structureName, blockPos)) return;
-            structures.add(structureName);
-        });
+        /*StructureHelper.LENIENT_SEARCH.set(true);
+        try {
+            return StructureHelper.getStructureNames()
+                    .stream()
+                    .filter(s -> world.getChunkSource().isInsideStructure(world, s, blockPos))
+                    .collect(Collectors.toSet());
+        } finally {
+            StructureHelper.LENIENT_SEARCH.set(false);
+        }
         *///?} else {
-        net.minecraft.world.gen.structure.StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
-            if (!feature.isValid(world, blockPos)) return;
-            structures.add(structureName);
-        });
+        return net.minecraft.world.gen.structure.StructureFeature.STRUCTURES.entrySet()
+                .stream()
+                .filter(e -> e.getValue().isValid(world, blockPos))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
         //?}
-        return structures;
     }
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 
 public final class StructureHelper {
     private static final Set<String> STRUCTURE_NAMES = new HashSet<>();
+    public static final ThreadLocal<Boolean> LENIENT_SEARCH = ThreadLocal.withInitial(() -> false);
 
     public static synchronized Collection<String> getStructureNames() {
         return new HashSet<>(STRUCTURE_NAMES);
