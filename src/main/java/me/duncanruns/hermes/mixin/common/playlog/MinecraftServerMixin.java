@@ -1,5 +1,6 @@
 package me.duncanruns.hermes.mixin.common.playlog;
 
+import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.playlog.PlayLog;
 import me.duncanruns.hermes.playlog.PlayLogServer;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Mixin(MinecraftServer.class)
@@ -29,7 +31,10 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
     @Inject(method = "prepareWorlds", at = @At("HEAD"))
     private void onFinishCreateWorlds(CallbackInfo ci) {
         MinecraftServer server = (MinecraftServer) (Object) this;
-        this.playLog = new PlayLog(server);
+        Path savePath = HermesMod.getSavePath(server);
+        if (savePath != null) {
+            this.playLog = new PlayLog(server, savePath.normalize());
+        }
     }
 
     @Inject(method = "tick", at = @At("RETURN"))

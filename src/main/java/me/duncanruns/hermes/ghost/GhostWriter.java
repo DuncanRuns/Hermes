@@ -38,7 +38,11 @@ public class GhostWriter {
 
     private static byte getFlags(ServerPlayerEntity player) {
         boolean isHandSwinging = player.armSwinging;
+        //? if <=1.8.9 {
+        /*boolean fallFlyingBool = false;
+        *///?} else {
         boolean fallFlyingBool = player.isFallFlying();
+         //?}
         byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
         byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
         byte sneaking = (byte) (player.isSneaking() ? (0x04) : 0);

@@ -23,7 +23,7 @@ public class ClientWorldStateUpdater implements BiConsumer<JsonObject, Minecraft
     @Override
     public void accept(JsonObject json, Minecraft client) {
         MinecraftServer server = ClientToServerHelper.getServer(client);
-        Optional.ofNullable(server).map(s -> HermesMod.getSavePath(s).normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
+        Optional.ofNullable(server).map(HermesMod::getSavePath).map(p -> p.normalize().toAbsolutePath()).ifPresent(lastWorldJoined::set);
         json.add("last_world_joined", HermesCore.pathToJsonObject(lastWorldJoined.get()));
         json.addProperty("open_to_lan", Optional.ofNullable(server).map(s -> (!HermesCore.IS_CLIENT) || ((IntegratedServer) s).isPublished()).orElse(null));
     }

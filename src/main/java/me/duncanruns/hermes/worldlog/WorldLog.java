@@ -55,7 +55,7 @@ public final class WorldLog {
 
     public static void update(Minecraft client) {
         IntegratedServer server = client.getServer();
-        Path world = Optional.ofNullable(server).map(s -> HermesMod.getSavePath(server).normalize()).orElse(null);
+        Path world = Optional.ofNullable(server).map(HermesMod::getSavePath).map(Path::normalize).orElse(null);
 
         Path previousWorld = lastWorld;
         if (!Objects.equals(world, lastWorld)) {

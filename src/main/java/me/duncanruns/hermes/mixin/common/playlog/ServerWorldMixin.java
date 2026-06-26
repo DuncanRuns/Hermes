@@ -19,9 +19,17 @@ public abstract class ServerWorldMixin extends World {
         //?}
     }
 
-    @Inject(method = "save", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/chunk/ServerChunkCache;save(Z)Z"))
+    @SuppressWarnings("MixinAnnotationTarget")
+    @Inject(method = "save", at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/server/world/chunk/ServerChunkCache;save(Z)Z"),
+            @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/ChunkSource;save(ZLnet/minecraft/util/ProgressListener;)Z")
+    }, require = 1, allow = 1)
     private void onSave(CallbackInfo ci) {
+        //? if <=1.8.9 {
+        /*String worldName = this.dimension.getName();
+        *///?} else {
         String worldName = this.dimension.getType().toString();
+        //?}
         //noinspection RedundantCast
         PlayLogHelper.getPlayLog(((ServerWorld) (Object) this).getServer()).ifPresent(p -> p.onWorldSave(worldName));
     }

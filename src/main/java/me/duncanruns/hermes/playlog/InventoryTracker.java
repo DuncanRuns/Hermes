@@ -45,7 +45,11 @@ public class InventoryTracker {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
         if (isEmpty(a) && isEmpty(b)) return true;
+        //? if <=1.8.9 {
+        /*return ItemStack.matchesItem(a, b) && ItemStack.matchesNbt(a, b);
+        *///?} else {
         return ItemStack.matchesItemIgnoreDamage(a, b);
+        //?}
     }
 
     /**
@@ -55,7 +59,7 @@ public class InventoryTracker {
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
         inventories.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
-        minecraftServer.getPlayerManager().getAll().forEach(player -> {
+        Util.getPlayers(minecraftServer).forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
             PlayerInventory inventory = player.inventory;
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
@@ -87,7 +91,9 @@ public class InventoryTracker {
     }
 
     private static Stream<ItemStack> getInventoryStream(PlayerInventory inventory) {
-        //? if <=1.10.2 {
+        //? if <=1.8.9 {
+        /*return HermesMod.concat(Arrays.stream(inventory.items), Arrays.stream(inventory.armor));
+        *///?} else if <=1.10.2 {
         /*return HermesMod.concat(Arrays.stream(inventory.items), Arrays.stream(inventory.armor), Arrays.stream(inventory.offhand));
         *///?} else {
         return HermesMod.concat(inventory.items.stream(), inventory.armor.stream(), inventory.offhand.stream());

@@ -2,13 +2,16 @@
 /*package me.duncanruns.hermes.mixin.common.playlog;
 
 import net.minecraft.server.world.chunk.ServerChunkCache;
-import net.minecraft.world.chunk.ChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ServerChunkCache.class)
 public interface ServerChunkCacheAccessor {
     @Accessor("generator")
-    ChunkGenerator getChunkGenerator();
+    //? if <=1.8.9{
+    /^net.minecraft.world.chunk.ChunkSource getChunkGenerator();
+    ^///?} else {
+    net.minecraft.world.chunk.ChunkGenerator getChunkGenerator();
+    //?}
 }
 *///?}

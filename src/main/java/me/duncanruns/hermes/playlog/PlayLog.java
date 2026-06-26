@@ -16,13 +16,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.living.player.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.PlayerStats;
 import net.minecraft.stat.Stat;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldSettings;
-import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -108,8 +106,7 @@ public class PlayLog {
             "minecraft.custom:minecraft.time_since_"
     );
 
-    public PlayLog(MinecraftServer server) {
-        Path worldFolder = HermesMod.getSavePath(server).normalize();
+    public PlayLog(MinecraftServer server, Path worldFolder) {
         this.savePath = worldFolder.resolve("hermes").resolve("play.log");
         this.rtPath = worldFolder.resolve("hermes").resolve("restricted").resolve("play.log.enc");
         this.requiredParent = worldFolder;
@@ -118,7 +115,7 @@ public class PlayLog {
     }
 
     private static long getTime(MinecraftServer server) {
-        return getOverworld(server).getTime();
+        return Util.getOverworld(server).getTime();
     }
 
     public static void registerInitializationEvent(Consumer<MinecraftServer> consumer) {
@@ -139,14 +136,6 @@ public class PlayLog {
          //?}
         PlayLogCreationSettings.addSettings(levelSettingsObj, out);
         return out;
-    }
-
-    private static ServerWorld getOverworld(MinecraftServer server) {
-        //? if <=1.12.2 {
-        /*return server.getWorld(DimensionType.OVERWORLD.getId());
-        *///?} else {
-        return server.getWorld(DimensionType.OVERWORLD);
-         //?}
     }
 
     private static void clearSeed(JsonElement jsonElement) {

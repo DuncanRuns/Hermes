@@ -22,13 +22,17 @@ public class DimensionTracker {
         oldDimensions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
         oldPositions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
         List<JsonObject> changes = new ArrayList<>();
-        minecraftServer.getPlayerManager().getAll().forEach(player -> {
+        Util.getPlayers(minecraftServer).forEach(player -> {
             UUID id = Util.getPlayerUUID(player);
             Vec3d newPos = Util.getEntityPos(player);
             Vec3d oldPos = oldPositions.put(id, newPos);
 
             ServerWorld world = Util.getPlayerServerWorld(player);
+            //? if <=1.8.9 {
+            /*String newDimension = Integer.toString(world.dimension.getId());
+            *///?} else {
             String newDimension = world.dimension.getType().toString();
+            //?}
 
             String oldDimension = oldDimensions.put(id, newDimension);
             if (Objects.equals(oldDimension, newDimension)) return;

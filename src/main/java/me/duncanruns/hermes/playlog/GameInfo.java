@@ -5,11 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.WorldData;
-import net.minecraft.world.dimension.DimensionType;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,17 +47,17 @@ public class GameInfo {
         GameInfo gameInfo = new GameInfo();
         //? if <=1.12.2 {
         /*gameInfo.cheatsAllowed = ((me.duncanruns.hermes.mixin.common.playlog.PlayerManagerAccessor) server.getPlayerManager()).getAllowCommands();
-        WorldData levelProperties = server.getWorld(DimensionType.OVERWORLD.getId()).getData();
+        WorldData levelProperties = Util.getOverworld(server).getData();
         *///?} else {
         gameInfo.cheatsAllowed = server.getPlayerManager().allowCommands();
-        WorldData levelProperties = server.getWorld(DimensionType.OVERWORLD).getData();
+        WorldData levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getData();
         //?}
         gameInfo.openToLan = (!HermesCore.IS_CLIENT) || ((IntegratedServer) server).isPublished();
 
         gameInfo.hardcore = levelProperties.isHardcore();
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
         gameInfo.difficulty = levelProperties.getDifficulty().getKey();
-        gameInfo.players = server.getPlayerManager().getAll().stream().map(p -> {
+        gameInfo.players = Util.getPlayers(server).stream().map(p -> {
             PlayerInfo pi = new PlayerInfo();
             pi.gamemode = p.interactionManager.getGameMode().getKey();
             pi.name = Util.getPlayerName(p);

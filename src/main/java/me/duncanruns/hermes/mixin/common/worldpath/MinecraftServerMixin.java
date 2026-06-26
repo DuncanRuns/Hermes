@@ -24,9 +24,13 @@ public abstract class MinecraftServerMixin implements WorldPathHolder {
     private static Path getSavePath(MinecraftServer server) {
         String worldSaveName = server.getWorldSaveName();
         if (worldSaveName == null) {
-            throw new IllegalStateException("Attempted to get save path before server finished initializing!");
+            return null;
         }
+        //? if <=1.8.9 {
+        /*return ((AlphaWorldStorageSourceAccessor)server.getWorldStorageSource()).getDir().toPath().resolve(worldSaveName);
+        *///?} else {
         return server.getWorldStorageSource().getFile(worldSaveName, ".").toPath();
+        //?}
     }
 
     @Override

@@ -18,7 +18,7 @@ public class StructureTracker {
         List<JsonObject> out = new ArrayList<>();
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
         structureMap.keySet().removeIf(uuid -> server.getPlayerManager().get(uuid) == null);
-        server.getPlayerManager().getAll().forEach(player -> {
+        Util.getPlayers(server).forEach(player -> {
             if (player.ticks % 20 != 0) return;
 
             BlockPos blockPos = new BlockPos((float) player.x, (float) player.y, (float) player.z);
