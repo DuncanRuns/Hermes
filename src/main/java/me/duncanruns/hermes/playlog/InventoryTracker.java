@@ -18,11 +18,19 @@ public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
 
     private static JsonElement stackToJson(ItemStack itemStack) {
-        if (itemStack.isEmpty()) return null;
+        if (isEmpty(itemStack)) return null;
         //? if <=1.12.2 {
         /*return me.duncanruns.hermes.util.NbtToJson.convert(itemStack.writeNbt(new NbtCompound()));
         *///?} else {
         return com.mojang.datafixers.Dynamic.convert(net.minecraft.nbt.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.writeNbt(new NbtCompound()));
+         //?}
+    }
+
+    private static boolean isEmpty(ItemStack itemStack) {
+        //? if <=1.10.2 {
+        /*return itemStack == null || itemStack.size <= 0 || itemStack.getItem() == null || itemStack.getItem().equals(net.minecraft.item.Item.byBlock(net.minecraft.block.Blocks.AIR));
+        *///?} else {
+        return itemStack.isEmpty();
          //?}
     }
 
@@ -36,7 +44,7 @@ public class InventoryTracker {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
-        if (a.isEmpty() && b.isEmpty()) return true;
+        if (isEmpty(a) && isEmpty(b)) return true;
         return ItemStack.matchesItemIgnoreDamage(a, b);
     }
 
@@ -52,7 +60,7 @@ public class InventoryTracker {
             PlayerInventory inventory = player.inventory;
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 = offhand
-            List<ItemStack> newItems = getInventoryStream(inventory).map(ItemStack::copy).collect(Collectors.toList());
+            List<ItemStack> newItems = getInventoryStream(inventory).map(InventoryTracker::copyItemStack).collect(Collectors.toList());
             List<ItemStack> oldItems = inventories.computeIfAbsent(id, uuid -> getEmptyInventory(newItems.size()));
             if (areItemListsEqual(oldItems, newItems)) {
                 return;
@@ -73,11 +81,28 @@ public class InventoryTracker {
         return changes;
     }
 
+    private static ItemStack copyItemStack(ItemStack itemStack) {
+        if (itemStack == null) return null;
+        return itemStack.copy();
+    }
+
     private static Stream<ItemStack> getInventoryStream(PlayerInventory inventory) {
+        //? if <=1.10.2 {
+        /*return HermesMod.concat(Arrays.stream(inventory.items), Arrays.stream(inventory.armor), Arrays.stream(inventory.offhand));
+        *///?} else {
         return HermesMod.concat(inventory.items.stream(), inventory.armor.stream(), inventory.offhand.stream());
+         //?}
     }
 
     private List<ItemStack> getEmptyInventory(int size) {
-        return IntStream.range(0, size).mapToObj(i -> ItemStack.EMPTY).collect(Collectors.toList());
+        return IntStream.range(0, size).mapToObj(i -> getEmptyItemStack()).collect(Collectors.toList());
+    }
+
+    private static ItemStack getEmptyItemStack() {
+        //? if <=1.10.2 {
+        /*return null;
+        *///?} else {
+        return ItemStack.EMPTY;
+         //?}
     }
 }
