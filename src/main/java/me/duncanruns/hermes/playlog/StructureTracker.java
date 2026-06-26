@@ -53,7 +53,7 @@ public class StructureTracker {
         try {
             return StructureHelper.getStructureNames()
                     .stream()
-                    .filter(s -> world.getChunkSource().isInsideStructure(world, s, blockPos))
+                    .filter(s -> StructureHelper.isInsideStructure(world, s, blockPos))
                     .collect(Collectors.toSet());
         } finally {
             StructureHelper.LENIENT_SEARCH.set(false);

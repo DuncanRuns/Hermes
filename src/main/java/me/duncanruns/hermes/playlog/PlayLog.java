@@ -12,7 +12,6 @@ import me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings;
 import me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
-import net.minecraft.advancement.Advancement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -317,7 +316,8 @@ public class PlayLog {
         write("screen", data);
     }
 
-    public void onAdvancement(Advancement advancement, String criterionName, boolean done, ServerPlayerEntity owner) {
+    //? if >=1.12 {
+    public void onAdvancement(net.minecraft.advancement.Advancement advancement, String criterionName, boolean done, ServerPlayerEntity owner) {
         JsonObject data = new JsonObject();
         data.add("player", toPlayerData(owner));
         data.addProperty("id", advancement.getId().toString());
@@ -332,6 +332,7 @@ public class PlayLog {
         }).orElse(null));
         write("advancement", data);
     }
+    //?}
 
     public void onTick(MinecraftServer minecraftServer) {
         checkGameInfo(minecraftServer);

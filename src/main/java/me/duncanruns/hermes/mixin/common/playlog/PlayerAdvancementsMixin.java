@@ -1,3 +1,4 @@
+//? if >=1.12 {
 package me.duncanruns.hermes.mixin.common.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLogHelper;
@@ -29,3 +30,4 @@ public abstract class PlayerAdvancementsMixin {
         PlayLogHelper.getPlayLog(this.server).ifPresent(p -> p.onAdvancement(advancement, criterionName, getProgress(advancement).isComplete(), player));
     }
 }
+//?}

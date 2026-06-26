@@ -20,11 +20,12 @@ public abstract class StructureFeatureMixin {
     @Shadow
     public abstract String getName();
 
+    @SuppressWarnings("unchecked")
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onCreateStructure(CallbackInfo ci) {
         String name = getName();
         if (name == null || name.isEmpty()) return;
-        StructureHelper.addStructureName(name);
+        StructureHelper.addStructureName(name, (Class<? extends StructureFeature>) (Object) this.getClass());
     }
 
     @WrapOperation(
