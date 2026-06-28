@@ -107,7 +107,7 @@ tasks {
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
             "version" to version.toString(),
-            "minecraft" to project.property("mod.mc_dep")
+            "minecraft" to (findProperty("mod.mc_dep") ?: stonecutter.current.version)
         )
 
         inputs.properties(props)
