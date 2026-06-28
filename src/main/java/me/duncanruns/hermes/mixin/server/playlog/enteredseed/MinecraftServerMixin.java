@@ -10,7 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
-    @Inject(method = "loadWorld",at= @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldSettings;<init>(JLnet/minecraft/world/GameMode;ZZLnet/minecraft/world/gen/WorldGeneratorType;)V"))
+    @SuppressWarnings("MixinAnnotationTarget")
+    @Inject(method = "loadWorld", at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldSettings;<init>(JLnet/minecraft/world/GameMode;ZZLnet/minecraft/world/gen/WorldGeneratorType;)V"),
+            @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldSettings;<init>(JLnet/minecraft/world/WorldSettings$GameMode;ZZLnet/minecraft/world/gen/WorldGeneratorType;)V"),
+            @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldSettings;<init>(JLnet/minecraft/world/WorldSettings__GameMode;ZZLnet/minecraft/world/gen/WorldGeneratorType;)V"),
+    }, require = 1, allow = 1)
     private void onCreateNewWorld(CallbackInfo ci) {
         if (!HermesCore.IS_CLIENT) ServerSeedHolder.serverCreatingNewWorld = true;
     }
