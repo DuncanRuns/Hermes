@@ -46,7 +46,8 @@ public final class NbtToJson {
 
     public static JsonObject convertCompound(NbtCompound compound) {
         JsonObject out = new JsonObject();
-        Set<String> keys = compound.getKeys();
+        //noinspection unchecked
+        Set<String> keys = (Set<String>) compound.getKeys();
         for (String key : keys) {
             out.add(key, convert(compound.get(key)));
         }
@@ -56,7 +57,12 @@ public final class NbtToJson {
     private static @NotNull JsonArray convertList(NbtList nbtList) {
         JsonArray out = new JsonArray(nbtList.size());
         for (int i = 0; i < nbtList.size(); i++) {
-            out.add(convert(nbtList.getElement(i)));
+            //? if <=1.7.10 {
+            /^NbtElement element = ((NbtElementList)nbtList).hermes$getElement(i);
+            ^///?} else {
+            NbtElement element = nbtList.getElement(i);
+            //?}
+            out.add(convert(element));
         }
         return out;
     }
@@ -74,5 +80,11 @@ public final class NbtToJson {
         for (byte b : bytes) jsonArray.add(b);
         return jsonArray;
     }
+
+    //? if <=1.7.10 {
+    /^public interface NbtElementList {
+        NbtElement hermes$getElement(int index);
+    }
+    ^///?}
 }
 *///?}

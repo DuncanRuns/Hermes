@@ -55,8 +55,12 @@ public class GameInfo {
         gameInfo.openToLan = (!HermesCore.IS_CLIENT) || ((IntegratedServer) server).isPublished();
 
         gameInfo.hardcore = levelProperties.isHardcore();
+        //? if <=1.7.10 {
+        /*gameInfo.difficulty = Util.getOverworld(server).difficulty.getKey();
+        *///?} else {
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
         gameInfo.difficulty = levelProperties.getDifficulty().getKey();
+        //?}
         gameInfo.players = Util.getPlayers(server).stream().map(p -> {
             PlayerInfo pi = new PlayerInfo();
             pi.gamemode = p.interactionManager.getGameMode().getKey();

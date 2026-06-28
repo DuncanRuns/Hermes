@@ -1,4 +1,4 @@
-//? if <=1.8.9 {
+//? if >=1.8 <=1.8.9 {
 /*package me.duncanruns.hermes.mixin.common.playlog;
 
 import net.minecraft.entity.living.effect.StatusEffect;

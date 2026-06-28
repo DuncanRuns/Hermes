@@ -6,31 +6,38 @@ import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class StructureTracker {
-    private final Map<UUID, Set<String>> structureMap = new HashMap<>();
+    private final Map<Object, Set<String>> structureMap = new HashMap<>();
 
     public Collection<JsonObject> tick(MinecraftServer server) {
         List<JsonObject> out = new ArrayList<>();
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        structureMap.keySet().removeIf(uuid -> server.getPlayerManager().get(uuid) == null);
+        structureMap.keySet().removeIf(id -> Util.getPlayer(server, id) == null);
         Util.getPlayers(server).forEach(player -> {
             if (player.ticks % 20 != 0) return;
 
+            //? if <=1.7.10 {
+            /*BlockPos blockPos = new BlockPos(MathHelper.floor(player.x), MathHelper.floor(player.y), MathHelper.floor(player.z));
+            *///?} else {
             BlockPos blockPos = new BlockPos((float) player.x, (float) player.y, (float) player.z);
+             //?}
             ServerWorld world = Util.getPlayerServerWorld(player);
 
-            //? if <=1.12.2 {
+            //? if <=1.7.10 {
+            /*if (!world.isChunkLoaded(blockPos.x, blockPos.y, blockPos.z)) return;
+            *///?} else if <=1.12.2 {
             /*if (!world.isChunkLoaded(blockPos)) return;
             *///?} else {
             if (!world.isLoaded(blockPos)) return;
              //?}
 
-            UUID id = Util.getPlayerUUID(player);
+            Object id = Util.getUniquePlayerID(player);
 
             Set<String> structures = getStructures(world, blockPos);
 
@@ -49,13 +56,16 @@ public class StructureTracker {
 
     private static @NotNull Set<String> getStructures(ServerWorld world, BlockPos blockPos) {
         //? if <=1.12.2 {
-        /*StructureHelper.LENIENT_SEARCH.set(true);
+        /*//? if >1.7.10
+        StructureHelper.LENIENT_SEARCH.set(true);
+        //noinspection EmptyFinallyBlock
         try {
             return StructureHelper.getStructureNames()
                     .stream()
                     .filter(s -> StructureHelper.isInsideStructure(world, s, blockPos))
                     .collect(Collectors.toSet());
         } finally {
+            //? if >1.7.10
             StructureHelper.LENIENT_SEARCH.set(false);
         }
         *///?} else {

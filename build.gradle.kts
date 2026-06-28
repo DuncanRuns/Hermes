@@ -35,7 +35,11 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 
-    modCompileOnly("${property("deps.speedrunigt")}")
+    if (stonecutter.eval(stonecutter.current.version, "<1.8")) {
+        modCompileOnly("${property("deps.speedrunigt_pre_1_8")}")
+    } else {
+        modCompileOnly("${property("deps.speedrunigt")}")
+    }
     modImplementation("${property("deps.hermes-core")}")
     include("${property("deps.hermes-core")}")
 }
@@ -119,8 +123,9 @@ tasks {
 
         into(rootProject.layout.buildDirectory.dir("libs/${project.property("mod.version")}"))
 
+        val versionFolder = findProperty("mod.version_folder") ?: stonecutter.current.version
         from(remapJar.map { it.archiveFile }) {
-            into(stonecutter.current.version)
+            into(versionFolder.toString())
         }
 
         from(remapSourcesJar.map { it.archiveFile }) {

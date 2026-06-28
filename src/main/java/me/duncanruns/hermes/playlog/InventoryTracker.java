@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class InventoryTracker {
-    Map<UUID, List<ItemStack>> inventories = new HashMap<>();
+    Map<Object, List<ItemStack>> inventories = new HashMap<>();
 
     private static JsonElement stackToJson(ItemStack itemStack) {
         if (isEmpty(itemStack)) return null;
@@ -46,7 +46,7 @@ public class InventoryTracker {
     private static boolean areItemsEqual(ItemStack a, ItemStack b) {
         if (isEmpty(a) && isEmpty(b)) return true;
         //? if <=1.8.9 {
-        /*return ItemStack.matchesItem(a, b) && ItemStack.matchesNbt(a, b);
+        /*return ItemStack.matches(a,b);
         *///?} else {
         return ItemStack.matchesItemIgnoreDamage(a, b);
         //?}
@@ -57,15 +57,15 @@ public class InventoryTracker {
      */
     public List<JsonObject> tick(MinecraftServer minecraftServer) {
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        inventories.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
+        inventories.keySet().removeIf(id -> Util.getPlayer(minecraftServer, id) == null);
         List<JsonObject> changes = new ArrayList<>();
         Util.getPlayers(minecraftServer).forEach(player -> {
-            UUID id = Util.getPlayerUUID(player);
+            Object id = Util.getUniquePlayerID(player);
             PlayerInventory inventory = player.inventory;
             // Note: Putting offhand at the ends means that the order should be the same for older versions of MC
             // 0 -> 35 = main, 36 -> 39 = armor, 40 = offhand
             List<ItemStack> newItems = getInventoryStream(inventory).map(InventoryTracker::copyItemStack).collect(Collectors.toList());
-            List<ItemStack> oldItems = inventories.computeIfAbsent(id, uuid -> getEmptyInventory(newItems.size()));
+            List<ItemStack> oldItems = inventories.computeIfAbsent(id, _id -> getEmptyInventory(newItems.size()));
             if (areItemListsEqual(oldItems, newItems)) {
                 return;
             }

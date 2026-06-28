@@ -2,7 +2,6 @@ package me.duncanruns.hermes.modintegration;
 
 import com.redlimerl.speedrunigt.option.SpeedRunOption;
 import com.redlimerl.speedrunigt.timer.InGameTimer;
-import net.minecraft.resource.Identifier;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -37,7 +36,11 @@ public final class SpeedRunIGTIntegration {
             optionsField.setAccessible(true);
         }
 
-        Map<Identifier, String> options = (Map<Identifier, String>) optionsField.get(null);
+        //? if <=1.7.10 {
+        /*Map<com.redlimerl.speedrunigt.Identifier, String> options = (Map<com.redlimerl.speedrunigt.Identifier, String>) optionsField.get(null);
+        *///?} else {
+        Map<net.minecraft.resource.Identifier, String> options = (Map<net.minecraft.resource.Identifier, String>) optionsField.get(null);
+        //?}
         return options.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
     }
 }

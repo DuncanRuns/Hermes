@@ -11,28 +11,24 @@ import java.util.*;
 // Implementation note: Doing a mixin to changeDimension is just not a good idea, as it isn't called on respawns, and
 // sometimes gets spammed when exiting the end. Doing a tracker like this resolves all of those issues and is easier.
 public class DimensionTracker {
-    Map<UUID, String> oldDimensions = new HashMap<>();
-    Map<UUID, Vec3d> oldPositions = new HashMap<>();
+    Map<Object, String> oldDimensions = new HashMap<>();
+    Map<Object, Vec3d> oldPositions = new HashMap<>();
 
     /**
      * @return A list of json objects representing the changes.
      */
     public Iterable<JsonObject> tick(MinecraftServer minecraftServer) {
         // Remove players that have left to prevent minor leakage, and mirrors the behavior of a solo player relogging for non host players.
-        oldDimensions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
-        oldPositions.keySet().removeIf(uuid -> minecraftServer.getPlayerManager().get(uuid) == null);
+        oldDimensions.keySet().removeIf(id -> Util.getPlayer(minecraftServer, id) == null);
+        oldPositions.keySet().removeIf(id -> Util.getPlayer(minecraftServer, id) == null);
         List<JsonObject> changes = new ArrayList<>();
         Util.getPlayers(minecraftServer).forEach(player -> {
-            UUID id = Util.getPlayerUUID(player);
+            Object id = Util.getUniquePlayerID(player);
             Vec3d newPos = Util.getEntityPos(player);
             Vec3d oldPos = oldPositions.put(id, newPos);
 
             ServerWorld world = Util.getPlayerServerWorld(player);
-            //? if <=1.8.9 {
-            /*String newDimension = Integer.toString(world.dimension.getId());
-            *///?} else {
-            String newDimension = world.dimension.getType().toString();
-            //?}
+            String newDimension = Util.getDimensionName(world);
 
             String oldDimension = oldDimensions.put(id, newDimension);
             if (Objects.equals(oldDimension, newDimension)) return;

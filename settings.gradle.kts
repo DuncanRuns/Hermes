@@ -17,6 +17,14 @@ plugins {
 stonecutter {
     create(rootProject) {
         versions(
+            "1.7.2",
+            "1.7.4",
+            "1.7.5",
+            "1.7.6",
+            // "1.7.7-101331", // not bothered to handle, can allow 1.7.6 build for 1.7.7
+            "1.7.8",
+            "1.7.9",
+            "1.7.10",
             "1.8",
             "1.8.1",
             "1.8.2",

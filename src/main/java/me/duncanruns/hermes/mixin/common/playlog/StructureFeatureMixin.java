@@ -28,6 +28,7 @@ public abstract class StructureFeatureMixin {
         StructureHelper.addStructureName(name, (Class<? extends StructureFeature>) (Object) this.getClass());
     }
 
+    //? if >1.7.10 {
     @WrapOperation(
             method = "findStructure",
             at = @At(
@@ -44,5 +45,6 @@ public abstract class StructureFeatureMixin {
             return original.call(instance, pos);
         }
     }
+    //?}
 }
 *///?}

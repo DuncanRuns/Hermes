@@ -12,7 +12,6 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 
 /**
  * It's possible the format could change, and anything that reads the file should know the version of Hermes that wrote it.
@@ -28,7 +27,7 @@ public class GhostWriter {
 
     private final ByteBuffer buffer;
 
-    public GhostWriter(MinecraftServer server, UUID playerId) {
+    public GhostWriter(MinecraftServer server, Object playerId) {
         Path worldPath = HermesMod.getSavePath(server);
         this.path = worldPath.resolve("hermes").resolve("ghosts").resolve(playerId.toString() + ".ghost");
         this.requiredParent = worldPath;
