@@ -323,6 +323,18 @@ public class PlayLog {
     }
     //?}
 
+    // Note that regular achievements are reported as stats, only adventuring time's progress is a special case
+    // We generalize to the achievement progress system as it's possible mods may add other achievements with progress
+    //? if >=1.7 <=1.11.2 {
+    /*public void onAchievementProgress(PlayerEntity player, String achievementName, String progressEarned) {
+        JsonObject data = new JsonObject();
+        data.add("player", toPlayerData(player));
+        data.addProperty("achievement", achievementName);
+        data.addProperty("progress", progressEarned);
+        write("achievement_progress", data);
+    }
+    *///?}
+
     public void onTick(MinecraftServer minecraftServer) {
         checkGameInfo(minecraftServer);
         inventoryTracker.tick(minecraftServer).forEach(jsonObject -> write("inventory_slots", jsonObject));
