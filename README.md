@@ -17,6 +17,10 @@ This is the `meta` branch, holding this `README`, and a copy of the license.
 
 ## Features
 
+> [!CAUTION]
+> Features listed reflect what is in the three development branches and may not be accurate to the current legal
+> version(s) of the mod.
+
 ### `[PID].json`
 
 On initialize, a json file named [PID].json (PID = process id) will be placed in a global location and contain the game
