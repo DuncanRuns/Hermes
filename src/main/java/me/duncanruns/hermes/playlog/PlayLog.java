@@ -80,6 +80,7 @@ public class PlayLog {
     private final InventoryTracker inventoryTracker = new InventoryTracker();
     private final DimensionTracker dimensionTracker = new DimensionTracker();
     private final StructureTracker structureTracker = new StructureTracker();
+    private final BiomeTracker biomeTracker = new BiomeTracker();
     private final EffectsTracker effectsTracker = new EffectsTracker();
     private final SRIGTOptionsTracker srigtOptionsTracker = new SRIGTOptionsTracker();
 
@@ -317,6 +318,7 @@ public class PlayLog {
         inventoryTracker.tick(minecraftServer).forEach(jsonObject -> write("inventory_slots", jsonObject));
         dimensionTracker.tick(minecraftServer).forEach(jsonObject -> write("dimension", jsonObject));
         structureTracker.tick(minecraftServer).forEach(jsonObject -> write("inside_structures", jsonObject));
+        biomeTracker.tick(minecraftServer).forEach(jsonObject -> write("biome", jsonObject));
         effectsTracker.tick(minecraftServer).forEach(jsonObject -> write("status_effects", jsonObject));
         srigtOptionsTracker.tick().ifPresent(jsonObject -> write("speedrunigt_options", jsonObject));
     }
