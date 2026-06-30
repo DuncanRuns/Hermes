@@ -102,11 +102,14 @@ if the world properly saved.
         - Total ticks ran in world, should be 0 for new world.
     - `atum_running` (if atum is also installed)
 - `stat` - Every stat update, the player it's for, the new value, and the difference from the last one. Excludes
-  stats that naturally update every tick or extremely spammy ones (e.g. walking/sprinting/flying)
+  stats that naturally update every tick or extremely spammy ones (e.g. walking/sprinting/flying). In pre 1.12, this
+  also includes achievements, as internally, achievements are statistics.
 - `screen` - Every screen change, the class (will look like class_xxxxx because of intermediary), the title (1.14+)
   (untranslated key, or sometimes the text in case of a renamed container), if the screen is supposed to pause the game.
-- `advancement` - Every advancement update, the criteria earned, the player it's for, and if it is completed. It
+- `advancement` (1.12+) - Every advancement update, the criteria earned, the player it's for, and if it is completed. It
   also contains the "display" data for the advancement (hidden, announce to chat, show toast).
+- `achievement_progress` (1.7-1.12) - Reports progress of achievements that require progression. In vanilla, this is
+  exclusively `achievement.exploreAllBiomes`.
 - `dimension` - Every change to a player's dimension as well as their initial dimension when they join.
 - `respawn` - Every time a player respawns, the player who respawned, the position they respawned at, and if they were
   alive before (e.g. `true` if coming out of the end). The dimension of the respawn can be determined by the
