@@ -8,9 +8,10 @@ or in-game functionality.
 ## Project
 
 Hermes as a project is split into three branches to support different ranges of the game.
+
 - The `1.0-1.13.2` branch targets ornithe's mappings/intermediaries.
 - The `1.14-1.21.11` branch targets yarn and fabric's intermediaries.
-- The `26.1+` branch uses official mappings, as the game is not obfuscated past those versions. 
+- The `26.1+` branch uses official mappings, as the game is not obfuscated past those versions.
 
 This is the `meta` branch, holding this `README`, and a copy of the license.
 
@@ -137,8 +138,7 @@ if the world properly saved.
   status effect, if the amplifier changes, or they relog with effects.
 - `command`- Every command ran by a player and who entered it.
 - `world_saved` - Every time a world (a specific dimension) is saved, and a string representing which world it is (may
-  vary based on game
-  version).
+  vary based on game version).
 - `players_saved` - Runs when all player data is saved.
 - `server_shutdown` - Runs when the server shuts down, even if using fast reset, includes a list of worlds saved during
   the shutdown process and if player data was saved during the shutdown process, which is useful for determining if fast
