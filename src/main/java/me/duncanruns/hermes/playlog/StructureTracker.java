@@ -6,7 +6,6 @@ import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -23,7 +22,7 @@ public class StructureTracker {
             if (player.ticks % 20 != 0) return;
 
             //? if <=1.7.10 {
-            /*BlockPos blockPos = new BlockPos(MathHelper.floor(player.x), MathHelper.floor(player.y), MathHelper.floor(player.z));
+            /*BlockPos blockPos = new BlockPos(net.minecraft.util.math.MathHelper.floor(player.x), net.minecraft.util.math.MathHelper.floor(player.y), net.minecraft.util.math.MathHelper.floor(player.z));
             *///?} else {
             BlockPos blockPos = new BlockPos((float) player.x, (float) player.y, (float) player.z);
              //?}
