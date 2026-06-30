@@ -220,7 +220,9 @@ Certain features of Hermes may be disabled by other mods. To disable features, a
   "custom": {
     "hermes:disable": [
       "playlog",
-      "ghost"
+      "ghost",
+      "atum_integration_v1",
+      "speedrunigt_integration_v1"
     ]
   }
 }
