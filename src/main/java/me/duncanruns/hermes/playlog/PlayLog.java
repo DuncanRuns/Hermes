@@ -349,7 +349,7 @@ public class PlayLog {
     private void checkGameInfo(MinecraftServer minecraftServer) {
         JsonObject newGameInfo = GSON.toJsonTree(GameInfo.fromServer(minecraftServer)).getAsJsonObject();
         JsonObject difference = lastGameInfo == null ? newGameInfo : HermesMod.getJsonDifference(lastGameInfo, newGameInfo);
-        if (difference.size() > 0) {
+        if (!difference.entrySet().isEmpty()) {
             lastGameInfo = newGameInfo;
             write("game_info", difference);
         }
