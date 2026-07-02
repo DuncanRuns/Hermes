@@ -76,7 +76,7 @@ tasks {
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
             "version" to version.toString(),
-            "minecraft" to project.property("mod.mc_dep")
+            "minecraft" to (findProperty("mod.mc_dep") ?: stonecutter.current.version)
         )
 
         inputs.properties(props)
@@ -95,9 +95,10 @@ tasks {
 
         into(rootProject.layout.buildDirectory.dir("libs/${project.property("mod.version")}"))
 
+        val versionFolder = findProperty("mod.version_folder") ?: stonecutter.current.version
         val modJar = project.tasks.named<Jar>("jar")
         from(modJar.map { it.archiveFile }) {
-            into(stonecutter.current.version)
+            into(versionFolder.toString())
         }
 
         val modSourcesJar = project.tasks.named<Jar>("sourcesJar")
