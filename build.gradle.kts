@@ -42,6 +42,8 @@ dependencies {
     }
     modImplementation("${property("deps.hermes-core")}")
     include("${property("deps.hermes-core")}")
+    modImplementation("${property("deps.wfvaio")}")
+    include("${property("deps.wfvaio")}")
 }
 
 ploceus {

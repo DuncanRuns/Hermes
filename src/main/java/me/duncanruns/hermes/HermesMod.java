@@ -1,6 +1,7 @@
 package me.duncanruns.hermes;
 
 import com.google.gson.JsonObject;
+import fr.catcore.wfvaio.WhichFabricVariantAmIOn;
 import me.duncanruns.hermes.core.Alive;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.core.InstanceInfo;
@@ -46,6 +47,7 @@ public class HermesMod implements ModInitializer {
         Function<Screen, Boolean> screenPauseGetter = Screen::shouldPauseGame;
         boolean screenIsPause = Optional.ofNullable(currentScreen).map(screenPauseGetter).orElse(false);
         data.addProperty("class", screenClass);
+        data.addProperty("wfvaio", WhichFabricVariantAmIOn.getVariant().toString());
         data.addProperty("is_pause", screenIsPause);
         return data;
     }
