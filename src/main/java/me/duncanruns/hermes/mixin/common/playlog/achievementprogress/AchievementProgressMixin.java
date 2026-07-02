@@ -30,12 +30,14 @@ public abstract class AchievementProgressMixin extends ForwardingSet implements 
         this.achievementName = achievementName;
     }
 
+    //? if >1.7.2 {
     @WrapMethod(method = "update")
     private void updateWithSuper(JsonElement progress, Operation<Void> original) {
         reloading = true;
         original.call(progress);
         reloading = false;
     }
+    //?}
 
     @Override
     public boolean add(Object element) {
