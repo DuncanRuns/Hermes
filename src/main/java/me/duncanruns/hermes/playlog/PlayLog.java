@@ -183,7 +183,8 @@ public class PlayLog {
     public static void closeAll() {
         ArrayList<PlayLog> toClose = new ArrayList<>(PLAY_LOGS);
         if (!toClose.isEmpty()) {
-            HermesMod.LOGGER.info("Closing {} play logs", toClose.size());
+            //noinspection StringConcatenationArgumentToLogCall
+            HermesMod.LOGGER.info("Closing " + toClose.size() + " play logs");
             toClose.forEach(PlayLog::close);
         }
         EXECUTOR.shutdown();

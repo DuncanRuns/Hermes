@@ -57,7 +57,8 @@ public enum HermesDisableableFeature {
     private void disable(String sourceMod) {
         if (disabled) return;
         disabled = true;
-        HermesMod.LOGGER.info("{} feature disabled by mod '{}'", displayName, sourceMod);
+        //noinspection StringConcatenationArgumentToLogCall
+        HermesMod.LOGGER.info(displayName + " feature disabled by mod '" + sourceMod + "'");
     }
 
     public static List<String> getDisabledFeatures() {
