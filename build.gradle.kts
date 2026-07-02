@@ -102,7 +102,7 @@ tasks {
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
             "version" to version.toString(),
-            "minecraft" to project.property("mod.mc_dep")
+            "minecraft" to (findProperty("mod.mc_dep") ?: stonecutter.current.version)
         )
         inputs.properties(fmjProps)
         filesMatching("fabric.mod.json") {
@@ -124,8 +124,9 @@ tasks {
 
         into(rootProject.layout.buildDirectory.dir("libs/${project.property("mod.version")}"))
 
+        val versionFolder = findProperty("mod.version_folder") ?: stonecutter.current.version
         from(remapJar.map { it.archiveFile }) {
-            into(stonecutter.current.version)
+            into(versionFolder.toString())
         }
 
         from(remapSourcesJar.map { it.archiveFile }) {
