@@ -111,7 +111,7 @@ if the world properly saved.
 - `screen` - Every screen change, the class (will look like class_xxxxx because of intermediary), the title (1.14+)
   (untranslated key, or sometimes the text in case of a renamed container), and if the screen is supposed to pause the
   game. In pre 26.1, on Hermes 0.14.0+, also contains `wfvaio` ("which fabric variant am I on"), allowing you to
-  identify what kind of mappings are being used for the screen's class.
+  identify what kind of intermediary classes are being used for the screen's class.
 - `advancement` (1.12+) - Every advancement update, the criteria earned, the player it's for, and if it is completed. It
   also contains the "display" data for the advancement (hidden, announce to chat, show toast).
 - `achievement_progress` (1.7-1.12) - Reports progress of achievements that require progression. In vanilla, this is
