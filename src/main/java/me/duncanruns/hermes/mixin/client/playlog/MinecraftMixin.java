@@ -16,7 +16,6 @@ public abstract class MinecraftMixin {
         Minecraft client = (Minecraft) (Object) this;
         IntegratedServer server = client.getServer();
         if (server == null) return;
-        assert client.screen != null;
         Runnable runnable = () -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onScreenChange(client.screen));
         //? if <=1.7.10 {
         /*// Ideally we do play log things on the server thread, but since play logs are already thread safe and 1.8 has
