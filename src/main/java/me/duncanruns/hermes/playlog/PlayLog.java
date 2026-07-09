@@ -455,7 +455,6 @@ public class PlayLog {
             IntegratedServer server = client.getSingleplayerServer();
             if (server == null) return;
             Screen screen = Util.Client.getScreen(client);
-            assert screen != null;
             Runnable runnable = () -> PlayLogHelper.getPlayLog(server).ifPresent(p -> p.onScreenChange(screen));
             server.submit(runnable);
         }
