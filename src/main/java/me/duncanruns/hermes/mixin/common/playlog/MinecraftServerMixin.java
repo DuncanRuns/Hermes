@@ -38,7 +38,7 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void onTick(CallbackInfo ci) {
-        assert playLog != null;
+        if (playLog == null) return;
         playLog.onTick((MinecraftServer) (Object) this);
     }
 
