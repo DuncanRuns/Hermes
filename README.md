@@ -161,7 +161,7 @@ All of these events will be logged with currentTimeMillis and speedrunigt times 
 
 Ghosts contain enough information to fully animate what a player looked like during the run (minus inventory data which
 can be found in the play log). The data is taken from the server-side player, so might not accurately represent the
-exact path or states of the client-side player. The data is saved as its raw bytes for file size purposes; every 42
+exact path or states of the client-side player. The data is saved as its raw bytes for file size purposes; every 46
 bytes represents a single tick for that player. The layout is as follows:
 
 | Byte(s)   | Type               | Description          |
