@@ -42,8 +42,10 @@ public class BiomeTracker {
 
             //? if <=1.16.1 {
             String biome = Objects.requireNonNull(net.minecraft.util.registry.Registry.BIOME.getId(world.getBiome(blockPos))).toString();
-            //?} else if <=1.18.1 {
-            /*String biome = Objects.requireNonNull(net.minecraft.util.registry.BuiltinRegistries.BIOME.getId(world.getBiome(blockPos))).toString();
+            //?} else if <=1.16.4 {
+            /*String biome = world.method_31081(blockPos).orElseThrow(() -> new RuntimeException("Biome at loaded position does not exist?")).getValue().toString();
+            *///?} else if <=1.18.1 {
+            /*String biome = world.getBiomeKey(blockPos).orElseThrow(() -> new RuntimeException("Biome at loaded position does not exist?")).getValue().toString();
             *///?} else {
             /*String biome = world.getBiome(blockPos).getKey().orElseThrow().getValue().toString();
             *///?}
