@@ -16,15 +16,17 @@ import java.util.stream.Stream;
 public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
 
-    private static JsonElement stackToJson(ItemStack itemStack) {
+    private static JsonElement stackToJson(MinecraftServer server, ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
         //? if <=1.14.3 || 1.15 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
         *///?} else if <=1.15.2 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
-         *///?} else {
+         *///?} else if <=1.20.4 {
         return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
-        //?}
+        //?} else {
+        /*return ItemStack.CODEC.encodeStart(server.getRegistryManager().getOps(com.mojang.serialization.JsonOps.INSTANCE), itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
+        *///?}
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -75,7 +77,7 @@ public class InventoryTracker {
             JsonObject changedSlots = new JsonObject();
             for (int i = 0; i < newItems.size(); i++) {
                 if (!areItemsEqual(oldItems.get(i), newItems.get(i))) {
-                    changedSlots.add(String.valueOf(i), stackToJson(newItems.get(i)));
+                    changedSlots.add(String.valueOf(i), stackToJson(minecraftServer, newItems.get(i)));
                 }
             }
             data.add("slots", changedSlots);
