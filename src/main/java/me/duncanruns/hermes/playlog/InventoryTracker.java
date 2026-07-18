@@ -17,9 +17,9 @@ import java.util.stream.Stream;
 public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
 
-    private static JsonElement stackToJson(ItemStack itemStack) {
+    private static JsonElement stackToJson(MinecraftServer server, ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
-        return ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
+        return ItemStack.CODEC.encodeStart(server.registryAccess().createSerializationContext(JsonOps.INSTANCE), itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
     }
 
     private static boolean areItemListsEqual(List<ItemStack> a, List<ItemStack> b) {
@@ -60,7 +60,7 @@ public class InventoryTracker {
             JsonObject changedSlots = new JsonObject();
             for (int i = 0; i < newItems.size(); i++) {
                 if (!areItemsEqual(oldItems.get(i), newItems.get(i))) {
-                    changedSlots.add(String.valueOf(i), stackToJson(newItems.get(i)));
+                    changedSlots.add(String.valueOf(i), stackToJson(minecraftServer, newItems.get(i)));
                 }
             }
             data.add("slots", changedSlots);
