@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
 
-    private static JsonElement stackToJson(MinecraftServer server, ItemStack itemStack) {
+    private static JsonElement stackToJson(@SuppressWarnings("unused") MinecraftServer server, ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
         //? if <=1.14.3 || 1.15 {
         /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
