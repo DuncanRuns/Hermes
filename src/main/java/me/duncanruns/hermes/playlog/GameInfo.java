@@ -47,7 +47,6 @@ public class GameInfo {
 
     public static GameInfo fromServer(MinecraftServer server) {
         GameInfo gameInfo = new GameInfo();
-        gameInfo.cheatsAllowed = server.getPlayerManager().areCheatsAllowed();
         gameInfo.openToLan = server.isRemote();
         //? if <=1.15.2 {
         /*net.minecraft.world.level.LevelProperties levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getLevelProperties();
@@ -55,6 +54,7 @@ public class GameInfo {
         net.minecraft.world.SaveProperties levelProperties = server.getSaveProperties();
         //?}
 
+        gameInfo.cheatsAllowed = levelProperties.areCommandsAllowed() || server.getPlayerManager().areCheatsAllowed();
         gameInfo.hardcore = levelProperties.isHardcore();
         gameInfo.difficultyLocked = levelProperties.isDifficultyLocked();
         //? if <=1.14.2 {
