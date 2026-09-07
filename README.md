@@ -73,12 +73,7 @@ replacement for the state output mod. Contained in the file is:
 
 ### `[Game Directory]/hermes/world_logs/worlds_[Timestamp Created].log`
 
-A log of worlds entered and exited where each line is a valid json object. Each object contains a log type (`entering`
-or `leave`), the world's save folder path, and the time. The word `entering` is chosen as it can either mean the world
-is being loaded into, or the world is already loaded and the player is just entering it (Pressing play on a SeedQueue
-world). This means that worlds generating in the background (e.g. via SeedQueue) will not be logged unless the player
-enters it. Note that fast resets are not distinguished from regular world exits. The play log can be used to determine
-if the world properly saved.
+A log of worlds entered and exited where each line is a valid json object. Each object contains a log type (`entering`, `leave`, or `play_log_saved`), the world's save folder path, and the time. The word `entering` is chosen as it can either mean the world is being loaded into, or the world is already loaded and the player is just entering it (Pressing play on a SeedQueue world). This means that worlds generating in the background  e.g. via SeedQueue) will not be logged as `entering` unless the player enters it. Note that fast resets are not distinguished from regular world exits. The play log can be used to determine if the world properly saved.
 
 ### `[Game Directory]/saves/[World Name]/hermes/play.log`
 
