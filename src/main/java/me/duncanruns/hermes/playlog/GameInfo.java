@@ -55,6 +55,7 @@ public class GameInfo {
         //noinspection RedundantCast
         gameInfo.openToLan = (!HermesCore.IS_CLIENT) || ((IntegratedServer) server).isPublished();
 
+        gameInfo.cheatsAllowed |= levelProperties.allowCommands();
         gameInfo.hardcore = levelProperties.isHardcore();
         //? if <=1.7.10 {
         /*gameInfo.difficulty = Util.getOverworld(server).difficulty.getKey();
