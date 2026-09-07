@@ -77,7 +77,7 @@ A log of worlds entered and exited where each line is a valid json object. Each 
 
 ### `[Game Directory]/saves/[World Name]/hermes/play.log`
 
-> Data related to player activity in the world will logged in real-time in a ciphered format in a "restricted" folder
+> Data related to player activity in the world will be logged in real-time in a ciphered format in a "restricted" folder
 > that most external tools should not be able to access (The cipher isn't very secure, and is only meant to convey
 > intention). Then on server shutdown (world exit), an unciphered copy is made. A warning.txt file is also placed in the
 > restricted folder to make it extra obvious.
