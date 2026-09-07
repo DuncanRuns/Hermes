@@ -12,6 +12,7 @@ import me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings;
 import me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder;
 import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
+import me.duncanruns.hermes.worldlog.WorldLog;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -68,7 +69,7 @@ public class PlayLog {
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-    private final Path requiredParent;
+    private final Path worldPath;
     private final Path savePath; // example: .minecraft/saves/Random Speedrun #3/hermes/play.log
     private final Path rtPath; // example: .minecraft/saves/Random Speedrun #3/hermes/restricted/play.log.enc
     private RandomAccessFile rtFile;
@@ -107,10 +108,10 @@ public class PlayLog {
             "minecraft.custom:minecraft.time_since_"
     );
 
-    public PlayLog(MinecraftServer server, Path worldFolder) {
-        this.savePath = worldFolder.resolve("hermes").resolve("play.log");
-        this.rtPath = worldFolder.resolve("hermes").resolve("restricted").resolve("play.log.enc");
-        this.requiredParent = worldFolder;
+    public PlayLog(MinecraftServer server, Path worldPath) {
+        this.savePath = worldPath.resolve("hermes").resolve("play.log");
+        this.rtPath = worldPath.resolve("hermes").resolve("restricted").resolve("play.log.enc");
+        this.worldPath = worldPath;
         onInitialize(server);
         PLAY_LOGS.add(this);
     }
@@ -264,7 +265,7 @@ public class PlayLog {
             return;
         }
         queuedLines.add(line);
-        if (Files.isDirectory(this.requiredParent)) {
+        if (Files.isDirectory(this.worldPath)) {
             try {
                 Files.createDirectories(rtPath.getParent());
                 rtFile = new RandomAccessFile(rtPath.toFile(), "rw");
@@ -427,6 +428,7 @@ public class PlayLog {
         }
 
         rtFile.seek(rtFile.length());
+        WorldLog.write(worldPath, "play_log_saved", System.currentTimeMillis());
     }
 
     public void close() {
