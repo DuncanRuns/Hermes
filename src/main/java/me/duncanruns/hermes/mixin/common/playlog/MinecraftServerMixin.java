@@ -12,7 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
-@Mixin(MinecraftServer.class)
+// Priority increased to ensure any other modded things, including Hermes ghosts, are saved before the play log closes,
+// allowing the closing of the play log to be reliably used as an indicator that files can be read.
+@Mixin(value = MinecraftServer.class, priority = 1001)
 public abstract class MinecraftServerMixin implements PlayLogServer {
     @Unique
     private PlayLog playLog;
