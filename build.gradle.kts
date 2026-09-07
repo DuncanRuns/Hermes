@@ -5,7 +5,7 @@ plugins {
     id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
-version = "${property("mod.version")}+MC${stonecutter.current.version}"
+version = "${property("mod.version")}+MC${findProperty("mod.target_version") ?: stonecutter.current.version}"
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {

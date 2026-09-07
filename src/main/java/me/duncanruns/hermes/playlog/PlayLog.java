@@ -306,9 +306,15 @@ public class PlayLog {
         data.addProperty("completed", done);
         data.add("display", advancement.value().display().map(a -> {
             JsonObject display = new JsonObject();
-            display.addProperty("hidden", a.isHidden());
+            //? if <=26.2 {
+            /*display.addProperty("hidden", a.isHidden());
             display.addProperty("announce_to_chat", a.shouldAnnounceChat());
-            if (HermesCore.IS_CLIENT) display.addProperty("show_toast", a.shouldShowToast());
+            display.addProperty("show_toast", a.shouldShowToast());
+            *///?} else {
+            display.addProperty("hidden", a.hidden());
+            display.addProperty("announce_to_chat", a.announceToChat());
+            display.addProperty("show_toast", a.showToast());
+            //?}
             return display;
         }).orElse(null));
         write("advancement", data);
@@ -404,7 +410,7 @@ public class PlayLog {
         }
 
         rtFile.seek(rtFile.length());
-        WorldLog.write(worldPath, "play_log_saved", System.currentTimeMillis());
+        if (HermesCore.IS_CLIENT) WorldLog.write(worldPath, "play_log_saved", System.currentTimeMillis());
     }
 
     public void close() {

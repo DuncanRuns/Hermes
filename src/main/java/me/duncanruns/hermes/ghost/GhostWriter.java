@@ -36,7 +36,13 @@ public class GhostWriter {
     }
 
     private static byte getFlags(ServerPlayer player) {
-        byte swinging = (byte) (player.swinging ? (0x01) : 0);
+        //? if <=26.2 {
+        /*boolean isHandSwinging = player.swinging;
+        *///?} else {
+        boolean isHandSwinging = player.isSwinging();
+        //?}
+
+        byte swinging = (byte) (isHandSwinging ? (0x01) : 0);
         byte usingItem = (byte) (player.isUsingItem() ? (0x02) : 0);
         byte sneaking = (byte) (player.isShiftKeyDown() ? (0x04) : 0);
         byte sprinting = (byte) (player.isSprinting() ? (0x08) : 0);

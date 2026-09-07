@@ -48,7 +48,11 @@ public class GameInfo {
 
     public static GameInfo fromServer(MinecraftServer server) {
         GameInfo gameInfo = new GameInfo();
-        gameInfo.cheatsAllowed = server.getPlayerList().isAllowCommandsForAllPlayers();
+        gameInfo.cheatsAllowed = server.getWorldData().isAllowCommands();
+        // In 26.3+, isAllowCommands must be true for any open to lan cheats to work, in pre 26.3, it does not.
+        //? if <= 26.2 {
+        /*gameInfo.cheatsAllowed |= server.getPlayerList().isAllowCommandsForAllPlayers();
+        *///?}
         gameInfo.openToLan = server.isPublished();
         // "WorldData" is mojang's "LevelProperties"
         WorldData worldData = server.getWorldData();
