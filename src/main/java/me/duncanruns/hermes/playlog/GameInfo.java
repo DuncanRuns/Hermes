@@ -52,6 +52,7 @@ public class GameInfo {
         gameInfo.cheatsAllowed = server.getPlayerManager().allowCommands();
         WorldData levelProperties = server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getData();
         //?}
+        //noinspection RedundantCast
         gameInfo.openToLan = (!HermesCore.IS_CLIENT) || ((IntegratedServer) server).isPublished();
 
         gameInfo.hardcore = levelProperties.isHardcore();
