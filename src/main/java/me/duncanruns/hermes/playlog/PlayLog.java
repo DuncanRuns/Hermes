@@ -77,6 +77,7 @@ public class PlayLog {
     private final Path savePath; // example: .minecraft/saves/Random Speedrun #3/hermes/play.log
     private final Path rtPath; // example: .minecraft/saves/Random Speedrun #3/hermes/restricted/play.log.enc
     private RandomAccessFile rtFile;
+    private long initialLength = -1;
 
     private final InventoryTracker inventoryTracker = new InventoryTracker();
     private final DimensionTracker dimensionTracker = new DimensionTracker();
@@ -259,8 +260,7 @@ public class PlayLog {
             try {
                 Files.createDirectories(rtPath.getParent());
                 rtFile = new RandomAccessFile(rtPath.toFile(), "rw");
-                long length = rtFile.length();
-                rtFile.seek(length);
+                checkNewLineAndSetInitialLength();
                 isCreated = true;
                 for (String queuedLine : queuedLines) {
                     writeToRTFile(queuedLine);
@@ -272,6 +272,21 @@ public class PlayLog {
                 HermesMod.LOGGER.error("Failed to create play log: {}", e.getMessage());
                 closeInternal();
             }
+        }
+    }
+
+    private void checkNewLineAndSetInitialLength() throws IOException {
+        initialLength = rtFile.length();
+        if (initialLength == 0) {
+            rtFile.seek(0);
+            return;
+        }
+        rtFile.seek(initialLength - 1);
+        int lastByte = rtFile.read();
+        if (lastByte != '\n') {
+            HermesMod.LOGGER.warn("{} appears to have its last line corrupted (probably due to a game crash) or tampered with. Adding newline to separate incomplete line.", rtPath);
+            rtFile.seek(initialLength);
+            rtFile.write('\n');
         }
     }
 
@@ -371,13 +386,25 @@ public class PlayLog {
         if (!Files.exists(rtPath)) return;
 
         try (RandomAccessFile unencryptedFile = new RandomAccessFile(savePath.toFile(), "rw")) {
-            long saveProgress = unencryptedFile.length();
-            long fileLength = rtFile.length();
+            long currentUFLength = unencryptedFile.length();
+            long targetUFLength = rtFile.length();
 
-            if (saveProgress >= fileLength) return;
+            // We expect the current unencrypted file length to equal the initial length of the real-time file.
+            // If the current unencrypted file length is NOT equal to the initial length of the real-time file, this
+            // means something probably went wrong when previously trying to save the unencrypted file, and so we
+            // should rewrite the play log file.
 
-            rtFile.seek(saveProgress);
-            unencryptedFile.seek(saveProgress);
+            long startingPos;
+            if (currentUFLength != initialLength) {
+                HermesMod.LOGGER.warn("{} had an unexpected length! Rewriting entire file...", savePath);
+                startingPos = 0;
+            } else {
+                startingPos = currentUFLength;
+            }
+
+            rtFile.seek(startingPos);
+            unencryptedFile.seek(startingPos);
+            unencryptedFile.setLength(startingPos);
 
             byte[] readBuffer = new byte[64 * 1024];
             byte[] lineBuffer = new byte[8192];
