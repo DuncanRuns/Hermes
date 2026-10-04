@@ -220,6 +220,7 @@ public class PlayLog {
     @SuppressWarnings("unused")
     private void onInitialize(MinecraftServer server, Object levelSettings) {
         JsonObject data = new JsonObject();
+        data.add("instance", PlayLogInstanceInfo.get());
         data.addProperty("hermes_version", HermesMod.VERSION);
         //? if <= 1.21.5 {
         data.addProperty("mc_version", SharedConstants.getGameVersion().getName());
