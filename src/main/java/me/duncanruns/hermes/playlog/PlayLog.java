@@ -534,4 +534,10 @@ public class PlayLog {
         write("players_saved", new JsonObject());
         if (serverShuttingDown) shutdownPlayersSaved = true;
     }
+
+    public void onViewSeed(long seed) {
+        JsonObject out = new JsonObject();
+        out.addProperty("seed", seed);
+        write("seed", out);
+    }
 }
