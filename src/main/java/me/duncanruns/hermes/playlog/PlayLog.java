@@ -192,6 +192,7 @@ public class PlayLog {
 
     private void onInitialize(MinecraftServer server) {
         JsonObject data = new JsonObject();
+        data.add("instance", PlayLogInstanceInfo.get());
         data.addProperty("hermes_version", HermesMod.VERSION);
         data.addProperty("mc_version", SharedConstants.getCurrentVersion().name());
         data.add("generator_options", getGeneratorOptions(server));
