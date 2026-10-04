@@ -5,21 +5,17 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.context.CommandContext;
 import me.duncanruns.hermes.playlog.PlayLogHelper;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.SeedCommand;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.commands.SeedCommand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(SeedCommand.class)
 public abstract class SeedCommandMixin {
-    @WrapOperation(method = "method_13617", at = @At(value = "INVOKE", target = "Ljava/lang/String;valueOf(J)Ljava/lang/String;", ordinal = 0))
-    private static String onSlashSeed(long l, Operation<String> original, @Local(argsOnly = true) CommandContext<ServerCommandSource> context) {
-        //? if <=1.17 {
-        MinecraftServer server = context.getSource().getMinecraftServer();
-        //?} else {
-        /*MinecraftServer server = context.getSource().getServer();
-        *///?}
+    @WrapOperation(method = "lambda$register$0", at = @At(value = "INVOKE", target = "Ljava/lang/String;valueOf(J)Ljava/lang/String;", ordinal = 0))
+    private static String onSlashSeed(long l, Operation<String> original, @Local(argsOnly = true) CommandContext<CommandSourceStack> c) {
+        MinecraftServer server = c.getSource().getServer();
         PlayLogHelper.getPlayLog(server).ifPresent(playLog -> playLog.onViewSeed(l));
         return original.call(l);
     }
