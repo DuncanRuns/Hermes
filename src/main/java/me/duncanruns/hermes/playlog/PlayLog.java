@@ -494,4 +494,10 @@ public class PlayLog {
             server.submit(runnable);
         }
     }
+
+    public void onViewSeed(long seed) {
+        JsonObject out = new JsonObject();
+        out.addProperty("seed", seed);
+        write("seed", out);
+    }
 }
