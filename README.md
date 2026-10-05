@@ -85,6 +85,9 @@ A log of worlds entered and exited where each line is a valid json object. Each 
 - `initialize` - Runs when the play log is initialized (creating or joining a world). Contains:
     - `hermes_version`
     - `mc_version`
+    - `instance`
+        - Contains a list of all loaded mods, with less details regarding mod origin compared to the instance info file,
+          and also a boolean for if the instance is a dedicated server.
     - `generator_options` (1.16+ only)
         - The format of the generator options is not consistent between versions of the game, and will be similar to the
           format found in a world's level.dat. Many versions contain the seed in its generator options, which is
@@ -149,6 +152,7 @@ A log of worlds entered and exited where each line is a valid json object. Each 
   reset was used.
 - `close` - Runs when the play log is closed, which is when the server shuts down, or when the game exits.
 - `speedrunigt_options` - Various options for the mod SpeedRunIGT. Logs whenever an option changes.
+- `seed` - Contains the seed. Logs whenever the `/seed` command runs.
 
 All of these events will be logged with currentTimeMillis and speedrunigt times if available (rta, igt, retime)
 
