@@ -124,6 +124,9 @@ A log of worlds entered and exited where each line is a valid json object. Each 
     - The names are similar or identical to those used in the `/locate` or `/locate structure` commands. This means in
       1.18.2+, village is split into its 5 different biome variants, as well as ruined portals and some other
       structures.
+- `biome` - The name of the biome that a player is currently inside. Only logs when the player changes biomes to prevent
+  redundant logs, although relogging may result in duplicate logs. The check runs every 20 ticks, similar to
+  advancements.
 - `game_info` - The "Game Info" whenever a change happens to it. If a field is not present, that means it hasn't changed
   from the last `game_info` event. Game Info includes:
     - Non-default Game Rules
