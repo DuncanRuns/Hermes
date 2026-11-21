@@ -2,11 +2,8 @@
 package me.duncanruns.hermes.mixin.client.playlog.enteredseed;
 
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
-import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
-
-import java.util.OptionalLong;
 
 @Mixin(MoreOptionsDialog.class)
 public interface MoreOptionsDialogAccessor {
@@ -15,10 +12,10 @@ public interface MoreOptionsDialogAccessor {
     String getSeedText();
     //?} else if <= 1.16.4 {
     /*@Accessor(value = "seedText")
-    OptionalLong getSeedOpt();
+    java.util.OptionalLong getSeedOpt();
     *///?} else {
     /*@Accessor(value = "seed")
-    OptionalLong getSeedOpt();
+    java.util.OptionalLong getSeedOpt();
     *///?}
 }
 //?}
