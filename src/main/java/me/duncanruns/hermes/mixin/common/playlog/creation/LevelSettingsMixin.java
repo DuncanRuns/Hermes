@@ -2,7 +2,6 @@
 /*package me.duncanruns.hermes.mixin.common.playlog.creation;
 
 import com.google.gson.JsonElement;
-import me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings;
 import net.minecraft.world.level.LevelInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,3 +36,14 @@ public abstract class LevelSettingsMixin implements PlayLogCreationSettings.Hold
     }
 }
 *///?}
+
+/*!imports
+com.google.gson.JsonElement
+me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings
+net.minecraft.world.level.LevelInfo
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Unique
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
+*/

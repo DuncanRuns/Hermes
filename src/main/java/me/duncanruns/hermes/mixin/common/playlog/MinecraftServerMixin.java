@@ -12,6 +12,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
+/*!imports
+java.util.Optional
+me.duncanruns.hermes.playlog.PlayLog
+me.duncanruns.hermes.playlog.PlayLogServer
+me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder
+net.minecraft.server.MinecraftServer
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Unique
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+*/
+
 // Priority increased to ensure any other modded things, including Hermes ghosts, are saved before the play log closes,
 // allowing the closing of the play log to be reliably used as an indicator that files can be read.
 @Mixin(value = MinecraftServer.class, priority = 1001)

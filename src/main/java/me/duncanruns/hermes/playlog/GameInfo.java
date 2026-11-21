@@ -9,6 +9,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/*!imports
+com.google.gson.JsonObject
+com.google.gson.annotations.SerializedName
+java.util.List
+java.util.Objects
+java.util.stream.Collectors
+me.duncanruns.hermes.util.Util
+net.minecraft.server.MinecraftServer
+*/
+
 /**
  * Various information about a save that could be found in level.dat or is related only to runtime information.
  * It's possible that later Minecraft versions would mean more information should be added or that previous versions would mean some information should be removed.

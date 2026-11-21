@@ -8,6 +8,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/*!imports
+me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder
+net.minecraft.server.dedicated.AbstractPropertiesHandler
+net.minecraft.server.dedicated.ServerPropertiesHandler
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+*/
+
 @Mixin(ServerPropertiesHandler.class)
 public abstract class ServerPropertiesHandlerMixin extends AbstractPropertiesHandler<ServerPropertiesHandler> {
     public ServerPropertiesHandlerMixin() {

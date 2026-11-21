@@ -25,6 +25,31 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+/*!imports
+com.google.gson.JsonElement
+com.google.gson.JsonObject
+fr.catcore.wfvaio.WhichFabricVariantAmIOn
+java.nio.file.Files
+java.nio.file.Path
+java.util.function.Function
+java.util.stream.Stream
+me.duncanruns.hermes.core.Alive
+me.duncanruns.hermes.core.HermesCore
+me.duncanruns.hermes.core.InstanceInfo
+me.duncanruns.hermes.instancestate.InstanceState
+me.duncanruns.hermes.playlog.PlayLog
+me.duncanruns.hermes.worldlog.WorldLog
+me.duncanruns.hermes.worldpath.WorldPathHolder
+net.fabricmc.api.EnvType
+net.fabricmc.api.Environment
+net.fabricmc.api.ModInitializer
+net.fabricmc.loader.api.FabricLoader
+net.minecraft.server.MinecraftServer
+org.apache.logging.log4j.LogManager
+org.apache.logging.log4j.Logger
+org.jetbrains.annotations.NotNull
+*/
+
 public class HermesMod implements ModInitializer {
     public static final String MOD_ID = "hermes";
     public static String VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new IllegalStateException("Failed to find hermes version via fabric loader")).getMetadata().getVersion().getFriendlyString();

@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/*!imports
+java.nio.charset.StandardCharsets
+java.util.ArrayList
+java.util.List
+java.util.Random
+*/
+
 // If this class is copied for external tools using live data, please also include the warning!
 
 /**

@@ -8,6 +8,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
+/*!imports
+me.duncanruns.hermes.core.HermesCore
+me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder
+net.minecraft.server.Main
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+*/
+
 @Mixin(Main.class)
 public class MainMixin {
     //? if <=1.18.1 {

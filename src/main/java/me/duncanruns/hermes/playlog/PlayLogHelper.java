@@ -7,6 +7,14 @@ import net.minecraft.server.MinecraftServer;
 
 import java.util.Optional;
 
+/*!imports
+java.util.Optional
+net.fabricmc.api.EnvType
+net.fabricmc.api.Environment
+net.minecraft.client.MinecraftClient
+net.minecraft.server.MinecraftServer
+*/
+
 /**
  * Helper class for accessing the play log.
  */

@@ -7,6 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/*!imports
+java.util.HashMap
+java.util.Map
+java.util.UUID
+me.duncanruns.hermes.util.Util
+net.minecraft.server.MinecraftServer
+*/
+
 public class GhostManager implements AutoCloseable {
     private final Map<UUID, GhostWriter> writers = new HashMap<>();
 

@@ -18,3 +18,13 @@ public abstract class MinecraftServerMixin {
     }
 }
 *///?}
+
+/*!imports
+me.duncanruns.hermes.core.HermesCore
+me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder
+net.minecraft.server.MinecraftServer
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+*/

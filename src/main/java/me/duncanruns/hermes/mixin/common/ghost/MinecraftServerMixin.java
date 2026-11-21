@@ -9,6 +9,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/*!imports
+me.duncanruns.hermes.ghost.GhostManager
+net.minecraft.server.MinecraftServer
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Unique
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
+*/
+
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Unique

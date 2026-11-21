@@ -16,6 +16,23 @@ import java.nio.file.Path;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/*!imports
+com.google.gson.JsonObject
+java.nio.file.Path
+java.util.function.BiConsumer
+java.util.function.Consumer
+me.duncanruns.hermes.HermesDisableableFeature
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.instancestate.InstanceState
+me.duncanruns.hermes.playlog.PlayLog
+me.duncanruns.hermes.playlog.PlayLogHelper
+me.duncanruns.hermes.worldlog.WorldLog
+net.fabricmc.api.EnvType
+net.fabricmc.api.Environment
+net.minecraft.client.MinecraftClient
+net.minecraft.server.MinecraftServer
+*/
+
 /**
  * A collection of methods for other mods to use Hermes' features. If something can be done using this API, it should be
  * done through this API rather than directly accessing Hermes' internals, which are not guaranteed to be stable, while

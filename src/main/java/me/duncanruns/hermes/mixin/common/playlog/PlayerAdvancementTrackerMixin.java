@@ -12,6 +12,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/*!imports
+me.duncanruns.hermes.playlog.PlayLogHelper
+net.minecraft.advancement.AdvancementProgress
+net.minecraft.advancement.PlayerAdvancementTracker
+net.minecraft.server.MinecraftServer
+net.minecraft.server.network.ServerPlayerEntity
+org.spongepowered.asm.mixin.Final
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Shadow
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
+*/
+
 @Mixin(PlayerAdvancementTracker.class)
 public abstract class PlayerAdvancementTrackerMixin {
     //? if <=1.20.1 {

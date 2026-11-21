@@ -10,6 +10,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.file.Path;
 
+/*!imports
+java.nio.file.Path
+me.duncanruns.hermes.worldpath.WorldPathHolder
+net.minecraft.server.MinecraftServer
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Unique
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+*/
+
 /**
  * server.getSavePath, at least in 1.16+, has side effects with computing the resolved path to a map.
  * So to avoid thread safety issues, we yoink the value in the constructor.

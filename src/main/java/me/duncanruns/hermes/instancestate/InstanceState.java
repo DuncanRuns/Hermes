@@ -7,8 +7,8 @@ import me.duncanruns.hermes.ClientToServerHelper;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.instancestate.updaters.WorldStateUpdater;
-import me.duncanruns.hermes.instancestate.updaters.client.ScreenStateUpdater;
 import me.duncanruns.hermes.instancestate.updaters.client.ClientWorldStateUpdater;
+import me.duncanruns.hermes.instancestate.updaters.client.ScreenStateUpdater;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 
@@ -20,6 +20,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
+
+/*!imports
+com.google.gson.Gson
+com.google.gson.GsonBuilder
+com.google.gson.JsonObject
+java.io.FileNotFoundException
+java.io.RandomAccessFile
+java.nio.charset.StandardCharsets
+java.util.Collection
+java.util.concurrent.CopyOnWriteArrayList
+java.util.concurrent.ExecutorService
+java.util.concurrent.Executors
+java.util.function.BiConsumer
+me.duncanruns.hermes.ClientToServerHelper
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.core.HermesCore
+me.duncanruns.hermes.instancestate.updaters.WorldStateUpdater
+me.duncanruns.hermes.instancestate.updaters.client.ClientWorldStateUpdater
+me.duncanruns.hermes.instancestate.updaters.client.ScreenStateUpdater
+net.minecraft.client.MinecraftClient
+net.minecraft.server.MinecraftServer
+*/
 
 public final class InstanceState {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().disableHtmlEscaping().create();

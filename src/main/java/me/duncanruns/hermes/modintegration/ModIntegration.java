@@ -7,6 +7,14 @@ import net.fabricmc.loader.api.FabricLoader;
 import java.util.Collections;
 import java.util.Map;
 
+/*!imports
+java.util.Collections
+java.util.Map
+me.duncanruns.hermes.HermesDisableableFeature
+me.duncanruns.hermes.HermesMod
+net.fabricmc.loader.api.FabricLoader
+*/
+
 public final class ModIntegration {
     public static final boolean INTEGRATE_SPEEDRUNIGT = !HermesDisableableFeature.SPEEDRUNIGT_INTEGRATION.isDisabled() && FabricLoader.getInstance().isModLoaded("speedrunigt");
     public static final boolean INTEGRATE_ATUM = !HermesDisableableFeature.ATUM_INTEGRATION.isDisabled() && FabricLoader.getInstance().isModLoaded("atum");

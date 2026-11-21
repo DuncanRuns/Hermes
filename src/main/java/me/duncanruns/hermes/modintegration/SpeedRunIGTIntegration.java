@@ -8,6 +8,15 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/*!imports
+com.redlimerl.speedrunigt.option.SpeedRunOption
+com.redlimerl.speedrunigt.timer.InGameTimer
+java.lang.reflect.Field
+java.util.Map
+java.util.stream.Collectors
+net.minecraft.util.Identifier
+*/
+
 public final class SpeedRunIGTIntegration {
     private static Field optionsField = null;
 

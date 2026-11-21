@@ -24,3 +24,8 @@ public class PlayLogCreationSettings {
     }
 }
 *///?}
+
+/*!imports
+com.google.gson.JsonElement
+com.google.gson.JsonObject
+*/

@@ -8,6 +8,15 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
+/*!imports
+java.lang.reflect.Field
+java.lang.reflect.InvocationTargetException
+java.lang.reflect.Method
+java.util.Optional
+java.util.function.BooleanSupplier
+org.jetbrains.annotations.NotNull
+*/
+
 public final class AtumIntegration {
     private static final BooleanSupplier atumRunningGetter;
     private static final boolean atumRunningExists;

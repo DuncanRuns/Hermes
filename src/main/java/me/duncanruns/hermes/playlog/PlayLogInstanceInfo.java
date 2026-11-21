@@ -1,11 +1,19 @@
 package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.core.HermesCore;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModOrigin;
+
+/*!imports
+com.google.gson.JsonArray
+com.google.gson.JsonElement
+com.google.gson.JsonObject
+me.duncanruns.hermes.core.HermesCore
+net.fabricmc.loader.api.FabricLoader
+net.fabricmc.loader.api.metadata.ModOrigin
+*/
 
 public final class PlayLogInstanceInfo {
     private static final JsonObject INFO = new JsonObject();

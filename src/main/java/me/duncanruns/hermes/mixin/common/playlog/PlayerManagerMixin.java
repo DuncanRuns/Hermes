@@ -14,6 +14,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/*!imports
+com.llamalad7.mixinextras.sugar.Local
+me.duncanruns.hermes.playlog.PlayLog
+me.duncanruns.hermes.playlog.PlayLogHelper
+me.duncanruns.hermes.util.Util
+net.minecraft.server.MinecraftServer
+net.minecraft.server.PlayerManager
+net.minecraft.server.network.ServerPlayerEntity
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Shadow
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
+*/
+
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
     @Shadow

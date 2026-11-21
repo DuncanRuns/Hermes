@@ -13,6 +13,19 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/*!imports
+com.google.gson.JsonElement
+com.google.gson.JsonObject
+java.util.stream.Collectors
+java.util.stream.IntStream
+java.util.stream.Stream
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.util.Util
+net.minecraft.entity.player.PlayerInventory
+net.minecraft.item.ItemStack
+net.minecraft.server.MinecraftServer
+*/
+
 public class InventoryTracker {
     Map<UUID, List<ItemStack>> inventories = new HashMap<>();
 

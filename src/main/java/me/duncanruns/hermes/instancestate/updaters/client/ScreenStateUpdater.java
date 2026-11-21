@@ -6,6 +6,13 @@ import net.minecraft.client.MinecraftClient;
 
 import java.util.function.BiConsumer;
 
+/*!imports
+com.google.gson.JsonObject
+java.util.function.BiConsumer
+me.duncanruns.hermes.HermesMod
+net.minecraft.client.MinecraftClient
+*/
+
 /**
  * Instance state field for client's currently opened screen
  */

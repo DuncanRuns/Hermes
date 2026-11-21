@@ -10,6 +10,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/*!imports
+com.google.gson.JsonArray
+com.google.gson.JsonObject
+me.duncanruns.hermes.util.Util
+net.minecraft.server.MinecraftServer
+net.minecraft.server.world.ServerWorld
+net.minecraft.util.math.BlockPos
+org.jetbrains.annotations.NotNull
+*/
+
 public class StructureTracker {
     private final Map<UUID, Set<String>> structureMap = new HashMap<>();
 

@@ -12,6 +12,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 
 import java.util.Optional;
 
+/*!imports
+java.util.Optional
+me.duncanruns.hermes.playlog.PlayLogHelper
+net.minecraft.server.MinecraftServer
+net.minecraft.server.command.CommandManager
+net.minecraft.server.command.ServerCommandSource
+net.minecraft.server.network.ServerPlayerEntity
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Unique
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+*/
+
 @Mixin(CommandManager.class)
 public abstract class CommandManagerMixin {
     //? if <=1.19 {

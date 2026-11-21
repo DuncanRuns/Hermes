@@ -8,6 +8,14 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
 
+/*!imports
+com.google.gson.JsonObject
+me.duncanruns.hermes.util.Util
+net.minecraft.server.MinecraftServer
+net.minecraft.server.world.ServerWorld
+net.minecraft.util.math.Vec3d
+*/
+
 // Implementation note: Doing a mixin to changeDimension is just not a good idea, as it isn't called on respawns, and
 // sometimes gets spammed when exiting the end. Doing a tracker like this resolves all of those issues and is easier.
 public class DimensionTracker {

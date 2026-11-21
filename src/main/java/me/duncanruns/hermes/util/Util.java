@@ -9,6 +9,16 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.UUID;
 
+/*!imports
+java.util.UUID
+net.minecraft.entity.Entity
+net.minecraft.entity.player.PlayerEntity
+net.minecraft.server.MinecraftServer
+net.minecraft.server.network.ServerPlayerEntity
+net.minecraft.server.world.ServerWorld
+net.minecraft.util.math.Vec3d
+*/
+
 public final class Util {
     private Util() {
     }

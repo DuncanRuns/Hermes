@@ -7,6 +7,14 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
+/*!imports
+java.util.List
+java.util.Set
+org.objectweb.asm.tree.ClassNode
+org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin
+org.spongepowered.asm.mixin.extensibility.IMixinInfo
+*/
+
 public class HermesMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {

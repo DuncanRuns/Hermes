@@ -12,6 +12,19 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
+/*!imports
+com.google.gson.JsonObject
+java.nio.file.Path
+java.util.Optional
+java.util.concurrent.atomic.AtomicReference
+java.util.function.BiConsumer
+me.duncanruns.hermes.ClientToServerHelper
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.core.HermesCore
+net.minecraft.client.MinecraftClient
+net.minecraft.server.MinecraftServer
+*/
+
 /**
  * Instance state fields related to a singleplayer worlds that don't apply to dedicated servers.
  */

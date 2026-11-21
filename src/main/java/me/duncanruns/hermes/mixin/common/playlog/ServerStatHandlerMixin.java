@@ -12,6 +12,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/*!imports
+me.duncanruns.hermes.playlog.PlayLogHelper
+me.duncanruns.hermes.util.Util
+net.minecraft.entity.player.PlayerEntity
+net.minecraft.server.network.ServerPlayerEntity
+net.minecraft.stat.ServerStatHandler
+net.minecraft.stat.Stat
+net.minecraft.stat.StatHandler
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+*/
+
 @Mixin(ServerStatHandler.class)
 public abstract class ServerStatHandlerMixin extends StatHandler {
     @Inject(method = "setStat", at = @At("HEAD"))

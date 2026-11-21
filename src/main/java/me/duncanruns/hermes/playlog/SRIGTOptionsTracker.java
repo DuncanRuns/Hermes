@@ -7,6 +7,14 @@ import me.duncanruns.hermes.modintegration.ModIntegration;
 import java.util.Objects;
 import java.util.Optional;
 
+/*!imports
+com.google.gson.JsonObject
+java.util.Objects
+java.util.Optional
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.modintegration.ModIntegration
+*/
+
 public class SRIGTOptionsTracker {
     private JsonObject lastOptions = null;
 

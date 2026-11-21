@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
+import net.minecraft.util.dynamic.RegistryReadingOps;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,41 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Consumer;
+
+/*!imports
+com.google.gson.Gson
+com.google.gson.GsonBuilder
+com.google.gson.JsonElement
+com.google.gson.JsonObject
+java.io.IOException
+java.io.RandomAccessFile
+java.nio.charset.StandardCharsets
+java.nio.file.Files
+java.nio.file.Path
+java.util.concurrent.ConcurrentLinkedQueue
+java.util.concurrent.ExecutorService
+java.util.concurrent.Executors
+java.util.concurrent.RejectedExecutionException
+java.util.function.Consumer
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.core.HermesCore
+me.duncanruns.hermes.modintegration.ModIntegration
+me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder
+me.duncanruns.hermes.rot.Rotator
+me.duncanruns.hermes.util.Util
+me.duncanruns.hermes.worldlog.WorldLog
+net.minecraft.SharedConstants
+net.minecraft.entity.player.PlayerEntity
+net.minecraft.server.MinecraftServer
+net.minecraft.server.network.ServerPlayerEntity
+net.minecraft.stat.Stat
+net.minecraft.stat.StatHandler
+net.minecraft.util.dynamic.RegistryReadingOps
+net.minecraft.util.math.ChunkPos
+net.minecraft.util.math.Vec3d
+net.minecraft.world.dimension.DimensionType
+org.jetbrains.annotations.NotNull
+*/
 
 
 public class PlayLog {
@@ -65,9 +101,9 @@ public class PlayLog {
     private static final Collection<PlayLog> PLAY_LOGS = new ConcurrentLinkedQueue<>();
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
     //? if >=1.16 <=1.16.1
-    private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
+    private static final RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
     //? if >=1.16.2 <=1.18.1
-    //private static final net.minecraft.util.dynamic.RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());
+    //private static final RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
     private final Path worldPath;
@@ -119,7 +155,7 @@ public class PlayLog {
         //? if >=1.16 {
         return server.getSaveProperties().getMainWorldProperties().getTime();
         //?} else {
-        /*return server.getWorld(net.minecraft.world.dimension.DimensionType.OVERWORLD).getTime();
+        /*return server.getWorld(DimensionType.OVERWORLD).getTime();
          *///?}
     }
 

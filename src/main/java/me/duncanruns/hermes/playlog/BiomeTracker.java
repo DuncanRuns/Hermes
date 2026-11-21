@@ -8,6 +8,14 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.*;
 
+/*!imports
+com.google.gson.JsonObject
+me.duncanruns.hermes.util.Util
+net.minecraft.server.MinecraftServer
+net.minecraft.server.world.ServerWorld
+net.minecraft.util.math.BlockPos
+*/
+
 public class BiomeTracker {
     Map<UUID, String> biomeMap = new HashMap<>();
 

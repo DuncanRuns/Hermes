@@ -8,6 +8,15 @@ import net.minecraft.server.MinecraftServer;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+/*!imports
+com.google.gson.JsonObject
+java.util.Optional
+java.util.function.BiConsumer
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.core.HermesCore
+net.minecraft.server.MinecraftServer
+*/
+
 /**
  * Instance state field(s) for the current world.
  */

@@ -11,6 +11,19 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+/*!imports
+com.llamalad7.mixinextras.injector.wrapoperation.Operation
+com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation
+com.llamalad7.mixinextras.sugar.Local
+com.mojang.brigadier.context.CommandContext
+me.duncanruns.hermes.playlog.PlayLogHelper
+net.minecraft.server.MinecraftServer
+net.minecraft.server.command.SeedCommand
+net.minecraft.server.command.ServerCommandSource
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.injection.At
+*/
+
 @Mixin(SeedCommand.class)
 public abstract class SeedCommandMixin {
     @WrapOperation(method = "method_13617", at = @At(value = "INVOKE", target = "Ljava/lang/String;valueOf(J)Ljava/lang/String;", ordinal = 0))

@@ -9,6 +9,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.BooleanSupplier;
 
+/*!imports
+java.util.function.BooleanSupplier
+me.duncanruns.hermes.instancestate.InstanceState
+net.minecraft.server.MinecraftServer
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.injection.At
+org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+*/
+
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Inject(method = "tick", at = @At("RETURN"))

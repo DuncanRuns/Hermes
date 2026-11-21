@@ -14,6 +14,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
+/*!imports
+java.io.RandomAccessFile
+java.nio.Buffer
+java.nio.ByteBuffer
+java.nio.file.Files
+java.nio.file.Path
+java.util.UUID
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.util.Util
+net.minecraft.entity.player.PlayerInventory
+net.minecraft.server.MinecraftServer
+net.minecraft.server.network.ServerPlayerEntity
+net.minecraft.util.math.Vec3d
+*/
+
 /**
  * It's possible the format could change, and anything that reads the file should know the version of Hermes that wrote it.
  */

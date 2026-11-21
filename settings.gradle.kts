@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("stonecutter-imports")
     repositories {
         mavenLocal()
         mavenCentral()

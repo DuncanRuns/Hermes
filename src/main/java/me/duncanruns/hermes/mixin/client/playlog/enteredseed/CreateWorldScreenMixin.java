@@ -7,6 +7,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+/*!imports
+com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod
+com.llamalad7.mixinextras.injector.wrapoperation.Operation
+me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder
+org.spongepowered.asm.mixin.Mixin
+org.spongepowered.asm.mixin.Shadow
+org.spongepowered.asm.mixin.Unique
+*/
+
 //? if <=1.14 {
 /*@Mixin(net.minecraft.client.gui.menu.NewLevelScreen.class)
 public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.Screen {

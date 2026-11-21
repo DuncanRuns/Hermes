@@ -9,6 +9,15 @@ import net.minecraft.server.MinecraftServer;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/*!imports
+com.google.gson.Gson
+com.google.gson.JsonObject
+java.util.stream.Collectors
+me.duncanruns.hermes.util.Util
+net.minecraft.entity.effect.StatusEffectInstance
+net.minecraft.server.MinecraftServer
+*/
+
 public class EffectsTracker {
     private static final Gson GSON = new Gson();
     private final Map<UUID, Map<String, Integer>> effects = new HashMap<>();

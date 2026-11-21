@@ -9,6 +9,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/*!imports
+java.util.stream.Collectors
+java.util.stream.Stream
+java.util.stream.StreamSupport
+net.fabricmc.loader.api.FabricLoader
+net.fabricmc.loader.api.ModContainer
+net.fabricmc.loader.api.metadata.CustomValue
+*/
+
 public enum HermesDisableableFeature {
     PLAY_LOG("playlog", "Play Log"),
     GHOST("ghost", "Ghost"),

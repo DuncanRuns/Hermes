@@ -20,6 +20,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
+/*!imports
+com.google.gson.Gson
+com.google.gson.GsonBuilder
+com.google.gson.JsonObject
+java.io.IOException
+java.io.RandomAccessFile
+java.nio.charset.StandardCharsets
+java.nio.file.Files
+java.nio.file.Path
+java.util.Objects
+java.util.Optional
+java.util.concurrent.ExecutorService
+java.util.concurrent.Executors
+java.util.concurrent.RejectedExecutionException
+me.duncanruns.hermes.HermesMod
+me.duncanruns.hermes.core.HermesCore
+me.duncanruns.hermes.modintegration.ModIntegration
+net.minecraft.client.MinecraftClient
+net.minecraft.server.integrated.IntegratedServer
+*/
+
 public final class WorldLog {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static Path lastWorld = null;
