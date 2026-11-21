@@ -2,6 +2,7 @@ package me.duncanruns.hermes.mixin.common.worldpath;
 
 import me.duncanruns.hermes.worldpath.WorldPathHolder;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.WorldSavePath;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 java.nio.file.Path
 me.duncanruns.hermes.worldpath.WorldPathHolder
 net.minecraft.server.MinecraftServer
+net.minecraft.util.WorldSavePath
 org.spongepowered.asm.mixin.Mixin
 org.spongepowered.asm.mixin.Unique
 org.spongepowered.asm.mixin.injection.At
@@ -35,7 +37,7 @@ public abstract class MinecraftServerMixin implements WorldPathHolder {
         //? if <= 1.15.2 {
         /*return server.getLevelStorage().resolveFile(server.getLevelName(), ".").toPath();
          *///?} else {
-        return server.getSavePath(net.minecraft.util.WorldSavePath.ROOT);
+        return server.getSavePath(WorldSavePath.ROOT);
         //?}
     }
 

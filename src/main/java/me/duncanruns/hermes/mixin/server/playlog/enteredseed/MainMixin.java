@@ -7,6 +7,7 @@ import net.minecraft.server.Main;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /*!imports
 me.duncanruns.hermes.core.HermesCore
@@ -15,13 +16,15 @@ net.minecraft.server.Main
 org.spongepowered.asm.mixin.Mixin
 org.spongepowered.asm.mixin.injection.At
 org.spongepowered.asm.mixin.injection.Inject
+org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 */
 
 @Mixin(Main.class)
 public class MainMixin {
     //? if <=1.18.1 {
     @Inject(method = "main", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelInfo;<init>(Ljava/lang/String;Lnet/minecraft/world/GameMode;ZLnet/minecraft/world/Difficulty;ZLnet/minecraft/world/GameRules;Lnet/minecraft/resource/DataPackSettings;)V"))
-    private static void onCreateNewWorld(org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+    private static void onCreateNewWorld(CallbackInfo ci) {
         if (!HermesCore.IS_CLIENT) ServerSeedHolder.serverCreatingNewWorld = true;
     }
     //?}  else {
@@ -30,7 +33,7 @@ public class MainMixin {
             @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelInfo;<init>(Ljava/lang/String;Lnet/minecraft/world/GameMode;ZLnet/minecraft/world/Difficulty;ZLnet/minecraft/world/GameRules;Lnet/minecraft/resource/DataConfiguration;)V"),
             @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelInfo;<init>(Ljava/lang/String;Lnet/minecraft/world/GameMode;ZLnet/minecraft/world/Difficulty;ZLnet/minecraft/world/rule/GameRules;Lnet/minecraft/resource/DataConfiguration;)V")
     }, require = 1, allow = 1)
-    private static void onCreateNewWorld(org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<?> cir) {
+    private static void onCreateNewWorld(CallbackInfoReturnable<?> cir) {
         if (!HermesCore.IS_CLIENT) ServerSeedHolder.serverCreatingNewWorld = true;
     }
     *///?}

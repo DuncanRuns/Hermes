@@ -2,6 +2,7 @@ package me.duncanruns.hermes.playlog;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,13 +17,20 @@ import java.util.stream.Stream;
 /*!imports
 com.google.gson.JsonElement
 com.google.gson.JsonObject
+com.mojang.datafixers.Dynamic
+com.mojang.datafixers.types.JsonOps
+com.mojang.serialization.JsonOps
 java.util.stream.Collectors
 java.util.stream.IntStream
 java.util.stream.Stream
 me.duncanruns.hermes.HermesMod
 me.duncanruns.hermes.util.Util
+net.minecraft.datafixer.NbtOps
+net.minecraft.datafixers.NbtOps
 net.minecraft.entity.player.PlayerInventory
 net.minecraft.item.ItemStack
+net.minecraft.nbt.CompoundTag
+net.minecraft.nbt.NbtOps
 net.minecraft.server.MinecraftServer
 */
 
@@ -32,13 +40,13 @@ public class InventoryTracker {
     private static JsonElement stackToJson(@SuppressWarnings("unused") MinecraftServer server, ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
         //? if <=1.14.3 || 1.15 {
-        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixers.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
+        /*return Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, itemStack.toTag(new CompoundTag()));
         *///?} else if <=1.15.2 {
-        /*return com.mojang.datafixers.Dynamic.convert(net.minecraft.datafixer.NbtOps.INSTANCE, com.mojang.datafixers.types.JsonOps.INSTANCE, itemStack.toTag(new net.minecraft.nbt.CompoundTag()));
+        /*return Dynamic.convert(NbtOps.INSTANCE, JsonOps.INSTANCE, itemStack.toTag(new CompoundTag()));
          *///?} else if <=1.20.4 {
-        return ItemStack.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
+        return ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
         //?} else {
-        /*return ItemStack.CODEC.encodeStart(server.getRegistryManager().getOps(com.mojang.serialization.JsonOps.INSTANCE), itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
+        /*return ItemStack.CODEC.encodeStart(server.getRegistryManager().getOps(JsonOps.INSTANCE), itemStack).resultOrPartial(HermesMod.LOGGER::error).orElse(null);
         *///?}
     }
 

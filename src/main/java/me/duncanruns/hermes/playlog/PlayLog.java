@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import me.duncanruns.hermes.HermesMod;
 import me.duncanruns.hermes.core.HermesCore;
 import me.duncanruns.hermes.modintegration.ModIntegration;
@@ -12,6 +13,8 @@ import me.duncanruns.hermes.rot.Rotator;
 import me.duncanruns.hermes.util.Util;
 import me.duncanruns.hermes.worldlog.WorldLog;
 import net.minecraft.SharedConstants;
+import net.minecraft.advancement.Advancement;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +23,8 @@ import net.minecraft.stat.StatHandler;
 import net.minecraft.util.dynamic.RegistryReadingOps;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.RegistryTracker;
+import net.minecraft.world.gen.GeneratorOptions;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -39,6 +44,7 @@ com.google.gson.Gson
 com.google.gson.GsonBuilder
 com.google.gson.JsonElement
 com.google.gson.JsonObject
+com.mojang.serialization.JsonOps
 java.io.IOException
 java.io.RandomAccessFile
 java.nio.charset.StandardCharsets
@@ -52,20 +58,33 @@ java.util.function.Consumer
 me.duncanruns.hermes.HermesMod
 me.duncanruns.hermes.core.HermesCore
 me.duncanruns.hermes.modintegration.ModIntegration
+me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings
 me.duncanruns.hermes.playlog.enteredseed.ServerSeedHolder
 me.duncanruns.hermes.rot.Rotator
 me.duncanruns.hermes.util.Util
 me.duncanruns.hermes.worldlog.WorldLog
 net.minecraft.SharedConstants
+net.minecraft.advancement.Advancement
+net.minecraft.advancement.AdvancementEntry
+net.minecraft.client.gui.Screen
+net.minecraft.client.gui.screen.Screen
 net.minecraft.entity.player.PlayerEntity
+net.minecraft.registry.DynamicRegistryManager
+net.minecraft.registry.RegistryOps
 net.minecraft.server.MinecraftServer
 net.minecraft.server.network.ServerPlayerEntity
 net.minecraft.stat.Stat
 net.minecraft.stat.StatHandler
+net.minecraft.util.dynamic.RegistryOps
 net.minecraft.util.dynamic.RegistryReadingOps
 net.minecraft.util.math.ChunkPos
 net.minecraft.util.math.Vec3d
+net.minecraft.util.registry.DynamicRegistryManager
+net.minecraft.util.registry.RegistryTracker
 net.minecraft.world.dimension.DimensionType
+net.minecraft.world.gen.GeneratorOptions
+net.minecraft.world.level.LevelInfo
+net.minecraft.world.level.WorldGenSettings
 org.jetbrains.annotations.NotNull
 */
 
@@ -101,9 +120,9 @@ public class PlayLog {
     private static final Collection<PlayLog> PLAY_LOGS = new ConcurrentLinkedQueue<>();
     private static final Collection<Consumer<MinecraftServer>> INITIALIZATION_CONSUMERS = new ArrayList<>();
     //? if >=1.16 <=1.16.1
-    private static final RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.RegistryTracker.create());
+    private static final RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = RegistryReadingOps.of(JsonOps.INSTANCE, RegistryTracker.create());
     //? if >=1.16.2 <=1.18.1
-    //private static final RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = net.minecraft.util.dynamic.RegistryReadingOps.of(com.mojang.serialization.JsonOps.INSTANCE, net.minecraft.util.registry.DynamicRegistryManager.create());
+    //private static final RegistryReadingOps<JsonElement> REGISTRY_READING_OPS = RegistryReadingOps.of(JsonOps.INSTANCE, DynamicRegistryManager.create());
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
     private final Path worldPath;
@@ -166,30 +185,30 @@ public class PlayLog {
     // We try to use mojang's names here, in mojmap it's LevelSettings, and the individual properties are also based on how mojang names them either in final translated names or otherwise mojmap
     //? if <=1.15.2 {
     /*private static JsonElement getLevelSettings(Object levelSettingsObj) {
-        net.minecraft.world.level.LevelInfo levelSettings = (net.minecraft.world.level.LevelInfo) levelSettingsObj;
+        LevelInfo levelSettings = (LevelInfo) levelSettingsObj;
         JsonObject out = new JsonObject();
         out.addProperty("gamemode", levelSettings.getGameMode().getName());
         out.addProperty("hardcore", levelSettings.isHardcore());
         out.addProperty("structures", levelSettings.hasStructures());
         out.addProperty("level_type", levelSettings.getGeneratorType().getName());
-        me.duncanruns.hermes.playlog.creation.PlayLogCreationSettings.addSettings(levelSettingsObj, out);
+        PlayLogCreationSettings.addSettings(levelSettingsObj, out);
         return out;
     }
     *///?} else {
     private static JsonElement getGeneratorOptions(MinecraftServer server) {
         //? if <=1.18.1 {
-        JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
+        JsonElement json = GeneratorOptions.CODEC
                 .encodeStart(REGISTRY_READING_OPS, server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
         //?} else if <=1.19.2 {
-        /*JsonElement json = net.minecraft.world.gen.GeneratorOptions.CODEC
-                .encodeStart(net.minecraft.util.dynamic.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE,server.getRegistryManager()), server.getSaveProperties().getGeneratorOptions())
+        /*JsonElement json = GeneratorOptions.CODEC
+                .encodeStart(RegistryOps.of(JsonOps.INSTANCE,server.getRegistryManager()), server.getSaveProperties().getGeneratorOptions())
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
         *///?} else {
-        /*net.minecraft.registry.DynamicRegistryManager.Immutable registryManager = server.getRegistryManager();
-        JsonElement json = net.minecraft.world.level.WorldGenSettings.encode(net.minecraft.registry.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE, registryManager), server.getSaveProperties().getGeneratorOptions(), registryManager)
+        /*DynamicRegistryManager.Immutable registryManager = server.getRegistryManager();
+        JsonElement json = WorldGenSettings.encode(RegistryOps.of(JsonOps.INSTANCE, registryManager), server.getSaveProperties().getGeneratorOptions(), registryManager)
                 .resultOrPartial(s -> HermesMod.LOGGER.warn("Failed to encode generator options: {}", s))
                 .orElse(null);
         *///?}
@@ -381,9 +400,9 @@ public class PlayLog {
 
     public void onScreenChange(
             //? if <=1.14 {
-            /*net.minecraft.client.gui.Screen currentScreen
+            /*Screen currentScreen
             *///?} else {
-            net.minecraft.client.gui.screen.Screen currentScreen
+            Screen currentScreen
             //?}
     ) {
         JsonObject data = HermesMod.screenToJsonObject(currentScreen);
@@ -394,9 +413,9 @@ public class PlayLog {
 
     public void onAdvancement(
             //? if <=1.20.1{
-            net.minecraft.advancement.Advancement advancement,
+            Advancement advancement,
             //?} else {
-            /*net.minecraft.advancement.AdvancementEntry advancement,
+            /*AdvancementEntry advancement,
             *///?}
             String criterionName, boolean done, ServerPlayerEntity owner) {
         JsonObject data = new JsonObject();

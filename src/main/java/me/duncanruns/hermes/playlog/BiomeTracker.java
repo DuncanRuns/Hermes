@@ -5,6 +5,7 @@ import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 
 import java.util.*;
 
@@ -14,6 +15,7 @@ me.duncanruns.hermes.util.Util
 net.minecraft.server.MinecraftServer
 net.minecraft.server.world.ServerWorld
 net.minecraft.util.math.BlockPos
+net.minecraft.util.registry.Registry
 */
 
 public class BiomeTracker {
@@ -49,7 +51,7 @@ public class BiomeTracker {
             UUID id = Util.getPlayerUUID(player);
 
             //? if <=1.16.1 {
-            String biome = Objects.requireNonNull(net.minecraft.util.registry.Registry.BIOME.getId(world.getBiome(blockPos))).toString();
+            String biome = Objects.requireNonNull(Registry.BIOME.getId(world.getBiome(blockPos))).toString();
             //?} else if <=1.16.4 {
             /*String biome = world.method_31081(blockPos).orElseThrow(() -> new RuntimeException("Biome at loaded position does not exist?")).getValue().toString();
             *///?} else if <=1.18.1 {

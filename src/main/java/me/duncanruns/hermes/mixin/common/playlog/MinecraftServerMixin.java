@@ -13,11 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 /*!imports
+com.llamalad7.mixinextras.sugar.Local
 java.util.Optional
 me.duncanruns.hermes.playlog.PlayLog
 me.duncanruns.hermes.playlog.PlayLogServer
 me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder
 net.minecraft.server.MinecraftServer
+net.minecraft.world.level.LevelInfo
 org.spongepowered.asm.mixin.Mixin
 org.spongepowered.asm.mixin.Unique
 org.spongepowered.asm.mixin.injection.At
@@ -42,7 +44,7 @@ public abstract class MinecraftServerMixin implements PlayLogServer {
 
     @Inject(method = "createWorlds", at = @At("RETURN"))
     //? if <=1.15.2 {
-    /*private void onFinishCreateWorlds(CallbackInfo ci, @com.llamalad7.mixinextras.sugar.Local(argsOnly = true) net.minecraft.world.level.LevelInfo levelInfo) {
+    /*private void onFinishCreateWorlds(CallbackInfo ci, @Local(argsOnly = true) LevelInfo levelInfo) {
         this.playLog = new PlayLog((MinecraftServer) (Object) this, levelInfo);
     }
     *///?} else {

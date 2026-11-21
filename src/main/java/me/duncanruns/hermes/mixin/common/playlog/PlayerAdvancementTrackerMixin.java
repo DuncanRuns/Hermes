@@ -1,9 +1,11 @@
 package me.duncanruns.hermes.mixin.common.playlog;
 
 import me.duncanruns.hermes.playlog.PlayLogHelper;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlayerAdvancementTracker;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,9 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /*!imports
 me.duncanruns.hermes.playlog.PlayLogHelper
+net.minecraft.advancement.Advancement
+net.minecraft.advancement.AdvancementEntry
 net.minecraft.advancement.AdvancementProgress
 net.minecraft.advancement.PlayerAdvancementTracker
 net.minecraft.server.MinecraftServer
+net.minecraft.server.PlayerManager
 net.minecraft.server.network.ServerPlayerEntity
 org.spongepowered.asm.mixin.Final
 org.spongepowered.asm.mixin.Mixin
@@ -30,10 +35,10 @@ org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 public abstract class PlayerAdvancementTrackerMixin {
     //? if <=1.20.1 {
     @Shadow
-    public abstract AdvancementProgress getProgress(net.minecraft.advancement.Advancement advancement);
+    public abstract AdvancementProgress getProgress(Advancement advancement);
     //?} else {
     /*@Shadow
-    public abstract AdvancementProgress getProgress(net.minecraft.advancement.AdvancementEntry advancement);
+    public abstract AdvancementProgress getProgress(AdvancementEntry advancement);
     *///?}
 
     @Shadow
@@ -45,16 +50,16 @@ public abstract class PlayerAdvancementTrackerMixin {
     *///?} else if <=1.20.1 {
     @Shadow
     @Final
-    private net.minecraft.server.PlayerManager field_25325;
+    private PlayerManager field_25325;
     //?} else {
     /*@Shadow
     @Final
-    private net.minecraft.server.PlayerManager playerManager;
+    private PlayerManager playerManager;
     *///?}
 
     //? if <=1.20.1 {
     @Inject(method = "grantCriterion", at = @At("RETURN"))
-    private void onAdvancement(net.minecraft.advancement.Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
+    private void onAdvancement(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
         //? if <=1.15.2 {
         /*MinecraftServer server = this.server;
          *///?} else {
@@ -64,7 +69,7 @@ public abstract class PlayerAdvancementTrackerMixin {
     }
     //?} else {
     /*@Inject(method = "grantCriterion", at = @At("RETURN"))
-    private void onAdvancement(net.minecraft.advancement.AdvancementEntry advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
+    private void onAdvancement(AdvancementEntry advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
         PlayLogHelper.getPlayLog(playerManager.getServer()).ifPresent(p -> p.onAdvancement(advancement, criterionName, getProgress(advancement).isDone(), owner));
     }
     *///?}

@@ -3,6 +3,10 @@ package me.duncanruns.hermes.mixin.client.playlog.enteredseed;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.world.CreateWorldScreen;
+import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -10,30 +14,38 @@ import org.spongepowered.asm.mixin.Unique;
 /*!imports
 com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod
 com.llamalad7.mixinextras.injector.wrapoperation.Operation
+java.util.OptionalLong
 me.duncanruns.hermes.playlog.enteredseed.EnteredSeedHolder
+net.minecraft.client.gui.Screen
+net.minecraft.client.gui.menu.NewLevelScreen
+net.minecraft.client.gui.screen.Screen
+net.minecraft.client.gui.screen.world.CreateWorldScreen
+net.minecraft.client.gui.screen.world.MoreOptionsDialog
+net.minecraft.client.gui.screen.world.WorldCreator
+org.spongepowered.asm.mixin.Final
 org.spongepowered.asm.mixin.Mixin
 org.spongepowered.asm.mixin.Shadow
 org.spongepowered.asm.mixin.Unique
 */
 
 //? if <=1.14 {
-/*@Mixin(net.minecraft.client.gui.menu.NewLevelScreen.class)
-public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.Screen {
+/*@Mixin(NewLevelScreen.class)
+public abstract class CreateWorldScreenMixin extends Screen {
 *///?} else {
-@Mixin(net.minecraft.client.gui.screen.world.CreateWorldScreen.class)
-public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.screen.Screen {
+@Mixin(CreateWorldScreen.class)
+public abstract class CreateWorldScreenMixin extends Screen {
 //?}
     //? if <=1.15.2 {
     /*@Shadow
     private String seed;
     *///?} else if <=1.19.3 {
     @Shadow
-    @org.spongepowered.asm.mixin.Final
-    public net.minecraft.client.gui.screen.world.MoreOptionsDialog moreOptionsDialog;
+    @Final
+    public MoreOptionsDialog moreOptionsDialog;
      //?} else {
     /*@Shadow
-    @org.spongepowered.asm.mixin.Final
-    net.minecraft.client.gui.screen.world.WorldCreator worldCreator;
+    @Final
+    WorldCreator worldCreator;
     *///?}
 
     protected CreateWorldScreenMixin() {
@@ -57,7 +69,7 @@ public abstract class CreateWorldScreenMixin extends net.minecraft.client.gui.sc
          *///?} else if <=1.16.1 {
         return ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedText();
          //?} else if <=1.19.3 {
-        /*java.util.OptionalLong seed = ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedOpt();
+        /*OptionalLong seed = ((MoreOptionsDialogAccessor) this.moreOptionsDialog).getSeedOpt();
         if (seed.isPresent()) {
             return Long.toString(seed.getAsLong());
         }

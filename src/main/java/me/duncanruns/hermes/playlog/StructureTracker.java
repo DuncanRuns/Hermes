@@ -6,6 +6,8 @@ import me.duncanruns.hermes.util.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.feature.StructureFeature;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -14,9 +16,18 @@ import java.util.*;
 com.google.gson.JsonArray
 com.google.gson.JsonObject
 me.duncanruns.hermes.util.Util
+net.minecraft.registry.Registry
+net.minecraft.registry.RegistryKey
+net.minecraft.registry.RegistryKeys
 net.minecraft.server.MinecraftServer
 net.minecraft.server.world.ServerWorld
 net.minecraft.util.math.BlockPos
+net.minecraft.util.registry.Registry
+net.minecraft.util.registry.RegistryKey
+net.minecraft.world.gen.StructureAccessor
+net.minecraft.world.gen.feature.ConfiguredStructureFeature
+net.minecraft.world.gen.feature.StructureFeature
+net.minecraft.world.gen.structure.Structure
 org.jetbrains.annotations.NotNull
 */
 
@@ -67,28 +78,28 @@ public class StructureTracker {
     private static @NotNull Set<String> getStructures(ServerWorld world, BlockPos blockPos) {
         Set<String> structures = new HashSet<>();
         //? if >=1.16
-        net.minecraft.world.gen.StructureAccessor structureAccessor = world.getStructureAccessor();
+        StructureAccessor structureAccessor = world.getStructureAccessor();
 
         //? if <=1.18.1 {
-        net.minecraft.world.gen.feature.StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
+        StructureFeature.STRUCTURES.forEach((structureName, feature) -> {
         //?} else if <=1.18.2 {
-        /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.feature.ConfiguredStructureFeature<?, ?>> structReg = world.getRegistryManager().get(net.minecraft.util.registry.Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
+        /*Registry<ConfiguredStructureFeature<?, ?>> structReg = world.getRegistryManager().get(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
         structReg.forEach(feature -> {
             String structureName = Objects.requireNonNull(structReg.getId(feature)).toString();
         *///?} else if <=1.19.2 {
-        /*net.minecraft.util.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().get(net.minecraft.util.registry.Registry.STRUCTURE_KEY);
+        /*Registry<Structure> structReg = world.getRegistryManager().get(Registry.STRUCTURE_KEY);
         structReg.forEach(structureRaw -> {
-            net.minecraft.util.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
+            RegistryKey<Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
             String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
         *///?} else if <=1.21.1 {
-        /*net.minecraft.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().get(net.minecraft.registry.RegistryKeys.STRUCTURE);
+        /*Registry<Structure> structReg = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
         structReg.forEach(structureRaw -> {
-            net.minecraft.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
+            RegistryKey<Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
             String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
         *///?} else {
-        /*net.minecraft.registry.Registry<net.minecraft.world.gen.structure.Structure> structReg = world.getRegistryManager().getOrThrow(net.minecraft.registry.RegistryKeys.STRUCTURE);
+        /*Registry<Structure> structReg = world.getRegistryManager().getOrThrow(RegistryKeys.STRUCTURE);
         structReg.forEach(structureRaw -> {
-            net.minecraft.registry.RegistryKey<net.minecraft.world.gen.structure.Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
+            RegistryKey<Structure> feature = structReg.getKey(structureRaw).orElseThrow(() -> new RuntimeException("Structure from registry doesn't have a key!?"));
             String structureName = Objects.requireNonNull(structReg.getId(structureRaw)).toString();
         *///?}
             //? if <=1.15.2 {

@@ -3,8 +3,10 @@ package me.duncanruns.hermes.playlog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.duncanruns.hermes.util.Util;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.registry.Registry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,8 +16,12 @@ com.google.gson.Gson
 com.google.gson.JsonObject
 java.util.stream.Collectors
 me.duncanruns.hermes.util.Util
+net.minecraft.entity.effect.StatusEffect
 net.minecraft.entity.effect.StatusEffectInstance
+net.minecraft.registry.Registries
+net.minecraft.registry.Registry
 net.minecraft.server.MinecraftServer
+net.minecraft.util.registry.Registry
 */
 
 public class EffectsTracker {
@@ -31,11 +37,11 @@ public class EffectsTracker {
 
             // the <= is not missing, it is called MOB_EFFECTS in only 1.14.3
             //? if 1.14.3 {
-            /*final net.minecraft.util.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.util.registry.Registry.MOB_EFFECT;
+            /*final Registry<StatusEffect> effectReg = Registry.MOB_EFFECT;
             *///?} else if <=1.19.2 {
-            final net.minecraft.util.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.util.registry.Registry.STATUS_EFFECT;
+            final Registry<StatusEffect> effectReg = Registry.STATUS_EFFECT;
             //?} else if <=1.20.4 {
-            /*final net.minecraft.registry.Registry<net.minecraft.entity.effect.StatusEffect> effectReg = net.minecraft.registry.Registries.STATUS_EFFECT;
+            /*final Registry<StatusEffect> effectReg = Registries.STATUS_EFFECT;
             *///?}
             //? if <=1.20.4 {
             Map<String, Integer> newEffects = player.getStatusEffects().stream().collect(Collectors.toMap(e -> Objects.requireNonNull(effectReg.getId(e.getEffectType())).toString(), StatusEffectInstance::getAmplifier));
