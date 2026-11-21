@@ -285,7 +285,6 @@ public class PlayLog {
         if (isCreated) {
             try {
                 writeToRTFile(line);
-                rtFile.getChannel().force(false);
             } catch (IOException e) {
                 HermesMod.LOGGER.error("Failed to write to play log: {}", e.getMessage());
                 closeInternal();
@@ -301,7 +300,6 @@ public class PlayLog {
                 isCreated = true;
                 for (String queuedLine : queuedLines) {
                     writeToRTFile(queuedLine);
-                    rtFile.getChannel().force(false);
                 }
                 queuedLines.clear();
                 writeWarning();
