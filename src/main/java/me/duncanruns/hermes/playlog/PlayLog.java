@@ -499,4 +499,13 @@ public class PlayLog {
         out.addProperty("seed", seed);
         write("seed", out);
     }
+
+    // The only "consistent" credits event other than this is the screen type with a credits screen, but that doesn't
+    // work for multiplayer, and dealing with class names is annoying, so we have a custom type specifically for this.
+    public void onWinGame(ServerPlayer thisPlayer) {
+        JsonObject out = new JsonObject();
+        out.add("player", toPlayerData(thisPlayer));
+        // Mojang's official mappings call the packet event "win game", so we follow that here
+        write("win_game", out);
+    }
 }
