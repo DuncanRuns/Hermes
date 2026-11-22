@@ -1,8 +1,9 @@
 plugins {
     id("net.fabricmc.fabric-loom")
-    kotlin("jvm") version "2.2.10"
-    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
-    id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
+    kotlin("jvm") version "2.4.21"
+    id("com.google.devtools.ksp") version "2.3.12"
+    alias(ft.plugins.default)
+    alias(ft.plugins.fabric)
 }
 
 version = "${property("mod.version")}+MC${findProperty("mod.target_version") ?: stonecutter.current.version}"
@@ -38,16 +39,16 @@ dependencies {
 
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // Useful for interface injection
-//    accessWidenerPath = rootProject.file("src/main/resources/template.accesswidener")
 
     decompilerOptions.named("vineflower") {
         options.put("mark-corresponding-synthetics", "1") // Adds names to lambdas - useful for mixins
     }
 
     runConfigs.all {
-        ideConfigGenerated(true)
-        vmArgs("-Dmixin.debug.export=true") // Exports transformed classes for debugging
-        runDir = "../../run" // Shares the run directory between versions
+        preferGradleTask = true
+        generateRunConfig = true
+        runDirectory = rootProject.file("run") // Shares the run directory between versions
+        jvmArguments.add("-Dmixin.debug.export=true") // Exports transformed classes for debugging
     }
 }
 
@@ -58,15 +59,12 @@ java {
 }
 
 fletchingTable {
-    mixins.create("main") {
-        mixin("default", "hermes.mixins.json") {
+    mixins.configure("main") {
+        mixin("hermes.mixins.json") {
             env("MAIN", "me.duncanruns.hermes.mixin.common")
             env("SERVER", "me.duncanruns.hermes.mixin.server")
             env("CLIENT", "me.duncanruns.hermes.mixin.client")
         }
-    }
-    mixins.all {
-        automatic = true
     }
 }
 
