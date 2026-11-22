@@ -146,6 +146,10 @@ public class GameInfo {
         *///?}
     }
 
+    public boolean hasPlayers() {
+        return players != null && !players.isEmpty();
+    }
+
     public static final class PlayerInfo {
         private String name;
         private String uuid;
