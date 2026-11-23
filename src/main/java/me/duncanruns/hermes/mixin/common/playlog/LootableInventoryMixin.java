@@ -6,7 +6,6 @@ import me.duncanruns.hermes.playlog.PlayLogHelper;
 import me.duncanruns.hermes.util.Util;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.LootableInventory;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Optional;
 
 @Mixin(LootableInventory.class)
 public interface LootableInventoryMixin {
@@ -23,8 +21,8 @@ public interface LootableInventoryMixin {
         //? if <=1.20.4 {
         Identifier lootTable = ((LootableInventory) this).getLootTableId();
         //?} else {
-        /^Identifier lootTable = Optional.ofNullable(((LootableInventory) this).getLootTable())
-                .map(RegistryKey::getValue).orElse(null);
+        /^Identifier lootTable = java.util.Optional.ofNullable(((LootableInventory) this).getLootTable())
+                .map(net.minecraft.registry.RegistryKey::getValue).orElse(null);
         ^///?}
         if (player instanceof ServerPlayerEntity serverPlayer && lootTable != null) {
             PlayLogHelper.getPlayLog(Util.getPlayerServer(serverPlayer)).ifPresent(playLog ->
