@@ -47,7 +47,7 @@ dependencies {
 }
 
 ploceus {
-//    setIntermediaryGeneration(2)
+    setIntermediaryGeneration(2)
 }
 
 loom {
