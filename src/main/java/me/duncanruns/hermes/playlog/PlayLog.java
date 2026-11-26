@@ -507,4 +507,11 @@ public class PlayLog {
         out.addProperty("seed", seed);
         write("seed", out);
     }
+
+    public void onWinGame(ServerPlayerEntity thisPlayer) {
+        JsonObject out = new JsonObject();
+        out.add("player", toPlayerData(thisPlayer));
+        // Mojang's official mappings call the packet event "win game", so we follow that here
+        write("win_game", out);
+    }
 }
