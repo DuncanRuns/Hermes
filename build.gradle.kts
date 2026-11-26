@@ -64,6 +64,16 @@ loom {
         runDirectory = rootProject.file("run") // Shares the run directory between versions
         jvmArguments.add("-Dmixin.debug.export=true") // Exports transformed classes for debugging
     }
+
+    stonecutter.active?.let {
+        if (stonecutter.eval(it.version, "<1.8")) {
+            runs {
+                named("client") {
+                    programArguments.addAll("--userProperties", "{}")
+                }
+            }
+        }
+    }
 }
 
 // We need java 21 (>=17) to make fletching table do mixin stuff, so we java 21 all the stuff
