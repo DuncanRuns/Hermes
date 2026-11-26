@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class SeedCommandMixin {
     //? if <=1.12.2 {
     /*@WrapOperation(method = "run", at = @At(value = "INVOKE", target = "Ljava/lang/Long;valueOf(J)Ljava/lang/Long;"))
-    private Long a(long l, Operation<Long> original, @Local(argsOnly = true) net.minecraft.server.command.source.CommandSource source) {
+    private Long onSlashSeed(long l, Operation<Long> original, @Local(argsOnly = true) net.minecraft.server.command.source.CommandSource source) {
         @SuppressWarnings({"RedundantCast", "RedundantSuppression"})
         MinecraftServer server = ((net.minecraft.server.world.ServerWorld) source.getCommandSourceWorld()).getServer();
         PlayLogHelper.getPlayLog(server).ifPresent(playLog -> playLog.onViewSeed(l));
