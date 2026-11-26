@@ -517,4 +517,14 @@ public class PlayLog {
         // Mojang's official mappings call the packet event "win game", so we follow that here
         write("win_game", out);
     }
+
+
+    //? if >=1.9 {
+    public void onLootContainer(ServerPlayerEntity serverPlayer, String lootTable) {
+        JsonObject out = new JsonObject();
+        out.add("player", toPlayerData(serverPlayer));
+        out.addProperty("loot_table", lootTable);
+        write("loot_container", out);
+    }
+    //?}
 }
