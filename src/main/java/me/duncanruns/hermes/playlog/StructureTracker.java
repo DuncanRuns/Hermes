@@ -53,19 +53,21 @@ public class StructureTracker {
         return out;
     }
 
+    @SuppressWarnings({"RedundantSuppression", "EmptyFinallyBlock"})
     private static @NotNull Set<String> getStructures(ServerWorld world, BlockPos blockPos) {
         //? if <=1.12.2 {
-        /*//? if >1.7.10
+        /*//? if >1.7.10 {
         StructureHelper.LENIENT_SEARCH.set(true);
-        //noinspection EmptyFinallyBlock
+        //?}
         try {
             return StructureHelper.getStructureNames()
                     .stream()
                     .filter(s -> StructureHelper.isInsideStructure(world, s, blockPos))
                     .collect(Collectors.toSet());
         } finally {
-            //? if >1.7.10
+            //? if >1.7.10 {
             StructureHelper.LENIENT_SEARCH.set(false);
+            //?}
         }
         *///?} else {
         return net.minecraft.world.gen.structure.StructureFeature.STRUCTURES.entrySet()
