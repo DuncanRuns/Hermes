@@ -82,6 +82,7 @@ public class PlayLog {
     private final EffectsTracker effectsTracker = new EffectsTracker();
     private final SRIGTOptionsTracker srigtOptionsTracker = new SRIGTOptionsTracker();
 
+    private boolean playerJoined = false;
     private boolean isCreated = false;
     private boolean isClosing = false;
     private final List<String> queuedLines = new ArrayList<>();
@@ -266,7 +267,7 @@ public class PlayLog {
             return;
         }
         queuedLines.add(line);
-        if (Files.isDirectory(this.worldPath)) {
+        if (Files.isDirectory(this.worldPath) && (playerJoined || !HermesCore.IS_CLIENT)) {
             try {
                 Files.createDirectories(rtPath.getParent());
                 rtFile = new RandomAccessFile(rtPath.toFile(), "rw");
@@ -363,7 +364,9 @@ public class PlayLog {
     }
 
     private void checkGameInfo(MinecraftServer minecraftServer) {
-        JsonObject newGameInfo = GSON.toJsonTree(GameInfo.fromServer(minecraftServer)).getAsJsonObject();
+        GameInfo gi = GameInfo.fromServer(minecraftServer);
+        if (gi.hasPlayers()) playerJoined = true;
+        JsonObject newGameInfo = GSON.toJsonTree(gi).getAsJsonObject();
         JsonObject difference = lastGameInfo == null ? newGameInfo : HermesMod.getJsonDifference(lastGameInfo, newGameInfo);
         if (!difference.entrySet().isEmpty()) {
             lastGameInfo = newGameInfo;
