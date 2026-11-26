@@ -22,7 +22,7 @@ public abstract class MinecraftMixin {
         // no execute or submit method, we will just do this anyway.
         runnable.run();
         *///?} else {
-        server.execute(runnable);
+        server.executeTask(runnable);
         //?}
     }
 }

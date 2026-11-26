@@ -73,8 +73,8 @@ public class GameInfo {
         gameInfo.defaultGamemode = server.getDefaultGameMode().getKey();
         //? if >1.12.2 {
         net.minecraft.resource.pack.repository.PackRepository<net.minecraft.resource.pack.repository.UnopenedPack> dataPackManager = server.getDataPackManager();
-        gameInfo.dataPacks = dataPackManager.getAvailable().stream().map(net.minecraft.resource.pack.repository.UnopenedPack::getId).sorted().collect(Collectors.toList());
-        gameInfo.enabledDataPacks = dataPackManager.getSelected().stream().map(net.minecraft.resource.pack.repository.UnopenedPack::getId).sorted().collect(Collectors.toList());
+        gameInfo.dataPacks = dataPackManager.getAvailablePacks().stream().map(net.minecraft.resource.pack.repository.UnopenedPack::getId).sorted().collect(Collectors.toList());
+        gameInfo.enabledDataPacks = dataPackManager.getSelectedPacks().stream().map(net.minecraft.resource.pack.repository.UnopenedPack::getId).sorted().collect(Collectors.toList());
         //?}
         gameInfo.nonDefaultGameRules = getChangedGameRules(server);
         return gameInfo;
